@@ -12,8 +12,6 @@ function leftPageSetup(totalRes, obj) {
 	if(editMode == 1){
 		tName = tempTabName;
 	}
-// 	var min = 1;
-// 	var max = contentNum;
 	
 	var totalPage = 1;
 	
