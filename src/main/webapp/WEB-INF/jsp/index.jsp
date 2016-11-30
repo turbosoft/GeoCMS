@@ -69,15 +69,7 @@ $(function(){
         background:"#99CCFF"
       });
     
-//     $('#shareUserDig').dialog({	//공유 user 설정 dialog
-//         autoOpen: false,
-//         width:300,
-//         height:140,
-//         title:'Share User',
-//         modal:true,
-//         background:"#99CCFF"
-//       });
-    
+   
     $('#LoginDig').dialog({	//projectName 추가, 수정 dialog
         autoOpen: false,
         width:400,
@@ -139,38 +131,10 @@ function httpRequest(type, obj){
 				projectImage = 1;
 				callRequest("BV", "/GeoVideo/geoSetChkVideo.do", null);
 			}
-// 			else if(type == "takeMarkerData"){
-// 				var response = request.responseText.trim();
-// 				markDataMake(response);
-// 			}
 			else if(type == "BV"){
 				projectVideo = 1;
 				getBase();
 			}
-// 			else if(type == 'videoViewer'){
-// 				var response = request.responseText.trim();
-// 				if(response=='true') {
-// 					jAlert('인코딩 중 입니다...', '정보');
-// 				}
-// 				else {
-// // 					var base_url ="http://"+ location.host;
-// 					var conv_file_url = encodeURIComponent(obj.file_url);
-// 					var $dialog = jQuery.FrameDialog.create({
-// 						url: '<c:url value="/geoVideo/video_viewer.do"/>?file_url='+conv_file_url+'&user_id='+obj.user_id+'&idx='+obj.idx,
-// // 						url: base_url + '/GeoVideo/sub/viewer/video_viewer.jsp?base_url='+base_url+'&file_url='+conv_file_url+'&user_id='+obj.user_id+'&idx='+obj.idx,
-// 						title: 'Video Viewer',
-// 						width: 1127,
-// 						height: 650,
-// 						buttons: {},
-// 						autoOpen:false
-// 					});
-// 					$dialog.dialog('open');
-// 				}
-// 			}else if(type == 'UserInfoServlet'){
-// 				var response = request.responseText.trim();
-// 				setShareUser(response);
-// 			}
-			
 		}else if(request.readyState == 4 && type == "BI"){
 			callRequest("BV", "/GeoVideo/geoSetChkVideo.do", null);
 		}else if(request.readyState == 4 && type == "BV"){
@@ -208,14 +172,6 @@ function session_check(){
 		$('#login_page').css('display', 'block');
 		$('#status_login').css('display', 'none');
 	}
-// 	if($.cookie('status')=='login') {
-// 		$('#login_page').css('display', 'none');
-// 		$('#status_login').css('display', 'block');
-// 		$('#userId').text($.cookie('id'));
-// 	}else{
-// 		$('#login_page').css('display', 'block');
-// 		$('#status_login').css('display', 'none');
-// 	}
 }
 
 //search word
@@ -229,12 +185,6 @@ function searchAction(){
 	}
 	var Skeyword = $('#srchBox').val();
 	$('#search_bar').val(Skeyword);
-// 	if(projectImage == 0){	//만약 GeoPhoto가 연결되어 있지 않으면
-// 		$('#search_image').attr('checked', false);
-// 	}
-// 	if(projectVideo == 0){	//만약 GeoVideo가 연결되어 있지 않으면
-// 		$('#search_video').attr('checked', false);
-// 	}
 	
 	search();
 	
@@ -276,47 +226,7 @@ function fnLogout(){
 			window.location.href='/GeoCMS';
 		}
 	});
-	
-// 	$.cookie('id', null);
-// 	$.cookie('status', null);
-// 	$.cookie('type', null);
-// 	$.cookie('id', null, {path: '/GeoPhoto', expires: 1});
-// 	$.cookie('status', null, {path: '/GeoPhoto', expires: 1});
-// 	$.cookie('type', null, {path: '/GeoPhoto', expires: 1});
-// 	$.cookie('id', null, {path: '/GeoVideo', expires: 1});
-// 	$.cookie('status', null, {path: '/GeoVideo', expires: 1});
-// 	$.cookie('type', null, {path: '/GeoVideo', expires: 1});
-// 	window.location.href='/GeoCMS';
 }
-
-// function setShareUser(data){
-// 	if(data != null && data!= ''){
-// 		var innerHTMLStr = '';
-// 		var data_line_arr = new Array();
-// 		data_line_arr = data.split("\<line\>");
-	
-// 		if(data_line_arr != null && data_line_arr != ""){
-// 			for(var i=0; i<data_line_arr.length; i++) {
-// 				var data_arr = new Array();
-// 				data_arr = data_line_arr[i].split("\<separator\>");
-// 				innerHTMLStr += '<tr class="shareTR">';
-// 				innerHTMLStr += '<td id="userId_'+ i +'" class="userIdClass">'+ data_arr[0] +'</td>';	//id
-// 				innerHTMLStr += '<td align="center"><input type="checkbox" id="chk_'+ i +'" class="shareChk"></td>';	//check
-// 				innerHTMLStr += '</tr>';	//type
-// 			}
-// 			$('#shareTable tr:last').before(innerHTMLStr);
-// 		}
-// 		$('#shareUserDig').dialog('open');
-// 	}
-// }
-
-// function shareUserSave(){
-	
-// }
-
-// function shareUserClose(){
-	
-// }
 
 //googleMap
 function cmsLoadExif(){
@@ -342,25 +252,6 @@ function cmsLoadExif(){
 	});
 }
 
-//open shareUser list
-// function getShareUser(){
-// 	contentViewDialog = jQuery.FrameDialog.create({
-// 		url:'sub/user/share.jsp',
-// 		width: 400,
-// 		height: 400,
-// 		buttons: {},
-// 		autoOpen:false
-// // 		position:[820,300],
-// // 		modal:false
-// 	});
-// 	contentViewDialog.dialog('widget').find('.ui-dialog-titlebar').remove();
-// 	contentViewDialog.dialog('open');
-// }
-//close shareUser list
-// function shareClose(){
-// 	contentViewDialog.dialog('close');
-// }
-
 </script>
 
 </head>
@@ -374,8 +265,6 @@ function cmsLoadExif(){
 		<div id="userId" style="height:30px; position:absolute; top:15px;color: blue;"></div>
 		<!-- logout -->
 		<img src="<c:url value='/images/geoImg/main_images/logout.png'/>" style="position:absolute; right:300px; top: 15px; width:50px; height:20px; cursor:pointer;" onclick="fnLogout();">
-		<!-- MyProject -->
-<!-- 		<input type="button" id="myProjects" style="height:50px; position:absolute; right:700px; top:8px;color: blue;" value="My Projects" onclick="viewMyProjects();"> -->
 	</div>
 	
 	<!-- login -->
@@ -430,9 +319,6 @@ function cmsLoadExif(){
 		<p class="fnt_12"><input type="checkbox" id="view_OpenApi" name="view_OpenApi" onclick="viewCheck(this);" /> Open API </p>
 		<p class="fnt_12"><input type="checkbox" id="view_latestUpload" name="view_latestUpload" onclick="viewCheck(this);" /> Latest Uploads </p>
 		
-<!-- 		<hr> -->
-<!-- 		<input type="button" value="Maker icon manager" onclick="makerIconManager();"/> -->
-		
 	</div>
 	<!-- edit btn -->
 	
@@ -483,24 +369,6 @@ function cmsLoadExif(){
 			</tr>
 		</table>
 	</div>
-	
-	<!-- share dialog -->
-<!-- 	<div id="shareUserDig"> -->
-<!-- 		<table id="shareTable"> -->
-<!-- 			<tbody> -->
-<!-- 				<tr> -->
-<!-- 					<th>ID</th> -->
-<!-- 					<th width="30" height="30"><input type="checkbox" onclick="allCheck(this);" class="shareChk"></th> -->
-<!-- 				</tr> -->
-<!-- 				<tr> -->
-<!-- 					<td colspan='2'align='center' height="30"> -->
-<!-- 						<button onclick='shareUserSave();'>save</button> -->
-<!-- 						<button onclick='shareUserClose();'>cancel</button> -->
-<!-- 					</td> -->
-<!-- 				</tr> -->
-<!-- 			</tbody> -->
-<!-- 		</table> -->
-<!-- 	</div> -->
 	
 </body>
 

@@ -103,13 +103,6 @@ function clickMovePageICL(cType, totalPage){
 	}
 }
 
-//move pageGroup : prev, next
-// function moveNextAdd(totalPage, pageNum){
-// 	clickImagePage(pageNum,1);
-// 	$('#left_list_table_1 tr:last').remove();
-// 	addImagePageCell(totalPage, pageNum);
-// }
-
 </script>
 <div id="imageMoveArea" style="width:420px; height:100%;">
 <div style="background-color:#000000; padding:7px; height:22px;">

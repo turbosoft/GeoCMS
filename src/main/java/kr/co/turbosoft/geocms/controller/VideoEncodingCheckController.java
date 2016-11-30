@@ -20,13 +20,9 @@ public class VideoEncodingCheckController {
 		
 		String base_path = request.getSession().getServletContext().getRealPath("/");
 		
-//		String[] origin_url_arr = origin_url.split("/");
-//		String upload_folder_path = origin_url_arr[0];
-//		String origin_file_name = origin_url_arr[1];
 		String origin_file_name = origin_url;
 		
 		String full_path = base_path.replace("\\", "\\\\");
-//		full_path += upload_folder_path;
 		full_path += "upload/GeoVideo/";
 		
 		File file = new File(full_path);
