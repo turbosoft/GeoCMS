@@ -130,8 +130,6 @@ function createContent() {
 		//게시물 정보 전송 설정
 		var title = encodeURIComponent($('#title_area').val());
 		var content = encodeURIComponent(document.getElementById('content_area').value);
-// 		var shareType = $('input[name=shareRadio]:checked').val();
-// 		var addShareUser = $('#shareAdd').val();
 		
 		if(title == null || title == "" || title == 'null'){
 			 jAlert('제목을 입력해 주세요.', '정보');
@@ -144,11 +142,6 @@ function createContent() {
 			 $('#content_area').focus();
 			 return;
 		 }
-		 
-// 		 if(shareType != null && shareType == 2 && (addShareUser == null || addShareUser == '')){
-// 			 jAlert('공유 유저가 지정되지 않았습니다.', '정보');
-// 			 return;
-// 		 }
 		 
 		$('#file_upload').uploadifySettings('script', '<c:url value="/geoUpload.do"/>?uploadType=GeoPhoto');
 		//파일 업로드
@@ -167,8 +160,6 @@ function saveImageFn(fileName, filePath, lati, longi){
 		var content = document.getElementById('content_area').value;
 		var tabName = $('#showKind').val();
 		var projectIdxNum = $('#projectKind').val();
-// 		var shareType = $('input[name=shareRadio]:checked').val();
-// 		var addShareUser = $('#shareAdd').val();
 		
 		title = title.replace(/\//g,'&sbsp');
 		content = content.replace(/\//g,'&sbsp');
@@ -182,13 +173,8 @@ function saveImageFn(fileName, filePath, lati, longi){
 			longi = '&nbsp';
 		}
 		
-// 		if(addShareUser == null || addShareUser.length <= 0){
-// 			addShareUser = '&nbsp';
-// 		}
-		
 		var Url			= baseRoot() + "cms/saveImage/";
 		var param		= loginToken + "/" + loginId + "/" + title + "/" + content + "/" + fileName + "/" + filePath + "/" + lati + "/" + longi + "/" + tabName + "/" + projectIdxNum;
-// 		var param		= loginToken + "/" + loginId + "/" + title + "/" + content + "/" + fileName + "/" + filePath + "/" + lati + "/" + longi + "/" + tabName + "/" + shareType + "/" + addShareUser;
 		var callBack	= "?callback=?";
 		
 		$.ajax({
@@ -280,13 +266,6 @@ function getShareUser(){
 			<textarea id="content_area" style="width:400px; height:370px;"></textarea>
 		</td>
 	</tr>
-<!-- 	<tr class="showDivTR"> -->
-<!-- 		<td colspan="2"> -->
-<!-- 			<div style="float:left;"><input type="radio" value="0" name="shareRadio" checked="checked">비공개</div> -->
-<!-- 			<div style="float:left;"><input type="radio" value="1" name="shareRadio">전체공개</div> -->
-<!-- 			<div style="float:left;"><input type="radio" value="2" name="shareRadio" onclick="getShareUser();">특정인 공개</div> -->
-<!-- 		</td> -->
-<!-- 	</tr> -->
 	<tr>
 		<td id="file_upload_td" width="" height="25" colspan="2">
 			<input id="file_upload" name="file_upload" type="file"/>
@@ -299,8 +278,4 @@ function getShareUser(){
 		</td>
 	</tr>
 </table>
-
-<!-- <input type="hidden" id="shareAdd"/> -->
-<!-- <input type="hidden" id="shareRemove"/> -->
-<!-- <div id="clonSharUser" style="display:none;"></div> -->
 </body>

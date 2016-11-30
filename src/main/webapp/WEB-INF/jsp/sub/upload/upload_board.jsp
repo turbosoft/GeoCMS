@@ -81,17 +81,6 @@ $(function() {
 		
 		$('#upload_table tr td').css('fontSize', 12);
 		
-// 		if(projectImage!= 1 && projectVideo != 1){
-// 			$('#showDiv').css('display', 'none');
-// 		}else{
-// 			if(projectImage != 1){
-// 				$('#showImage').parent().css('display', 'none');
-// 			}	
-// 			if(projectVideo != 1){
-// 				$('#showVideo').parent().css('display', 'none');
-// 			}
-// 		}
-		
 		//tab select
 		var innerHTML = '';
 		for(var i=0;i<b_boardTabArr.length;i++){
@@ -144,13 +133,6 @@ $(function() {
 		    }
 		    
 		});
-// 		document.getElementById("fileinfo").onsubmit = function(){
-// 			document.getElementById("fileinfo").target = "uploadIFrame";
-// 		}
-// 		document.getElementById("uploadIFrame").onload = function(e)
-// 		{
-// 			alert("파일 업로드 완료!" + JSON.stringify(this));
-// 		}
 	}
 );
 
@@ -169,11 +151,6 @@ function createContent() {
 		var innerStr = textEditor.document.body.innerHTML;
 		var shareType = $('input[name=shareRadio]:checked').val();
 		var addShareUser = $('#shareAdd').val();
-// 		var content = encodeURIComponent(innerStr);
-// 		var tmpTabName = $('#showKind').val();
-		
-// 		$('#fileinfo').attr('action', 'UploadServlet?id='+id+'&title='+title+'&content='+content+'&type=B&idx='+ObjIdx+'&tabName='+$('#showKind').val());
-// 		$('#fileinfo').submit();
 
 		 if(title == null || title == "" || title == 'null'){
 			 jAlert('제목을 입력해 주세요.', '정보');
@@ -238,8 +215,6 @@ function boardDataSave(data){
 		});
 
 		$(this).attr('src', tempId);
-// 		var tempId = $(this).attr('id');
-// 		$(this).attr('src', tempId.split("_")[0]);
 	});
 	
 	var title = $('#title_area').val();
@@ -257,11 +232,6 @@ function boardDataSave(data){
 		 tmpRemoveShareUser = '&nbsp';
 	 }
 	
-// 	$('#fileinfo').attr('action', 'UploadServlet?id='+id+'&title='+title+'&content='+content+'&type=B&idx='+ObjIdx+'&tabName='+$('#showKind').val());
-// 	$('#fileinfo').submit();
-// 	jQuery.FrameDialog.closeDialog();
-// 	alert('저장 되었습니다.');
-	
 	title = title.replace(/\//g,'&sbsp');
 	innerStr = innerStr.replace(/\//g,'&sbsp');
 	
@@ -274,7 +244,6 @@ function boardDataSave(data){
 	
 	title = encodeURIComponent(title);
 	innerStr = encodeURIComponent(innerStr);
-// 	alert(loginToken + "/" + loginId + "/" + title + "/" + innerStr + "/" + fileNameStr + "/" + filePathStr + "/" + tmpTabName + "/" + ObjIdx + "/" + shareType + "/" + tmpAddShareUser + "/" + tmpRemoveShareUser);
 	
 	var Url			= baseRoot();
 	var param		= loginToken + "/" + loginId + "/" + title + "/" + innerStr + "/" + fileNameStr + "/" + filePathStr + "/" + tmpTabName + "/" + ObjIdx + "/" + shareType + "/" + tmpAddShareUser + "/" + tmpRemoveShareUser;
@@ -285,7 +254,6 @@ function boardDataSave(data){
 		Url = Url + "cms/saveBorder/";
 	}
 	
-// 	alert(Url + param + callBack + " ObjIdx : " + ObjIdx);
 	$.ajax({
 		type	: "POST"
 		, url	: Url + param + callBack
@@ -304,66 +272,6 @@ function boardDataSave(data){
 	});
 
 }
-
-// function saveBoardFn(){
-// 	if(loginId != null && loginId != '' && loginId != 'null') {
-// 		//게시물 정보 전송 설정
-// 		var title = encodeURIComponent($('#title_area').val());
-		
-// 		var innerStr = textEditor.document.body.innerHTML;
-// // 		var content = encodeURIComponent(innerStr);
-// 		datasubmit();
-		
-// 		var strClass = textEditor.document.getElementsByTagName('img');
-// 		$.each(strClass , function(idx, val){
-// 			var tempId = $(this).attr('id');
-// 			$(this).attr('src', tempId.split("_")[0]);
-// 		});
-		
-// 		title = title.replace(/' '/g,'&nbsp').replace(/\//g,'&sbsp');
-// 		innerStr = innerStr.replace(/' '/g,'&nbsp').innerStr(/\//g,'&sbsp');
-
-// 		if(ObjIdx != null && ObjIdx != "" && ObjIdx != "null"){
-// 		 bareUrl = bareUrl + "cms/updateBorder/";
-// 		}else{
-// 		 bareUrl = bareUrl + "cms/saveBorder/";
-// 		}
-
-// 		var Url			= baseRoot();
-// 		var param		= loginToken + "/" + loginId + "/" + title + "/" + innerStr + "/" + data + "/" + tmpTabName + "/" + ObjIdx;
-// 		var callBack	= "?callback=?";
-// 		if(ObjIdx != null && ObjIdx != "" && ObjIdx != "null"){
-// 			Url = Url + "cms/updateBorder/";
-// 		}else{
-// 			Url = Url + "cms/saveBorder/";
-// 		}
-		
-// 		alert(Url + param + callBack + " ObjIdx : " + ObjIdx);
-// 		$.ajax({
-// 			type	: "get"
-// 			, url	: Url + param + callBack
-// 			, dataType	: "jsonp"
-// 			, async	: false
-// 			, cache	: false
-// 			, success: function(data) {
-// 				if(data.Code == 100){
-// 						jQuery.FrameDialog.closeDialog();
-// 					window.parent.closeUpload();
-// 					jAlert(data.Message, '정보');
-// 				}else{
-// 					jAlert(data.Message, '정보');
-// 				}
-// 			}
-// 		});
-		
-// 		jQuery.FrameDialog.closeDialog();
-// 	 	alert('저장 되었습니다.');
-// 	 	window.location.href='/GeoCMS';
-	 	
-// // 		jQuery.FrameDialog.closeDialog();
-// // 		alert('저장 되었습니다.');
-// 	}
-// }
 
 //게시물 생성 취소
 function cancelContent() {
@@ -401,8 +309,6 @@ function datasubmit()
 		var tmpIdx = $(this).attr('id').lastIndexOf("_");
 		var tempId = $(this).attr('id').substring(0,tmpIdx);
 		tempInputFile.push(tempId);
-// 		var tempId = $(this).attr('id').split("_");
-// 		tempInputFile.push(tempId[tempId.length-1]);
 	});
 	
 	var filess = document.getElementsByClassName('imgFiles');
@@ -415,12 +321,6 @@ function datasubmit()
 				removeFile.push($(this).attr('id'));
 			}
 		}
-// 		var tmpIdx = $(this).attr('id').lastIndexOf("_");
-// 		var tempId = $(this).attr('id').substring(0,tmpIdx);
-// 		var idx = $.inArray(tempId , tempInputFile);
-// 		if(idx == -1){
-// 			removeFile.push($(this).attr('id'));
-// 		}
 	});
 
 	$.each(removeFile, function(idx, val){
@@ -450,7 +350,6 @@ function backPage(){
 //open shareUser list
 function getShareUser(){
 	contentViewDialog = jQuery.FrameDialog.create({
-// 		url:'http://'+location.host + '/GeoCMS/sub/user/share.jsp?shareIdx='+ ObjIdx +'&shareKind=GeoCMS',
 		url:'<c:url value="/geoCMS/share.do" />?shareIdx='+ ObjIdx +'&shareKind=GeoCMS',
 		width: 370,
 		height: 535,
