@@ -31,17 +31,12 @@ function searchPageInit(text, boardChk, imageChk, videoChk, check, display) {
 	var callBack	= "?callback=?";
 	
 	$.ajax({
-// 		type: 'POST',
-// 		url: 'GetSearchList',
-// 		data: 'text='+encode_text+'&boardChk='+boardChk+'&imageChk='+imageChk+'&videoChk='+videoChk+'&check='+check+'&display='+display,
-// 		success: function(data) {
 		type	: "get"
 		, url	: Url + param + callBack
 		, dataType	: "jsonp"
 		, async	: false
 		, cache	: false
 		, success: function(data) {
-// 			var response = data.trim();
 			if(data.Code == '100'){
 				var response = data.Data;
 				
@@ -99,7 +94,6 @@ function searchListSetup(pure_data) {
 	for(var i=0; i<id_arr.length; i++) {
 		addSearchDataCell(search_arr[i], id_arr[i], title_arr[i], content_arr[i], udate_arr[i], file_url_arr[i], thumbnail_url_arr[i], origin_url_arr[i], lati_arr[i], longi_arr[i], idx_arr[i], dataKind_arr[i]);
 	}
-// 	$('a.searchTag').cluetip({splitTitle: '|', positionBy: 'mouse', dropShadow: true, showTitle: false, cluetipClass: 'default'});
 }
 
 //테이블에 데이터 추가
@@ -107,7 +101,6 @@ function addSearchDataCell(search, id, title, content, udate, file_url, thumbnai
 
 	var target = document.getElementById('search_content_list_table');
 	var url = 'upload/'+ dataKind_arr+'/';
-// 	var url = 'http://'+ location.host +'/'+ dataKind_arr + '/upload/';
 	
 	var thumbnail_arr = "";
 	//xml file check
@@ -174,7 +167,6 @@ function loadXML(file_url, data_kind){
 	$.ajax({
 		type: "GET",
 		url: '<c:url value="upload/'+ data_kind + '/'+ xml_file_name +'"/>',
-// 		url: 'Http://'+ location.host +'/'+ data_kind +'/upload/'+xml_file_name,
 		dataType: "xml",
 		cache: false,
 		async: false,

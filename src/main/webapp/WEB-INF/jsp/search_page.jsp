@@ -43,13 +43,6 @@ function search() {
 			jAlert("키워드 대상을 선택해 주세요.", "정보");
 			return;
 		}
-		
-// 		if(projectImage == 0){	//만약 GeoPhoto가 연결되어 있지 않으면
-// 			$('#search_image').parent().css('display', 'none');
-// 		}
-// 		if(projectVideo == 0){	//만약 GeoVideo가 연결되어 있지 않으면
-// 			$('#search_video').parent().css('display', 'none');
-// 		}
 
 		if(projectImage != 1 && projectVideo != 1){
 			$('input[name=search_check2]').attr('checked',false);

@@ -44,49 +44,11 @@ $(function(){
 	$('body').mousedown();
 	
 	$('body').mouseup();
-	
-	//upload
-// 	$('#icon_upload').uploadify({
-// 		'uploader' : '<c:url value="/lib/uploadify/uploadify.swf"/>',
-// 		'onComplete' : function(event, ID, fileObj, response, data) {
-// // 			imageUploadCnt++;
-			
-// // 			if(response != null && response != ''){
-// // 				var tmpArr = response.split(",");
-// // 				var fileName, filePath, lati, longi;
-
-// // 				$.each(tmpArr, function(idx, val){
-// // 					if(val != null && val != ''){
-// // 						if(val.indexOf('files') > -1){
-// // 							var tempFile = val.replace("files:","");
-// // 							var tmpFileIdx = tempFile.lastIndexOf("\\");
-// // 							fileName = tempFile.substring(tmpFileIdx+1, tempFile.length);
-// // 							filePath = tempFile.split('GeoPhoto\\')[0];
-// // 						}else if(val.indexOf('lati') > -1){
-// // 							lati = val.split(':')[1];
-// // 						}else if(val.indexOf('longi') > -1){
-// // 							longi = val.split(':')[1];
-// // 						}
-// // 					}
-// // 				});
-// // 				saveImageFn(fileName, filePath, lati, longi);
-// // 			}
-// 		},
-// 		'cancelImg' : '<c:url value="/lib/uploadify/cancel.png"/>',
-// 		'folder' : '/images/geoImg/map/uploadMapIcon',	
-// 		'fileExt' : '*.jpg;*.gif;*.png;*.bmp;',
-// 		'fileDesc' : 'Image Files',
-// 		'auto' : false,
-// 		'multi' : true,
-// 		'hideButton' : false
-// 	});
-	
 });
 
 //편집 모드
 function contentMove(){
 	if(editMode == 0){
-// 		$('#status_login').css('display', 'none');
 		$('#editPopBtn').css('display', 'block');
 		$('#moreViewImg').css('display', 'none');
 		
@@ -105,7 +67,6 @@ function contentMove(){
 		if(nowRightTabName == 'content'){
 			if(imgType1 == "gellery"){
 				nowContnetNum = Math.floor(tempTabNumArr[tmpIdx]/150);	//현재 컨텐츠 갯수
-//	 			nowContnetNum = Math.floor(tempTabNumArr[tmpIdx]/126);	//현재 컨텐츠 갯수
 			}else{
 				nowContnetNum = Math.floor(tempTabNumArr[tmpIdx]/102);	//현재 컨텐츠 갯수
 			}
@@ -465,22 +426,19 @@ function editLeftBoardSetting(bNowContnetNum, bNowTabelHeight, eTableNum){
 //edit mode sample boaard list2
 function editlatestBoardSetting(){
 	//latest table draw
-// 	var eTableH = 800 - $('#imageMoveArea').children().first().height() - $('#tabHeader').height() - Number(nowTabelHeight) - 60;
-// 	var etableT = Number(nowTabelHeight) + 220;
 	var eTableH = 800 - $('#imageMoveArea').children().first().outerHeight() - $('#tabHeader').height() - Number(nowTabelHeight) - 100;
 	var eTableN = Math.floor(eTableH/26)-1;
 	
 	$('#left_list_table_2').empty();
 	$('#latestUpload').css('top', (Number(nowTabelHeight)+200) +"px");
 	$('#image_latest_list').css('top', (Number(nowTabelHeight) + 220)+"px");
-// 	$('#image_latest_list').css('top', 600+"px");
+	
 	if(eTableN > 0){
 		$('#latestUpload').css('display', 'block');
 		editLeftBoardSetting(eTableN, nowTabelHeight, 2)
 	}else{
 		$('#latestUpload').css('display', 'none');
 	}
-	$('#aaaaa').val("cc : " + (eTableH) +"\n eTableN : " + eTableN + "\n nowTabelHeight : " + nowTabelHeight + "\n $('#left_list_table_2') : " + $('#left_list_table_2').offset().top);
 }
 
 //편집 모드 버튼 이벤트
@@ -517,10 +475,6 @@ function editBtnEvent(kind){
 		var callBack	= "?callback=?";
 		
 		$.ajax({
-// 			type: 'POST',
-// 			url: 'GetBaseListServlet',
-// 			data: 'type=update&setObj='+JSON.stringify(setObj),
-// 			success: function(data) {
 			type	: "get"
 			, url	: Url + param + callBack
 			, dataType	: "jsonp"
@@ -548,10 +502,6 @@ function saveTabModify(){
 	var callBack	= "?callback=?";
 
 	$.ajax({
-// 		type: 'POST',
-// 		url: 'GetBaseListServlet',
-// 		data: 'type=updateTabName&tempOldNameArr='+JSON.stringify(tempOldNameArr)+"&tempTabArr="+JSON.stringify(tempTabArr)+"&nowRightTabName="+nowRightTabName,
-// 		success: function(data) {
 		type	: "get"
 		, url	: Url + param + callBack
 		, dataType	: "jsonp"
@@ -560,7 +510,6 @@ function saveTabModify(){
 		, success: function(data) {
 			
 			if(data.Code == '100'){
-// 				$('#status_login').css('display', 'block');
 				editExit();
 				jAlert("저장 되었습니다.", '정보');
 			}else{
@@ -730,22 +679,4 @@ function userManage(){
 	});
 	manageDig.dialog('open');
 }
-
-// function markerIconManager(){
-// 	var xml_file_name = url_buf[0] + '.xml';
-// 	var file_check =0;
-	
-// 	$.ajax({
-// 		type: "GET",
-// 		url: '<c:url value="/geoCMS/getMarkerIcon.do"/>',
-// 		cache: false,
-// 		async: false,
-// 		success: function(response) {
-			
-// 		}
-// 	});
-	
-// 	return file_check;
-// }
-
 </script>

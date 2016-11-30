@@ -67,46 +67,13 @@ function myContentsListSetup(){
 	clickMyContentPage('GeoPhoto', 1);
 	clickMyContentPage('GeoVideo', 1);
 	
-// 	if(myContentsType == 'Both'){
-// 		$('#GeoPhoto_DIV').css('display', 'block');
-// 		$('#GeoVideo_DIV').css('display', 'block');
-		
-// 		$('#GeoCMS_list_table').css('height', '30%');
-// 		$('#GeoPhoto_list_table').css('height', '30%');
-// 		$('#GeoVideo_list_table').css('height', '30%');
-		
-// 		clickMyContentPage('GeoPhoto', 1);
-// 		clickMyContentPage('GeoVideo', 1);
-// 	}else if(myContentsType == 'Image'){
-// 		$('#GeoPhoto_DIV').css('display', 'block');
-		
-// 		$('#GeoCMS_list_table').css('height', '45%');
-// 		$('#GeoPhoto_list_table').css('height', '45%');
-		
-// 		clickMyContentPage('GeoPhoto', 1);
-// 	}else if(myContentsType == 'Video'){
-// 		$('#GeoVideo_DIV').css('display', 'block');
-		
-// 		$('#GeoCMS_list_table').css('height', '45%');
-// 		$('#GeoVideo_list_table').css('height', '45%');
-		
-// 		clickMyContentPage('GeoVideo', 1);
-// 	}else{
-// 		$('#GeoCMS_list_table').css('height', '90%');
-// 	}
-// 	alert(JSON.stringify(myCType));
-// 	$('#myContent_list_table tr').remove();
 	removeModeOnOff(false);
-// 	proType = projectType;
-// 	proIdx = response[0].IDX;
 
 	myContentsMarks();
 }
 
 //페이지 선택
 function clickMyContentPage(callType, pageNum){
-// 	$('#myContent_list_table tr').remove();
-
 	$('#'+ callType +'_list_table tr').remove();
 	
 	if(callType == 'GeoCMS'){
@@ -128,11 +95,7 @@ function clickMyContentPage(callType, pageNum){
 		, success: function(data) {
 			var response = data.Data;
 			if(data.Code == '100'){
-// 				if(callType == 'GeoCMS'){
-// 					addMyContentsCellBoard(callType, response);
-// 				}else{
-					addMyContentsCell(callType, response);
-// 				}
+				addMyContentsCell(callType, response);
 				
 				//페이지 설정
 				var dataLen = 1;
@@ -157,7 +120,6 @@ function clickMyContentPage(callType, pageNum){
 }
 
 function addMyContentsCell(callType, response){
-// 	var target = document.getElementById('myContent_list_table');
 	var target = document.getElementById(callType +'_list_table');
 	var blankImg = 'images/geoImg/blank(100x70).PNG';
 
@@ -170,11 +132,9 @@ function addMyContentsCell(callType, response){
 	
 	var nowCnt = 0;
 	for(var i=0; i<myContentsNum; i++) {
-// 		alert(JSON.stringify(response[i]));
-		//타입 별 file 주소 설정
 		
+		//타입 별 file 주소 설정
 		var localAddress = '';
-// 		var nowCnt = 0;
 		if(response[i] != null && response[i] != '' && response[i] != undefined){
 			localAddress = 'upload/'+response[i].DATAKIND;
 			if(response[i].DATAKIND == "GeoPhoto"){
@@ -182,13 +142,6 @@ function addMyContentsCell(callType, response){
 			}else if(response[i].DATAKIND == "GeoVideo"){
 				localAddress += '/'+response[i].THUMBNAIL;
 			}
-			
-// 			localAddress = "http://"+location.host + '/'+ response[i].DATAKIND + '/upload/'; //이미지 주소
-// 			if(response[i].DATAKIND == "GeoPhoto"){
-// 				localAddress += response[i].FILENAME;
-// 			}else if(response[i].DATAKIND == "GeoVideo"){
-// 				localAddress += response[i].THUMNAIL;
-// 			}
 		}
 		
 		//image add

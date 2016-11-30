@@ -57,12 +57,8 @@ function getBase() {
 					var idx = $.inArray('latestUpload', menuArr);
 					menuArr[idx] = 'latestUpload_off';
 				}
-// 				if(projectImage == 1 || projectVideo == 1) {	//projectImage :GeoPhoto 다운여부 {0:다운받지 않음, 1:다운받음} projectVideo :GeoVideo 다운여부 {0:다운받지 않음, 1:다운받음}
-					rightTabAdd();								//content TAB 추가
-					rightTabChang('content_tab');				//left list content type setting
-// 				}else{
-// 					rightTabChang('board_tab');					//left list board type setting
-// 				}
+				rightTabAdd();								//content TAB 추가
+				rightTabChang('content_tab');				//left list content type setting
 			}else{
 				jAlert(data.Message, '정보');
 			}
@@ -93,14 +89,6 @@ function rightTabChang(objId){
 		$('#board_tab').removeClass('col_blue');
 		$('#board_tab').addClass('col_gray1');
 		$('#board_tab').css('color', 'gray');
-		
-// 		if(projectImage == 1 && projectVideo == 1){
-			b_url = 'cms/getContent/';
-// 		}else if(projectImage == 1){
-// 			b_url = 'cms/getImage/';
-// 		}else if(projectVideo == 1){
-// 			b_url = 'cms/getVideo/';
-// 		}
 		
 		tabArr = b_contentTabArr;
 		tabTypeArr = b_contentTabTypeArr;
@@ -170,7 +158,6 @@ function tabSetting(){
 	$('#tabs-1').append("<table border=1 class='ui-widget' id='left_list_table_1' style='margin: 30px 20px 16px 20px; border-collapse: collapse; height: 563px;width:383px;border-left:0px;border-color:#999;'><tbody></tbody></table>");	//처음 페이지 로딩시 첫번째 tab만 데이터 로딩
 
 	tabMaxMoveNum = $('#tabHeader').width();
-// 	totalHeaderWidth = $('#tabHeader_long').width()+30;
 	$.each($('.tabDiv'), function(idx, val){
 		totalHeaderWidth += $(val).width()+3;
 	});
@@ -244,7 +231,6 @@ function menuSetting(){
 	menuMap = new Map();
 	menuMap.put("logo",{"src": "<c:url value='/images/geoImg/english_images/logo.jpg'/>", "top": 20, "width": 152, "etc": ""});	//이미지 주소, top, width, function 및 id
 	menuMap.put("MyProjects",{"src": "<c:url value='/images/geoImg/english_images/myProjects.png'/>", "top": 55, "width": 77, "etc": "onclick='viewMyProjects(null);'"});
-// 	menuMap.put("MyContents",{"src": "<c:url value='/images/geoImg/english_images/menu05.jpg'/>", "top": 55, "width": 77, "etc": "onclick='viewMyContents();'"});
 	menuMap.put("OpenApi",{"src": "<c:url value='/images/geoImg/english_images/menu04.gif'/>", "top": 55, "width": 77, "etc": "onclick='diagOpen()'" /*"id='opener'"*/});
 	menuMap.put("searchBox",{"src": "<c:url value='/images/geoImg/btn_image/search.png'/>", "top": 55, "width": 28, "etc": "alt='검색버튼' onclick='searchAction();'"});
 	
@@ -841,18 +827,6 @@ function cntOfHeight(num, type){
 
 //my content list page
 function viewMyContents(){
-// 	var contentViewType = '';
-	
-// 	if(projectImage == 1 && projectVideo == 1){
-// 		contentViewType = "Both";
-// 	}else if(projectImage == 1){
-// 		contentViewType = "Image";
-// 	}else if(projectVideo == 1){
-// 		contentViewType = "Video";
-// 	}else{
-// 		contentViewType = "Board";
-// 	}
-	
 	$('#myContent_list').css('display','block');
 	myContentsListSetup();
 }
