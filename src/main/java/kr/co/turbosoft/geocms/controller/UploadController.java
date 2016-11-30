@@ -170,10 +170,6 @@ public class UploadController {
 						if(i==0){
 							filePathStr = files.get(i);
 							filePathStr = filePathStr.split("GeoCMS\\\\")[0];
-//							int tmpFileIdx = filePathStr.lastIndexOf("\\");
-//							if(tmpFileIdx > 0){
-//								filePathStr = filePathStr.substring(0, tmpFileIdx);
-//							}
 						}
 					}
 				}
@@ -192,7 +188,6 @@ public class UploadController {
 				String thumbnail = files.get(0).substring(0, files.get(0).length()-4) + "_thumb.jpg";
 				reseultData += "lat:"+lat + ",lon:"+lon; 
 				reseultData += ",files:"+files.get(0);
-				
 			}
 		}
 		
