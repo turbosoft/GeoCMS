@@ -75,26 +75,13 @@ $(document).ready(
 					$('#file_upload_gpx').uploadifyUpload();
 					
 					saveVideoFn(response);
-					
-// 					//계속 업로드 할 것인지 물음 기능 추가
-// 					jConfirm('게시물을 계속 업로드 하시겠습니까?', '정보', function(type){
-// 						if(!type){
-// 							window.parent.closeUpload();
-// 							window.parent.viewMyContents();
-// 						}
-// 					});
 				}
 			},
-// 			'onQueueFull': function(event, queueSizeLimit) {
-// 		        alert("Please don't put anymore files in me! You can upload " + queueSizeLimit + " files at once");
-// 		        return false;
-// 		    },
 			'cancelImg' : '<c:url value="/lib/uploadify/cancel.png"/>',
 			'folder' : '/upload/GeoVideo',
 			'fileExt' : '*.avi;*.mpg;*.mp4;*.mov;*.ogg;*.flv;*.webm;*.m4v;',
 			'fileDesc' : 'Video Files',
 			'auto' : false,
-// 			'queueSizeLimit': 2,
 			'hideButton' : false,
 			'buttonText' : 'video File',
 		});
@@ -102,7 +89,6 @@ $(document).ready(
 		$('#file_upload_gpx').uploadify({
 			'buttonText' : 'gpx File',
 			'uploader' : '<c:url value="/lib/uploadify/uploadify.swf"/>',
-// 			'script' : 'UploadServlet',
 			'cancelImg' : '<c:url value="/lib/uploadify/cancel.png"/>',
 			'folder' : '/upload/GeoVideo',
 			'fileExt' : '*.gpx;',
@@ -112,7 +98,7 @@ $(document).ready(
 		});
 	}
 );
-//cms/saveVideo/{token}/{loginId}/{title}/{content}/{filesStr}/{filePath}/{latitude}/{longitude}/{tabName}/{shareType}/{shareUser}
+
 function saveVideoFn(data){
 	var tmpArr = data.split(",");
 	var lat = 0;
@@ -189,9 +175,6 @@ function createContent() {
 
 function contentSave() {
 	//게시물 정보 전송 설정
-// 	var title = encodeURIComponent($('#title_area').val());
-// 	var content = encodeURIComponent(document.getElementById('content_area').value);
-//		$('#file_upload').uploadifySettings('script', 'UploadServlet?id='+id+'&title='+title+'&content='+content+'&tabKind='+$('#showKind').val());
 	$('#file_upload').uploadifySettings('script', '<c:url value="/geoUpload.do"/>?uploadType=GeoVideo');
 	//파일 업로드
 	$('#file_upload').uploadifyUpload();
@@ -276,10 +259,6 @@ function getShareUser(){
 		<td id='file_upload_td' width='' height='25' colspan='2'>
 			<input id='file_upload' name='file_upload' type='file'/>
 			<input id='file_upload_gpx' name='file_upload_gpx' type='file'/>
-<!-- 			<div style="background-image:images/upload/selectGpx.png;"> -->
-<!-- 				<input id='file_upload_gpx' name='file_upload_gpx' type='file'/> -->
-<!-- 			</div> -->
-<!-- 			<img src="images/upload/selectGpx.png" id='file_upload_gpxx' name='file_upload_gpx'> -->
 		</td>
 	</tr>
 	<tr>

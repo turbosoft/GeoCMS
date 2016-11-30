@@ -112,7 +112,6 @@ function sendMail(text,type){
 				<button onclick="searchUserInfo('id');" class="radiusBtn5">search ID</button>
 			</td>
 			<td colspan="2">
-<!-- 				<button onclick="idCheck();" id="idChkBtn">ID CHECK</button> -->
 				<button onclick="searchUserInfo('pass');" class="radiusBtn5">search PASS</button>
 			</td>
 		</tr>
