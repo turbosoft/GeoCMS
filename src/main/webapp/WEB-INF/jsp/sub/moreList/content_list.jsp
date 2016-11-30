@@ -109,7 +109,6 @@ function clickContentPage(pageNum){
 	}
 	var tmpIndex = '&nbsp';
 	
-// 	parent.callRequest('clickContentPage', moveUrl, 'type=noinit&pageNum='+pageNum+'&contentNum='+contentCountNum+'&tabName='+contentnowTabName, tempObj);
 	var Url			= baseRoot() + moveUrl;
 	var param		= "list/" + tmpLoginToken + "/" + tmpLoginId + "/" + pageNum + "/" + contentCountNum + "/" + contentnowTabName + "/" + tmpIndex;
 	var callBack	= "?callback=?";
@@ -132,8 +131,6 @@ function clickContentPage(pageNum){
 
 			//페이지 설정
 			contentPageSetup(data.DataLen, makeTmpObj);
-			//content view table css
-// 			setContentDesign(tempObj.type);
 		}
 	});
 }
@@ -163,11 +160,6 @@ function setContentDesign(contentNowType) {
 	}
 }
 
-//게시물 페이지 설정
-// function contentPageSetup(obj) {
-// // 	parent.callRequest('contentPageSetup', obj.moveUrl, 'type=init&tabName='+obj.tabName, obj);
-// }
-
 //테이블에 페이징 숫자 추가
 function addContentPageCell(totalPage, pageNum, type) {
 	var target;
@@ -180,7 +172,6 @@ function addContentPageCell(totalPage, pageNum, type) {
 	var row = target.insertRow(-1);
 	var cell = row.insertCell(-1);
 	cell.colSpan = '3';
-// 	cell.height = '18px';
 
 	var innerHTMLStr = "<div id='pagingDiv'>";
 	var pageGroup = 0;
@@ -225,13 +216,6 @@ function addContentPageCell(totalPage, pageNum, type) {
 	innerHTMLStr += "</div>";
 	cell.innerHTML = innerHTMLStr;
 }
-
-//move pageGroup : prev, next
-// function moveNext(totalPage, pageNum){
-// 	clickContentPage(pageNum);
-// 	$('#content_list_table_pop tr:last').remove();
-// 	addContentPageCell(totalPage, pageNum, 'pop');
-// }
 
 function clickMovePageCL(cType, totalPage){
 	var movePage = 0;	

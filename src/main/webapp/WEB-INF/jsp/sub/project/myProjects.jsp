@@ -26,8 +26,6 @@ function projectGroupListSetup(response){
 	
 	markerProArr = new Array();
 	addProjectGroupCell(response);
-	
-// 	projectMarkerData(proIdx);
 }
 
 //project group list
@@ -48,11 +46,7 @@ function addProjectGroupCell(response){
 			var projectNameTxt = response[i].PROJECTNAME.length>22? response[i].PROJECTNAME.substring(0,22)+'...' : response[i].PROJECTNAME;
 			
 			innerHTML += '<div id="pName_'+ response[i].IDX +'" onclick="fnProjectDiv(this,'+response[i].IDX+');"';
-// 			if(i == 0){
-// 				innerHTML += 'class="onProjectDiv ';
-// 			}else{
-				innerHTML += 'class="offProjectDiv">';
-// 			}
+			innerHTML += 'class="offProjectDiv">';
 			innerHTML += '<input type="hidden" id="hiddenProName_'+ response[i].IDX +'" value="'+ response[i].PROJECTNAME +'"/>';
 			innerHTML += '<input type="hidden" id="hiddenProUserIn_'+ response[i].IDX +'" value="'+ response[i].editUserIn +'"/>';
 			innerHTML += '<input type="hidden" id="hiddenShareType_'+ response[i].IDX +'" value="'+ response[i].SHARETYPE +'"/>';
@@ -122,7 +116,6 @@ function clickProjectPage(pageNum, tmpProIdx, dataType){
 		, cache	: false
 		, success: function(data) {
 			var response = data.Data;
-// 			alert(JSON.stringify(data));
 			if(response != null && response != '' && data.Code == '100'){
 				if(dataType != 'editView'){
 					proIdx = tmpProIdx;
@@ -169,7 +162,6 @@ function addProjectChildCell(response, pageNum){
 	var imgHeight = 50;		//image height
 	var max_cell = 4;
 	
-// 	$('#'+ nowPChild).attr("border","1");
 	var totalLan = response.length%4 == 0?response.length:response.length + (4-response.length%4);
 
 	for(var i=0; i<totalLan; i++) {
@@ -227,24 +219,12 @@ function addProjectChildCell(response, pageNum){
 			if(loadXML(response[i].FILENAME, response[i].DATAKIND) == 1){
 				var tempTop = 8;
 				var tempLeft = 66;
-// 				innerHTMLStr += "<div style='position:absolute; margin:"+ tempTop +"px 0 0 "+ tempLeft +"px; width:15px; height:20px; background-image:url(<c:url value='images/geoImg/btn_image/xmlFile_w.png'/>);'></div>";
 				innerHTMLStr += "<div style='position:relative; margin:"+ tempTop +"px 0 0 "+ tempLeft +"px; width:15px; height:20px; background-image:url(<c:url value='images/geoImg/btn_image/xmlFile_w.png'/>);'></div>";
 			}else{
 				var tempTop = 8;
 				var tempLeft = 66;
 				innerHTMLStr += "<div style='position:relative; margin:"+ tempTop +"px 0 0 "+ tempLeft +"px; width:15px; height:20px;'></div>";
 			}
-			
-// 			//image or video icon add
-// 			innerHTMLStr += "<div style='width:30px; height:30px; margin:10px 0 0 15px;  background-image:url(<c:url value='images/geoImg/"+ response[i].DATAKIND +"_marker.png'/>); zoom:0.7;'></div>";
-
-// 			//xml file check icon add
-// 			if(loadXML(response[i].FILENAME, response[i].DATAKIND) == 1){
-// 				var tempTop = 40;
-// 				var tempLeft = 66;
-// // 				innerHTMLStr += "<div style='position:absolute; margin:"+ tempTop +"px 0 0 "+ tempLeft +"px; width:15px; height:20px; background-image:url(<c:url value='images/geoImg/btn_image/xmlFile_w.png'/>);'></div>";
-// 				innerHTMLStr += "<div style='margin:"+ tempTop +"px 0 0 "+ tempLeft +"px; width:15px; height:20px; background-image:url(<c:url value='images/geoImg/btn_image/xmlFile_w.png'/>);'></div>";
-// 			}
 			
 			innerHTMLStr += "<img class='round' src='<c:url value='/"+ localAddress +"'/>' width='" + imgWidth + "' height='" + imgHeight + "' hspace='10' vspace='10' ";
 			var tmpViewId = "MOVE_"+ response[i].DATAKIND + "_" + response[i].IDX;
@@ -357,7 +337,6 @@ function clickMovePageMP(cType, totalPage, pageNum, projectIdx){
 	var movePage = 0;
 	proIdx = projectIdx;
 	$('#pChild_'+ proIdx).empty();
-// 	pageNum = Number(contentNowPageNum);
 	if(cType == 'next'){
 		if(pageNum+1 <= totalPage){
 			movePage = pageNum+1;
@@ -376,7 +355,6 @@ function clickMovePageMP(cType, totalPage, pageNum, projectIdx){
 //프로젝트 명 추가 dialog Open
 function openAddProjectName(){
 	proIdx = 0;
-// 	$('#projectShareUser').load('<c:url value="/geoCMS/share.do" />?shareIdx='+ 0 +'&shareKind=GeoProject&showProject=Y');
 	$('#projectNameAddDig #saveBtn').css('display','inline-block');
 	$('#projectNameAddDig #modifyBtn').css('display','none');
 	$('#projectNameAddDig #removeBtn').css('display','none');
@@ -404,10 +382,6 @@ function editProject(projectIdx){
 	$('#nowMarkerIconDiv').append($('#markerIcon_42').clone());
 	
 	clickProjectPage(1, projectIdx, 'editView');
-// 	$('input[name=shareRadio]:radio[value='+ tmpProShare +']').attr('checked',true);
-// 	$('#projectNameAddDig #saveBtn').css('display','none');
-// 	$('#projectNameAddDig #modifyBtn').css('display','inline-block');
-// 	$('#projectNameAddDig').dialog('open');
 }
 
 function editDiagOpen(totalLen){
@@ -420,38 +394,6 @@ function editDiagOpen(totalLen){
 	$('#projectNameAddDig #modifyBtn').css('display','inline-block');
 	$('#projectNameAddDig').dialog('open');
 }
-
-// function getProShareUser(){
-// 	var Url			= baseRoot() + "cms/searchShareUser/";
-// 	var param		= loginToken + "/" + loginId + "/list/&nbsp;/"+ nowpage + "/"+ nowSelUserNum + "/" + tmpIdx + "/" + shareKind + "/" + orderText +  "/" + tmpAddShare + "/" +tmpRemoveShare;
-// 	var callBack	= "?callback=?";
-	
-// 	$.ajax({
-// 		type	: "get"
-// 		, url	: Url + param + callBack
-// 		, dataType	: "jsonp"
-// 		, async	: false
-// 		, cache	: false
-// 		, success: function(data) {
-			
-// 		}
-// 	});
-// }
-
-// function editProject(projectIdx){
-// 	proEdit = 1;
-// 	contentViewDialog = jQuery.FrameDialog.create({
-// 		url: 'project_deit.jsp?projectIdx='+projectIdx+'&nowTabName='+tempTabName+'&tabArr='+tabArr +'&urlText='+b_url+'&selBoardNum='+selBoardNum,
-// 		width: 960,
-// 		height: 650,
-// 		buttons: {},
-// 		autoOpen:false
-// 	});
-// 	$('.ui-dialog-titlebar').attr('class', 'ui-dialog-titlebar');
-// 	$('.ui-dialog-title').remove();
-// 	$('.ui-dialog').attr('id', 'board_dig');
-// 	contentViewDialog.dialog('open');
-// }
 
 //open shareUser list
 function getShareUser(){
@@ -473,11 +415,6 @@ function addProjectName(){
 	var projectEditYes = $('#editYes').val();
 	var projectShareType = $('input[name=shareRadio]:checked').val();
 	var projectMarkerIcon = '';
-	
-// 	var projectSelect = $('input[name=proShareUser]:checked').val();
-// 	var projectDigIdx = $('#projectDigIdx').val();
-	
-// 	alert(projectNameTxt + " : " + projectDigIdx + " : " + projectSelect) ;
 	
 	if(projectNameTxt == null || projectNameTxt == ''){
 		jAlert('프로젝트 명을 입력해 주세요.', '정보');
@@ -503,15 +440,6 @@ function addProjectName(){
 		projectMarkerIcon = '&nbsp';
 	}
 	
-// 	if(projectDigIdx == null || projectDigIdx == ''){
-// 		if(projectSelect == '2'){
-// 			jAlert('공유 유저를 선택해 주세요.', '정보');
-// 			return;
-// 		}else{
-// 			projectDigIdx = '&nbsp';
-// 		}
-// 	}
-	
 	var Url			= baseRoot() + "cms/saveProject/";
 	var param		= loginToken + "/"+ loginId + "/" + projectNameTxt + "/" + projectShareType + "/" + projectShareUser + "/"+ projectEditYes + "/" + projectMarkerIcon;
 	var callBack	= "?callback=?";
@@ -528,7 +456,6 @@ function addProjectName(){
 			jAlert(data.Message, '정보');
 		}
 	});
-// 	shareInit();
 }
 
 //modify project name
@@ -541,11 +468,6 @@ function modifyProjectName(){
 	var projectRemoveShareUser = $('#shareRemove').val();
 	var projectEditYes = $('#editYes').val();
 	var projectEditNo = $('#editNo').val();
-	
-// 	var projectSelect = $('input[name=proShareUser]:checked').val();
-// 	var projectDigIdx = $('#projectDigIdx').val();
-	
-// 	alert(projectNameTxt + " : " + projectDigIdx + " : " + projectSelect) ;
 	
 	if(projectNameTxt == null || projectNameTxt == ''){
 		jAlert('프로젝트 명을 입력해 주세요.', '정보');
@@ -585,12 +507,10 @@ function modifyProjectName(){
 
 //make content
 function myContentsMake(){
-// 	var tmpType = myContentsType == 'Both'?'Image':myContentsType;
 	ContentsMakes(null,'Image','','');
 }
 
 function removeContents(type, tmpIdArr, parentId){
-// 	/cms/deleteContent/{token}/{loginId}/{type}/{idxArr}
 	var Url			= baseRoot() + "cms/deleteContent/";
 	var param		= loginToken + "/"+ loginId + "/" + type + "/" + tmpIdArr;
 	var callBack	= "?callback=?";
@@ -693,15 +613,6 @@ function moveContentAdd(objArr){
 			innerHTMLStr += "<a class='imageTag' id='MOVE_"+ objArr[4] + "_"+ objArr[3] +"' href='javascript:;' ";
 			var tempArr = new Array; //mapCenterChange에 넘길 객체 생성
 			innerHTMLStr += '"'+" title='제목 : "+ objArr[10] +"\n내용 : "+ objArr[11] +"\n작성자 : "+ objArr[7] +"\n작성일 : "+ objArr[12] +"' border='0'>";
-			//image or video icon add
-//		 	innerHTMLStr += "<div style='position:absolute; width:30px; height:30px; margin:15px 0 0 15px;  background-image:url(images/geoImg/"+ objArr[4] +"_marker.png); zoom:0.7;'></div>";
-
-			//xml file check icon add
-//		 	if(loadXML(response[i].FILENAME, response[i].DATAKIND) == 1){
-//		 		var tempTop = 24;
-//		 		var tempLeft = 54;
-//		 		innerHTMLStr += "<div style='position:absolute; margin:"+ tempTop +"px 0 0 "+ tempLeft +"px; width:30px; height:30px; background-image:url(images/thumbnail.png);'></div>";
-//		 	}
 
 			innerHTMLStr += "<img class='round' src='<c:url value='/"+ localAddress +"'/>' width='80' height='60' hspace='10' vspace='10' style='border:2px solid #888888'/>";
 			innerHTMLStr += "</a>";

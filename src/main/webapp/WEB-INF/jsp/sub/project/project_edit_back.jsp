@@ -31,15 +31,12 @@ pop_tabArr = pop_tabArr.split(",");
 
 $(function(){
 	$("input[name=popRadio][value=list]").attr("checked", true);	//초기 설정은 list
-// 	if(urlText == '/GeoCMS/GetContentListServlet'){
 	if(urlText == 'cms/getContent/'){
 		$('#pop_both').attr("checked", true);
 	}else{
 		$('#viewKind').css('display', 'none');
-// 		if(urlText == '/GeoPhoto/GetImageListServlet'){
 		if(urlText == 'cms/getImage/'){
 			$('#pop_image').attr("checked", true);
-// 		}else if(urlText == '/GeoVideo/GetVideoListServlet'){
 		}else if(urlText == 'cms/getVideo/'){
 			$('#pop_video').attr("checked", true);
 		}
@@ -64,13 +61,10 @@ function clickContentPage(pageNum){
 	
 	var moveUrl = '';
 	if(contentViewKind == 'both'){
-// 		moveUrl = '/GeoCMS/GetContentListServlet';
 		moveUrl = 'cms/getContent/';
 	}else if(contentViewKind == 'image'){
-// 		moveUrl = '/GeoPhoto/GetImageListServlet';
 		moveUrl = 'cms/getImage/';
 	}else if(contentViewKind == 'video'){
-// 		moveUrl = '/GeoVideo/GetVideoListServlet';
 		moveUrl = 'cms/getVideo/';
 	}
 	
@@ -85,7 +79,6 @@ function clickContentPage(pageNum){
 		loginId = '&nbsp';
 	}
 	
-// 	parent.callRequest('clickContentPage', moveUrl, 'type=noinit&pageNum='+pageNum+'&contentNum='+contentCountNum+'&tabName='+contentnowTabName, tempObj);
 	var Url			= baseRoot() + moveUrl;
 	var param		= "list/" + loginId + "/" + pageNum + "/" + contentCountNum + "/" + contentnowTabName;
 	var callBack	= "?callback=?";
@@ -138,11 +131,6 @@ function setContentDesign(contentNowType) {
 		}
 	}
 }
-
-//게시물 페이지 설정
-// function contentPageSetup(obj) {
-// // 	parent.callRequest('contentPageSetup', obj.moveUrl, 'type=init&tabName='+obj.tabName, obj);
-// }
 
 //테이블에 페이징 숫자 추가
 function addContentPageCell(totalPage, pageNum, type) {

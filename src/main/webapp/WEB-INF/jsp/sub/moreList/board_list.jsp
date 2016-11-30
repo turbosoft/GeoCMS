@@ -58,19 +58,13 @@ function clickBoardPage(pageNum){
 	var param		= dataType + "/" + loginToken + "/" + loginId + "/" + pageNum + "/" + boardCountNum + "/" + boardnowTabName + "/" + dataIdx;
 	var callBack	= "?callback=?";
 	
-// 	alert(Url + " : " + param + " : " );
 	$.ajax({
-// 		type: 'POST',
-// 		url: '../../GetBoardListServlet',
-// 		data: 'type=noinit&pageNum='+pageNum+'&contentNum=' + boardCountNum+'&tabName='+boardnowTabName,
-// 		success: function(data) {
 		type	: "get"
 		, url	: Url + param + callBack
 		, dataType	: "jsonp"
 		, async	: false
 		, cache	: false
 		, success: function(data) {
-// 			var response = data.trim();
 			if(data.Code == '100'){
 				var response = data.Data;
 				
@@ -96,13 +90,10 @@ function boardFirstSet(){
 	$('#board_list_table').append(innerHTMLStr);
 
 	innerHTMLStr = "<tr style='text-align:center;'>";
-// 	innerHTMLStr += "<tr style='background:url(\"../../images/board/table_mid.gif\") repeat-x; text-align:center;'>";
-// 	innerHTMLStr += "<td width='5'><img src='../../images/board/table_left.gif' width='5' height='30' /></td>";
 	innerHTMLStr += "<td width='73'>번호</td>";
 	innerHTMLStr += "<td width='379'>제목</td>";
 	innerHTMLStr += "<td width='73'>작성자</td>";
 	innerHTMLStr += "<td width='164'>작성일</td>";
-// 	innerHTMLStr += "<td width='7'><img src='../../images/board/table_right.gif' width='5' height='30' /></td></tr>";
 	innerHTMLStr += "<tr style='height:15px;' align='center'></tr>";
 	innerHTMLStr += "<tr class='tr_line' bgcolor='#D2D2D2'><td colspan='4'></td></tr>";
 	innerHTMLStr += "<tr class='tr_line' bgcolor='#82B5DF'><td colspan='4'></td></tr>";
@@ -138,19 +129,6 @@ function boardListSetup(pure_data) {
 
 //게시물 페이지 설정
 function boardPageSetup(pageNum, totalPageCnt) {
-// 	$.ajax({
-// 		type: 'POST',
-// 		url: '../../GetBoardListServlet',
-// 		data: 'type=init&tabName='+boardnowTabName,
-// 		success: function(data) {
-// 			var response = data.trim(); //공백제거
-			//총 페이지 계산
-// 			var totalPage = 1;
-// 			if(response % boardCountNum == 0){
-// 				totalPage = parseInt(response / boardCountNum);
-// 			}else{
-// 				totalPage = parseInt(response / boardCountNum)+1;
-// 			}
 			var totalPage = 1;
 			if(totalPageCnt % boardCountNum == 0){
 				totalPage = parseInt(totalPageCnt / boardCountNum);
@@ -228,12 +206,6 @@ function clickMovePageBL(cType, totalPage){
 	}
 }
 
-// //move pageGroup : prev, next
-// function moveNextBoard(totalPage, pageNum){
-// 	$('#pagingDiv').remove();
-// 	clickBoardPage(pageNum);
-// }
-
 //테이블 데이터 추가
 function addBoardListDataCell(id_arr, title_arr, content_arr, file_url_arr, idx_arr, udate_arr){
 	var innerHTMLStr = "";
@@ -241,27 +213,10 @@ function addBoardListDataCell(id_arr, title_arr, content_arr, file_url_arr, idx_
 	if(listNum > 1){
 		listNum = ((listNum-1) * boardCountNum) +1;
 	}
-// 	innerHTMLStr = "<div style='position:absolute; border:2px solid #82B5DF; width:98%; height:35px; border-radius:10px; top:52px;'></div>";
-// 	$('#board_list_table').append(innerHTMLStr);
-
-// 	innerHTMLStr = "<tr style='text-align:center;'>";
-// // 	innerHTMLStr += "<tr style='background:url(\"../../images/board/table_mid.gif\") repeat-x; text-align:center;'>";
-// // 	innerHTMLStr += "<td width='5'><img src='../../images/board/table_left.gif' width='5' height='30' /></td>";
-// 	innerHTMLStr += "<td width='73'>번호</td>";
-// 	innerHTMLStr += "<td width='379'>제목</td>";
-// 	innerHTMLStr += "<td width='73'>작성자</td>";
-// 	innerHTMLStr += "<td width='164'>작성일</td>";
-// // 	innerHTMLStr += "<td width='7'><img src='../../images/board/table_right.gif' width='5' height='30' /></td></tr>";
-// 	innerHTMLStr += "<tr style='height:15px;' align='center'></tr>";
-// 	innerHTMLStr += "<tr class='tr_line' bgcolor='#D2D2D2'><td colspan='4'></td></tr>";
-// 	innerHTMLStr += "<tr class='tr_line' bgcolor='#82B5DF'><td colspan='4'></td></tr>";
 	
 	for(var i=0;i<id_arr.length;i++){
 		innerHTMLStr += "<tr style='text-align:center;height:25px;' onclick='boardViewDetail(this);' id='GeoCMS_" + idx_arr[i] + "'>";
-// 		innerHTMLStr += "<td colspan='2' style='font-size:12px;'>" + (listNum++) +"</td>";
 		innerHTMLStr += "<td style='font-size:12px;'>" + (listNum++) +"</td>";
-// 		innerHTMLStr += "<td style='text-align:left;'>" + title_arr[i] +"</td><td>" + id_arr[i] + " </td><td colspan='2'>" + udate_arr[i] + "</td>";
-// 		innerHTMLStr += "</tr><tr class='tr_line' bgcolor='#D2D2D2'><td colspan='6'></td></tr>";
 		innerHTMLStr += "<td style='text-align:left;'>" + title_arr[i] +"</td><td>" + id_arr[i] + " </td><td>" + udate_arr[i] + "</td>";
 		innerHTMLStr += "</tr><tr class='tr_line' bgcolor='#D2D2D2'><td colspan='4'></td></tr>";
 	}
