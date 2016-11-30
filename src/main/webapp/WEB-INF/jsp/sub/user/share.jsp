@@ -68,11 +68,6 @@ var editYesArr = new Array();		//편집 가능 유저 Y
 var editNoArr = new Array();		//편집 가능 유저 N
 
 $(function() {
-// 	if(showProject == 'Y'){
-// 		$('.shareBtnCls').css('display','none');
-// 		nowTopNum = 505;
-// 	}
-
 	if(window.parent.$('#clonSharUser').children().length > 0){
 		var tmpShareAddVal = window.parent.$('#shareAdd').val();
 		if(tmpShareAddVal.length > 0){
@@ -94,7 +89,6 @@ $(function() {
 			editNoArr = tmpEditNoVal.split(',').map(Number);
 		}
 		
-		
 		$('#shareUser_table').remove();
 		$('#shareDiv').append(window.parent.$('#shareUser_table').clone());
 	}else{
@@ -105,7 +99,6 @@ $(function() {
 //search user
 function clickUserPage(type, page){
 	nowpage = page;
-// 	nowSelUserNum = $('#selUserNum').val();
 	var searchText	= $('#searchText').val();
 	var orderText = 'ASC';
 	var tmpIdx = '&nbsp';
@@ -141,8 +134,6 @@ function clickUserPage(type, page){
 		tmpRemoveShare = removeShareUser;
 	}
 	
-// 	alert('shareIdx : ' + shareIdx + "  : " +loginToken + "/" + loginId + "/" + searchText + "/"+ nowpage + "/"+ nowSelUserNum + "/" + tmpIdx + "/" + shareKind + "/" + orderText +  "/" + tmpAddShare + "/" +tmpRemoveShare);
-	
 	var Url			= baseRoot() + "cms/searchShareUser/";
 	var param		= loginToken + "/" + loginId + "/" + type + "/" + searchText + "/"+ nowpage + "/"+ nowSelUserNum + "/" + tmpIdx + "/" + shareKind + "/" + orderText +  "/" + tmpAddShare + "/" +tmpRemoveShare;
 	var callBack	= "?callback=?";
@@ -157,7 +148,6 @@ function clickUserPage(type, page){
 			
 			if(data.Code == '100'){
 				var data_line_arr = data.Data;
-// 				alert(JSON.stringify(data_line_arr));
 				if(data_line_arr != null && data_line_arr != ''){
 					if(page != null && type == 'search'){
 						if(data.SearchYN == 'Y'){
@@ -198,14 +188,6 @@ function clickUserPage(type, page){
 						}
 						
 						$('#shareUser_table tr:last').after(innerHTMLStr);
-						
-// 						if($('.allCheckBox').attr('checked')){
-// 							allCheck(true);
-// 						}
-						
-// 						if($('.allCheckBoxEdit').attr('checked')){
-// 							allCheckEdit(true);
-// 						}
 						
 						if(data.DataLen != null){
 							totalCnt = data.DataLen;
@@ -277,7 +259,6 @@ function makeShareArray(makeType, searchUid){
 		}else{
 			addShareUser.push(searchUid);
 		}
-// 		alert(tmpUid + " : "  +tmpIdx + " : removeShareUser : " + JSON.stringify(removeShareUser) + " : addShareUser : " + JSON.stringify(addShareUser));
 		clickUserPage('list', 1);
 	}
 }
@@ -513,16 +494,6 @@ function shareUserSave(){
 		</tbody>
 	</table>
 	</div>
-	
-<!-- 	<select id="selUserNum" onchange="clickUserPage('list', 1);" style="position:absolute; margin-top:48px;"> -->
-<!-- 		<option value="5">5개씩</option> -->
-<!-- 		<option value="10" selected="selected">10개씩</option> -->
-<!-- 		<option value="15">15개씩</option> -->
-<!-- 		<option value="20">20개씩</option> -->
-<!-- 		<option value="30">30개씩</option> -->
-<!-- 		<option value="40">40개씩</option> -->
-<!-- 		<option value="50">50개씩</option> -->
-<!-- 	</select> -->
 		
 	<div style="text-align:center; margin-top: 50px;" class="shareBtnCls">
 		<button onclick='shareUserSave();'>ok</button>
