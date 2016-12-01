@@ -49,11 +49,16 @@ $(document).ready(
 		var dataContentNum = '&nbsp';
 		var dataTabName = '&nbsp';
 
+// 		alert(dataType + "/" + loginToken + "/" + loginId + "/" + dataPageNum + "/" + dataContentNum + "/" + dataTabName + "/" + idxNum);
 		var Url			= baseRoot() + "cms/getBorder/";
 		var param		= dataType + "/" + loginToken + "/" + loginId + "/" + dataPageNum + "/" + dataContentNum + "/" + dataTabName + "/" + idxNum ;
 		var callBack	= "?callback=?";
 		
 		$.ajax({
+// 			type: "POST",
+// 			url: "../../GetBoardListServlet",
+// 			data: "type=onData&idxNum="+idxNum,
+// 			success: function(data){
 			type	: "get"
 			, url	: Url + param + callBack
 			, dataType	: "jsonp"
@@ -67,6 +72,8 @@ $(document).ready(
 					$('#title_area').text(result[0].TITLE);
 					textEditor.document.body.innerHTML = result[0].CONTENT;
 					
+// 					var base_url_buf = location.href.split("\/GeoCMS\/"); //location.href 주소 "http://localhost:8088/GeoCMS_manage/"
+// 					var base_url = base_url_buf[0] + "\/GeoCMS/upload\/"; // "http://localhost:8088//GeoCMS_manage/upload"
 					var strClass = textEditor.document.getElementsByTagName('img');
 					$.each(strClass , function(idx, val){
 						var tempId = $(this).attr('id');
@@ -85,12 +92,45 @@ $(document).ready(
 						nowObj.oldShareUserLen = tmpShareList.length;	//저장된 공유 유저 len
 					}
 					
+					//로그인한 사용자가 아니면 수정 불가
+//	 				var id = $.cookie('id');
+//	 				var type = $.cookie('type');
+
 					if(loginId != null && loginId != '' && loginId != 'null' && (loginId == result[0].ID && loginType != 'WRITE' || loginType == 'ADMIN')) {
 						$('#modifyBtn').css('display', 'inline-block');
 					}
 				}else{
 					jAlert(data.Message, '정보');
 				}
+				
+// 				var result = data.trim();	//공백제거
+// 				var result_arr = new Array();
+// 				result_arr = result.split("<separator>");
+// 				$('#title_area').text(result_arr[1]);
+// 				textEditor.document.body.innerHTML = result_arr[2];
+				
+// 				var base_url_buf = location.href.split("\/GeoCMS\/"); //location.href 주소 "http://localhost:8088/GeoCMS_manage/"
+// 				var base_url = base_url_buf[0] + "\/GeoCMS/upload\/"; // "http://localhost:8088//GeoCMS_manage/upload"
+// 				var strClass = textEditor.document.getElementsByTagName('img');
+// 				$.each(strClass , function(idx, val){
+// 					var tempId = $(this).attr('id');
+// 					var tempSrc = $(this).attr('src');
+// 					 $(this).attr('src', base_url + tempSrc);
+// 				});
+				
+// 				$('#writer_area').text(result_arr[0]);
+// 				$('#date_area').text(result_arr[4]);
+// 				nowObj.idx = idxNum;
+// 				nowObj.title = result_arr[1];
+// 				nowObj.content = result_arr[2];
+// 				nowObj.viewPageNum = viewPageNum;
+				
+// 				//로그인한 사용자가 아니면 수정 불가
+// // 				var id = $.cookie('id');
+// // 				var type = $.cookie('type');
+// 				if(loginId != null && loginId != '' && loginId != 'null' && (loginId == result_arr[0] && loginType != 'WRITE' || loginType == 'ADMIN')) {
+// 					$('#modifyBtn').css('display', 'inline-block');
+// 				}
 			}
 		});
 	}
