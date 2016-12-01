@@ -108,30 +108,30 @@ public class UploadController {
 								
 								String tempPath = uploadFile.getPath();
 								newUploadFilePath = tempPath.substring(0, tempPath.lastIndexOf("."))+".ogg";
-								
-								System.out.println("uploadFile : "+newUploadFilePath);
-								
-								if(uploadFilePath.indexOf("gpx") > 0){
-									item.write(uploadFile);
-									//
-									File fXmlFile = new File(newUploadFilePath);
-									DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
-									DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
-									Document doc = dBuilder.parse(fXmlFile);
-									doc.getDocumentElement().normalize();
-									System.out.println("Root element :" + doc.getDocumentElement().getNodeName());
-									NodeList nList = doc.getElementsByTagName("trkpt");
-									System.out.println("----------------------------");
-									Element eElement = (Element)nList.item(0);
-									lat = eElement.getAttribute("lat");
-									lon = eElement.getAttribute("lon");
-									gpxSave++;
-								}else{
-									String tmpPathStr = newUploadFilePath.substring(0, newUploadFilePath.lastIndexOf(".")).replace("_ogg", "");
-									files.add(tmpPathStr + uploadFilePath.substring(uploadFilePath.lastIndexOf(".")));
-									uploadFile = new File(tmpPathStr + uploadFilePath.substring(uploadFilePath.lastIndexOf(".")));
-									item.write(uploadFile);
-								}
+							}
+							
+							System.out.println("uploadFile : "+newUploadFilePath);
+							
+							if(uploadFilePath.indexOf("gpx") > 0){
+								item.write(uploadFile);
+								//
+								File fXmlFile = new File(newUploadFilePath);
+								DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
+								DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
+								Document doc = dBuilder.parse(fXmlFile);
+								doc.getDocumentElement().normalize();
+								System.out.println("Root element :" + doc.getDocumentElement().getNodeName());
+								NodeList nList = doc.getElementsByTagName("trkpt");
+								System.out.println("----------------------------");
+								Element eElement = (Element)nList.item(0);
+								lat = eElement.getAttribute("lat");
+								lon = eElement.getAttribute("lon");
+								gpxSave++;
+							}else{
+								String tmpPathStr = newUploadFilePath.substring(0, newUploadFilePath.lastIndexOf(".")).replace("_ogg", "");
+								files.add(tmpPathStr + uploadFilePath.substring(uploadFilePath.lastIndexOf(".")));
+								uploadFile = new File(tmpPathStr + uploadFilePath.substring(uploadFilePath.lastIndexOf(".")));
+								item.write(uploadFile);
 							}
 						}else{
 							while((uploadFile = new File(newUploadFilePath)).exists()) {
@@ -142,13 +142,15 @@ public class UploadController {
 								uploadFile = new File(newUploadFilePath);
 							}
 							filesName.add(newUploadFilePath);
+							////
+							System.out.println("uploadFile : "+newUploadFilePath);
+							
+							files.add(newUploadFilePath);
+							
+							item.write(uploadFile);
 						}
+						////
 						
-						System.out.println("uploadFile : "+newUploadFilePath);
-						
-						files.add(newUploadFilePath);
-						
-						item.write(uploadFile);
 					}
 				}
 			}
@@ -170,6 +172,10 @@ public class UploadController {
 						if(i==0){
 							filePathStr = files.get(i);
 							filePathStr = filePathStr.split("GeoCMS\\\\")[0];
+//							int tmpFileIdx = filePathStr.lastIndexOf("\\");
+//							if(tmpFileIdx > 0){
+//								filePathStr = filePathStr.substring(0, tmpFileIdx);
+//							}
 						}
 					}
 				}
@@ -184,10 +190,14 @@ public class UploadController {
 				reseultData += contentsSave.saveImageContent(files);
 				reseultData += ",files:"+ files.get(0);
 			}else if("GeoVideo".equals(uploadType)){
-				String file_name = files.get(0).substring(0, files.get(0).length()-4) + "_ogg.ogg";
-				String thumbnail = files.get(0).substring(0, files.get(0).length()-4) + "_thumb.jpg";
-				reseultData += "lat:"+lat + ",lon:"+lon; 
-				reseultData += ",files:"+files.get(0);
+//				String file_name = files.get(0).substring(0, files.get(0).length()-4) + "_ogg.ogg";
+//				String thumbnail = files.get(0).substring(0, files.get(0).length()-4) + "_thumb.jpg";
+				if(gpxSave == 1){
+					reseultData += "lat:"+lat + ",lon:"+lon; 
+				}else{
+					reseultData += "lat:"+lat + ",lon:"+lon; 
+					reseultData += ",files:"+files.get(0);
+				}
 			}
 		}
 		

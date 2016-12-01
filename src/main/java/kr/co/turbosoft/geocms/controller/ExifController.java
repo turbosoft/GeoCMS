@@ -42,9 +42,10 @@ public class ExifController {
 				String[] split_data = exifRW.parseData(data);
 				exifRW.write(file_dir, split_data);
 			}
+			else {}
 		}
 		
-		//setContentType
+		//setContentType �� ���� �����ϰ� getWriter		
 		response.setContentType("text/html;charset=utf-8");
 		PrintWriter out = response.getWriter();
 		out.print(result);
