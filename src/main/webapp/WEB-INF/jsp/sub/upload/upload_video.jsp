@@ -14,6 +14,8 @@ String loginToken = (String)session.getAttribute("loginToken");			//로그인 to
 String projectBoard = request.getParameter("projectBoard");
 String projectImage = request.getParameter("projectImage");
 String b_contentTabArr = request.getParameter("b_contentTabArr");
+String projectNameArr = request.getParameter("projectNameArr");			//project name array
+String projectIdxArr = request.getParameter("projectIdxArr");			//project idx array
 %>
 <script type="text/javascript">
 var loginId = '<%= loginId %>';					//로그인 아이디
@@ -23,6 +25,10 @@ var projectBoard = "<%=projectBoard%>";		//GeoCMS 연동여부				0:연동안됨
 var projectImage = "<%=projectImage%>";		//GeoCMS_Image 연동여부		0:연동안됨, 1:연동됨
 var b_contentTabArr = "<%=b_contentTabArr%>";	//content tab array
 b_contentTabArr = b_contentTabArr.split(",");
+var projectNameArr = '<%=projectNameArr%>';		//project name array
+projectNameArr = JSON.parse(projectNameArr);
+var projectIdxArr = "<%=projectIdxArr%>";		//project idx array
+projectIdxArr = projectIdxArr.split(",");
 
 var videoUploadCnt = 0;
 var uploadFileName = '';
@@ -52,6 +58,13 @@ $(document).ready(
 		}
 		$('#showKind').append(innerHTML);
 		$('#showVideo').attr("checked", true);
+		
+		//project name setting
+		innerHTML = '';
+		for(var i=0;i<projectNameArr.length;i++){
+			innerHTML += '<option value="'+ projectIdxArr[i] +'">'+ projectNameArr[i] +'</option>';
+		}
+		$('#projectKind').append(innerHTML);
 		
 		$('#file_upload').uploadify({
 			'uploader' : '<c:url value="/lib/uploadify/uploadify.swf"/>',
@@ -147,8 +160,9 @@ function saveVideoFn(data){
 	var title = $('#title_area').val();
 	var content = document.getElementById('content_area').value;
 	var tabName = $('#showKind').val();
-	var shareType = $('input[name=shareRadio]:checked').val();
-	var addShareUser = $('#shareAdd').val();
+	var projectIdxNum = $('#projectKind').val();
+// 	var shareType = $('input[name=shareRadio]:checked').val();
+// 	var addShareUser = $('#shareAdd').val();
 
 	title = title.replace(/\//g,'&sbsp');
 	content = content.replace(/\//g,'&sbsp');
@@ -157,15 +171,16 @@ function saveVideoFn(data){
 	if(lat == null || lat == ''){
 		lat = '0.0';
 	}
+	
 	if(lon == null || lon == ''){
 		lon = '0.0';
 	}
-	if(addShareUser == null || addShareUser.length <= 0){
-		addShareUser = '&nbsp';
-	}
+// 	if(addShareUser == null || addShareUser.length <= 0){
+// 		addShareUser = '&nbsp';
+// 	}
 	
 	var Url			= baseRoot() + "cms/saveVideo/";
-	var param		= loginToken + "/" + loginId + "/" + title + "/" + content + "/" + fileName + "/" + filePath + "/" + lat + "/" + lon + "/" + tabName + "/" + shareType + "/" + addShareUser;
+	var param		= loginToken + "/" + loginId + "/" + title + "/" + content + "/" + fileName + "/" + filePath + "/" + lat + "/" + lon + "/" + tabName + "/" + projectIdxNum;
 	var callBack	= "?callback=?";
 	
 	$.ajax({
@@ -180,7 +195,8 @@ function saveVideoFn(data){
 				jConfirm('게시물을 계속 업로드 하시겠습니까?', '정보', function(type){
 					if(!type){
 						window.parent.closeUpload();
-						window.parent.viewMyContents();
+						window.parent.viewMyProjects(projectIdxNum);
+						jAlert(data.Message, '정보');
 					}
 				});
 			}else{
@@ -265,26 +281,32 @@ function getShareUser(){
 		</td>
 	</tr>
 	<tr>
-		<td width='' height='25' align='center' style="width:80px;">제목</td>
+		<td width="80" height="25" align="center">Project Name</td>
+		<td width="" height="25" align="center">
+			<select style="width:318px;" id="projectKind"></select>
+		</td>
+	</tr>
+	<tr>
+		<td width='' height='25' align='center' style="width:80px;">TITLE</td>
 		<td width='' height='25' align='center'>
 			<input id='title_area' type='text' style='width:316px;'>
 		</td>
 	</tr>
 	<tr>
-		<td width='' height='25' align='center' colspan='2'>내용</td>
+		<td width='' height='25' align='center' colspan='2'>CONTENT</td>
 	</tr>
 	<tr>
 		<td width='' height='300' align='center' colspan='2'>
 			<textarea id='content_area' style='width:400px; height:370px;'></textarea>
 		</td>
 	</tr>
-	<tr class="showDivTR">
-		<td colspan="2">
-			<div style="float:left;"><input type="radio" value="0" name="shareRadio" checked="checked">비공개</div>
-			<div style="float:left;"><input type="radio" value="1" name="shareRadio">전체공개</div>
-			<div style="float:left;"><input type="radio" value="2" name="shareRadio" onclick="getShareUser();">특정인 공개</div>
-		</td>
-	</tr>
+<!-- 	<tr class="showDivTR"> -->
+<!-- 		<td colspan="2"> -->
+<!-- 			<div style="float:left;"><input type="radio" value="0" name="shareRadio" checked="checked">비공개</div> -->
+<!-- 			<div style="float:left;"><input type="radio" value="1" name="shareRadio">전체공개</div> -->
+<!-- 			<div style="float:left;"><input type="radio" value="2" name="shareRadio" onclick="getShareUser();">특정인 공개</div> -->
+<!-- 		</td> -->
+<!-- 	</tr> -->
 	<tr>
 		<td id='file_upload_td' width='' height='25' colspan='2'>
 			<input id='file_upload' name='file_upload' type='file'/>
@@ -303,7 +325,7 @@ function getShareUser(){
 	</tr>
 </table>
 
-<input type="hidden" id="shareAdd"/>
-<input type="hidden" id="shareRemove"/>
-<div id="clonSharUser" style="display:none;"></div>
+<!-- <input type="hidden" id="shareAdd"/> -->
+<!-- <input type="hidden" id="shareRemove"/> -->
+<!-- <div id="clonSharUser" style="display:none;"></div> -->
 </body>
