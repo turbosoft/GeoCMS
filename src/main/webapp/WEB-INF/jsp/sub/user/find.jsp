@@ -38,7 +38,6 @@ function searchUserInfo(type){
 	var param		= textType + "/" + id + "/" + email +'.+';
 	var callBack	= "?callback=?";
 	
-	alert(Url + param + callBack);
 	$.ajax({
 		type	: "get"
 		, url	: Url + param + callBack
