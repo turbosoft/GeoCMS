@@ -208,10 +208,10 @@ function addProjectChildCell(response, pageNum){
 			innerHTMLStr += "mapCenterChange('"+ tempArr +"');";
 			innerHTMLStr += '"'+" title='제목 : "+ response[i].TITLE +"\n내용 : "+ response[i].CONTENT +"\n작성자 : "+ response[i].ID +"\n작성일 : "+ response[i].U_DATE +"' border='0'>";
 			
-			var tmpMarginTop = '0';
-			if(totalLan/4 > 1){
-				tmpMarginTop = '15px';
-			}
+// 			var tmpMarginTop = '0';
+// 			if(totalLan/4 > 1){
+				var tmpMarginTop = '15px';
+// 			}
 			//image or video icon add
 			innerHTMLStr += "<div style='position:relative;width:30px; height:30px; margin:"+tmpMarginTop+" 0 0 20px;  background-image:url(<c:url value='images/geoImg/"+ response[i].DATAKIND +"_marker.png'/>); zoom:0.7;'></div>";
 			
