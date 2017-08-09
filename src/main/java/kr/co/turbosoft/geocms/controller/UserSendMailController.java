@@ -1,6 +1,7 @@
 package kr.co.turbosoft.geocms.controller;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.Properties;
 
 import javax.mail.Authenticator;
@@ -15,14 +16,19 @@ import javax.mail.internet.MimeMessage;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
-import kr.co.turbosoft.geocms.controller.UserSendMailController.PopupAuthenticator;
-
 @Controller
 public class UserSendMailController {
+	@Value("#{props['email.address']}")
+	private String emailAddress;
+	
+	@Value("#{props['email.pass']}")
+	private String emailPass;
+	
 	@RequestMapping(value = "/geoUserSendMail.do", method = RequestMethod.POST)
 	public void geoUserSendMail(HttpServletRequest request, HttpServletResponse response) throws IOException {
 		
@@ -31,13 +37,13 @@ public class UserSendMailController {
 		String textType = request.getParameter("textType");
 		String searchEmail = request.getParameter("searchEmail");
 		String thisType = request.getParameter("thisType"); 
-		 Properties props = new Properties();
+		Properties props = new Properties();
 
 	        String msgBody = "";
 	        if(thisType != null && thisType != "" && "checkEmail".equals(thisType)){
-	        	msgBody = "ÀÎÁõ ¹øÈ£ ´Â "+ text +" ÀÔ´Ï´Ù.";
+	        	msgBody = "ì¸ì¦ ë²ˆí˜¸ ëŠ” "+ text +" ì…ë‹ˆë‹¤.";
 	        }else{
-	        	msgBody = "¿äÃ»ÇÏ½Å "+ textType +"´Â "+ text +" ÀÔ´Ï´Ù.";
+	        	msgBody = "ìš”ì²­í•˜ì‹  "+ textType +"ëŠ” "+ text +" ì…ë‹ˆë‹¤.";
 	        }
 
 	        try {
@@ -63,9 +69,11 @@ public class UserSendMailController {
 	        }
 	}
 	
-	static class PopupAuthenticator extends Authenticator {
+	private class PopupAuthenticator extends Authenticator {
         public PasswordAuthentication getPasswordAuthentication() {
-            return new PasswordAuthentication("Your Gmail", "Your Pass");
+        	String address = emailAddress;
+        	String pass = emailPass;
+            return new PasswordAuthentication(address, pass);
         }
     }
 }
