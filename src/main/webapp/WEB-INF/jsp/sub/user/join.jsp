@@ -70,7 +70,7 @@ function joinUser(){
 		,success: function(data) {
 			if(data.Code == 100){
 				joinClose();
-				alert(data.Message);
+				alert("회원가입이 완료 되었습니다.");
 				location.reload();
 			}else{
 				jAlert(data.Message, '정보');
