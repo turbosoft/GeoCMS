@@ -76,7 +76,7 @@ function fnJoin(){
 		url: "<c:url value='/geoCMS/join.do'/>",
 		title: 'JOIN',
 		width: 450,
-		height: 230,
+		height: 240,
 		buttons: {},
 		autoOpen:false
 	});
