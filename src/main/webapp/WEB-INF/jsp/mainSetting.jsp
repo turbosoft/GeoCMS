@@ -90,6 +90,14 @@ function rightTabChang(objId){
 		$('#board_tab').addClass('col_gray1');
 		$('#board_tab').css('color', 'gray');
 		
+		if(projectImage == 1 && projectVideo == 1){
+			b_url = 'cms/getContent/';
+		}else if(projectImage == 1){
+			b_url = 'cms/getImage/';
+		}else if(projectVideo == 1){
+			b_url = 'cms/getVideo/';
+		}
+		
 		tabArr = b_contentTabArr;
 		tabTypeArr = b_contentTabTypeArr;
 		tabNumArr = b_contentNum;
@@ -457,7 +465,6 @@ function clickImagePage(pageNum, tableNum){
 	}else{
 		Url			= baseRoot() + b_url;
 		param		= obj.type + "/" + tmpLoginToken + "/" + tmpLoginId + "/" + pageNum + "/" + obj.content_num + "/" + tName + "/" + tmpIndex;
-		
 		$.ajax({
 			type	: "get"
 			, url	: Url + param + callBack
@@ -466,7 +473,6 @@ function clickImagePage(pageNum, tableNum){
 			, cache	: false
 			, success: function(data) {
 				var response = data.Data;
-				
 				leftListSetup(response, obj);
 				//페이지 설정
 				var dataLen = 1;
@@ -540,7 +546,6 @@ function leftListSetup(pure_data, obj) {
 			idx_arr.push("");
 		}
 	}
-	
 	//테이블 초기화
 	$('#'+obj.table_name+" tr").remove();
 	
@@ -834,6 +839,7 @@ function viewMyContents(){
 //my project list page
 function viewMyProjects(orderIdx){
 	$('#myProject_list').css('display','block');
+	$('#image_latest_list').css('display','none');
 	
 	if(orderIdx == null || orderIdx == '' || orderIdx == 'null'){
 		orderIdx = '&nbsp';
