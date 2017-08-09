@@ -5,15 +5,13 @@
 <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
 <meta http-equiv="content-type" content="text/html; charset=utf-8"/>
 
-<script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?sensor=false&key=AIzaSyAZ4i-9lnjP3m46b2oqg4BlVxDmDfhExvU"></script>
+<script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?key=AIzaSyAth-_FyQxRomNh2JkI_MvAWXRJuLOEXNI"></script>
 <script type='text/javascript'>
 
 /* --------------------- 내부 함수 --------------------*/
 var map;
 var markerArr = new Array();
 var markerFileList = null;
-// var markerCnt = 5;				//로딩 된 마커 개수	
-// var map_type;	
 var preBounds; //메인화면 크기 저장
 
 var marker_latlng, view_marker_latlng;
@@ -25,6 +23,8 @@ var direction_latlng;
 
 var draw_angle_arr = new Array();
 var draw_direction_arr = new Array();
+var blackMarker = new Array();
+var gpx_draw_direction = new Array();
 
 function initialize() {
 	markerArr = new Array();
@@ -47,11 +47,9 @@ function initialize() {
 
 //촬영 지점 설정
 function setCenterA(lat, lng) {
-// 	map_type = type;
 	if(lat>0 && lng>0) {
-		marker_latlng = new google.maps.LatLng(lat, lng); map.setZoom(16);
+		marker_latlng = new google.maps.LatLng(lat, lng);
 	}
-	map.setCenter(marker_latlng);
 }
 
 //촬영 각도와 거리를 계산하여 지도에 표현
@@ -60,7 +58,7 @@ function setAngle(direction_str, focal_str) {
 	var focal = parseFloat(focal_str);
 	
 	fov = getFOV(focal);
-	view_value = getViewLength(0.3); //km 단위
+	view_value = getViewLength(0.1); //km 단위
 	
 	if(direction>0 && focal>0) {
 		setViewPoint(marker_latlng, view_value, direction);
@@ -71,12 +69,11 @@ function setAngle(direction_str, focal_str) {
 }
 //화각 구하기
 getFOV = function(focal_length) {
-	//var diagonalLength = Math.sqrt(Math.pow(36, 2) + Math.pow(24, 2));
-	//var diagonalLength = Math.sqrt(Math.pow(3.626, 2) + Math.pow(2.709, 2));
 	var fov = (2 * Math.atan(3.626 / (2 * focal_length))) * 180 / Math.PI;
 	
 	return fov;
 };
+
 //촬영 거리 구하기
 getViewLength = function(focus) {
 	return focus;
@@ -84,7 +81,6 @@ getViewLength = function(focus) {
 
 //촬영 각도 및 거리에 맞추어 좌표 설정
 function setViewPoint(point, km, direction) {
-// 	alert(point + " : " +  km + " : " + direction);
 	var rad = (km * 1000) / 1609.344;
 	var d2r = Math.PI / 180;
 	var circleLatLngs = new Array();
@@ -96,9 +92,9 @@ function setViewPoint(point, km, direction) {
 	var vertexLng = point.lng() + (circleLng * Math.sin(theta));
 	direction_latlng = new google.maps.LatLng(parseFloat(vertexLat), parseFloat(vertexLng));
 }
+
 //촬영 범위를 폴리곤으로 표현
 function createViewPolygon(km, direction, angle) {
-// 	alert('createViewPolygon' + " direction : " + direction);
 	direction = parseInt(direction);
 	var angle_val = angle / 2;
 	var min_direction = direction - angle_val;
@@ -145,8 +141,6 @@ function createViewPolygon(km, direction, angle) {
 		}
 	}
 	
-// 	if(draw_angle!=null) draw_angle.setMap(null);
-	
 	var draw_angle = new google.maps.Polygon({
 		paths: circleLatLngs,
 		strokeColor: "#FF0000",
@@ -158,12 +152,10 @@ function createViewPolygon(km, direction, angle) {
 	draw_angle_arr.push(draw_angle);
 	draw_angle.setMap(map);
 }
+
 //촬영 위치와 촬영 범위 위치를 선으로 연결
 function createViewPolyline(point1, point2) {
-// 	alert('createViewPolyline ' +  point1 + " :" + point2);
 	var direction_arr = [point1, point2];
-	
-// 	if(draw_direction!=null) draw_direction.setMap(null);
 	
 	var draw_direction = new google.maps.Polyline({
 		path: direction_arr,
@@ -175,14 +167,11 @@ function createViewPolyline(point1, point2) {
 	draw_direction.setMap(map);
 }
 
-var nowPolyBoundsNum = 0;
 //촬영 범위 좌표 설정
 function createViewMarker(point) {
-	var marker_image = '<c:url value="images/map/view_marker.png"/>';
+	var marker_image = '<c:url value="images/geoImg/map/view_marker.png"/>';
 	
-// 	if(view_marker==null) {
 		var drag = false;
-// 		if(map_type==2) drag = true;
 		var view_marker = new google.maps.Marker({
 			position: point,
 			map: map,
@@ -190,44 +179,8 @@ function createViewMarker(point) {
 			icon: marker_image,
 			draggable: drag
 		});
-// 	}
-// 	else {
-// 		view_marker.setPosition(point);
-// 	}
-// 	if(map_type==2) {
-// 		google.maps.event.addListener(view_marker, 'dragend', function() {
-// 			dragEvent(1);
-// 		});
-// 		google.maps.event.addListener(marker, 'dragend', function() {
-// 			dragEvent(2);
-// 		});
-// 	}
-
-	if(markerFileList != null && markerFileList.length > 0){
-// 		alert(markerFileList.length + " : " +nowPolyBoundsNum + " : polyBounds :" + polyBounds);
-		if(polyBounds != null ){
-// 			var latlng = new google.maps.LatLng(view_marker.getPosition().lat(), view_marker.getPosition().lng());
-// 			polyBounds.extend(latlng);
-			if(nowPolyBoundsNum == (markerFileList.length -1)){
-				map.fitBounds(polyBounds);
-				map.setZoom(map.getZoom()+1);
-				nowPolyBoundsNum = -1;
-// 				alert('base');
-			}		
-		}
-	}
-	nowPolyBoundsNum++;
+		blackMarker.push(view_marker);
 }
-//마커 드래그 이벤트
-// function dragEvent(type) {
-// 	draw_direction.setPath([marker.getPosition(), view_marker.getPosition()]);
-// 	if(type==2) { marker_latlng = new google.maps.LatLng(marker.getPosition().lat(), marker.getPosition().lng()); }
-// 	var km = draw_direction.inKm();
-// 	var degree = draw_direction.Bearing();
-// 	createViewPolygon(km, degree, fov);
-	
-// 	parent.setExifData(marker.getPosition().lat(), marker.getPosition().lng(), parseInt(degree));
-// }
 
 /* ---------------------------- 구글맵 확장 기능 --------------------------------- */
 google.maps.LatLng.prototype.kmTo = function(a){
@@ -309,7 +262,6 @@ function fnMakeMarker(p, type){
         	fontSize: '0px'
         },
         icon: tmpMarkerIcon
-//         icon:'http://maps.google.com/mapfiles/ms/icons/red-dot.png'
     });
     
 	if(type != 'click'){
@@ -326,17 +278,16 @@ function fnMakeMarker(p, type){
 		if(kindStr == 'GeoPhoto'){
 			imageViewer(this.title, this.id.split("_")[2], this.id.split("_")[0], this.id.split("_")[3]);
 		}else if(kindStr == 'GeoVideo'){
-			videoViewer(this.label.text.split('/')[0], this.label.text.split('/')[1], this.id.split("_")[2], this.id.split("_")[0]);
+			videoViewer(this.label.text.split('/')[0], this.label.text.split('/')[1], this.id.split("_")[2], this.id.split("_")[0], this.id.split("_")[3]);
 		}
     });
     
     google.maps.event.addListener(marker, 'mouseover', function() {
     	var kindStr = this.id.split("_")[1];
-    	var contentStr = "<img class='round' src='<c:url value='/upload/"+ kindStr +"/"+this.title+"'/>' width='200' height='200' hspace='10' vspace='10' style='border:2px solid #888888'/>";
-//     	var contentStr = "<img class='round' src='http://"+location.host + "/"+ kindStr +"/upload/"+this.title+"' width='200' height='200' hspace='10' vspace='10' style='border:2px solid #888888'/>";
+    	var contentStr = "<img class='round' src='<c:url value='/upload/"+ kindStr +"/"+this.title+"'/>' width='200' height='200' style='border:2px solid #888888'/>";
 		infowindow = new google.maps.InfoWindow({
    			content: contentStr,
-   		 	size: new google.maps.Size(100,100) 
+   			maxWidth: 204
   		});
     	infowindow.open(map, this);
 		$('.gm-style-iw').next('div').remove();
@@ -347,13 +298,11 @@ function fnMakeMarker(p, type){
     });
     
     google.maps.event.addListener(marker, 'rightclick', function() {
-    	alert(this);
     });
 }
 
 //마커 데이터 가져오기
 function takeMarkerData(typeShape) {
-// 	callRequest('takeMarkerData', b_url, 'type='+typeShape+'&contentNum='+markerCnt, "");
 	var tmpPageNum = '&nbsp';
 	var tmpContentNum = '&nbsp';
 	var tmpTabName = editMode == 1?tempTabName:nowTabName;
@@ -426,7 +375,7 @@ function markDataMake(data){
 			
 			thumbnail_url_arr.push(data[i].THUMBNAIL);	//thumb file
 			
-			origin_url_arr.push(data[i].ORIGNNAME);	//origin file
+			origin_url_arr.push(data[i].ORIGINNAME);	//origin file
 			
 			dataKind_arr.push(data[i].DATAKIND); //데이터 타입
 			
@@ -464,19 +413,9 @@ function markDataMake(data){
 	LocationData = loca;
 	google.maps.event.addDomListener(window, 'load', gridMap(LocationData));
 
-// 	map = 
-//         new google.maps.Map(document.getElementById('map_canvas'));
-//     var bounds = new google.maps.LatLngBounds();
-//     map.fitBounds(bounds);
-//     preBounds = bounds;
-    
-//     map.setCenter(new google.maps.LatLng(lat, lon));
-//     map.fitBounds(preBounds);
 }
 
 function gridMap(LocationData) {
-// 	map = 
-//         new google.maps.Map(document.getElementById('map_canvas'));
     var bounds = new google.maps.LatLngBounds();
     var infowindow = new google.maps.InfoWindow();
 
@@ -509,13 +448,11 @@ function gridMap(LocationData) {
 
 //get image exif data
 function loadExif(file_name) {
-// 	var replace_url = 'http://'+location.host +'/GeoPhoto/';
 	var encode_file_name = encodeURIComponent('/upload/GeoPhoto/'+file_name);
-
+	
 	$.ajax({
 		type: 'POST',
 		url: '<c:url value="/geoExif.do"/>',
-// 		url: replace_url+'geoExif.do',
 		data: 'file_name='+encode_file_name+'&type=load',
 		success: function(data) {
 			var response = data.trim();
@@ -553,6 +490,10 @@ function exifSetting(data) {
 	if(line_data_buf_arr[1].indexOf('\(')!=-1 && line_data_buf_arr[1].indexOf('\)')!=-1) focal_str = line_data_buf_arr[1].substring(line_data_buf_arr[1].indexOf('\(')+1, line_data_buf_arr[1].indexOf('\)'));
 	else focal_str = line_data_buf_arr[1];
 	
+	if(focal_str != null && focal_str != ''){
+		focal_str = focal_str.replace(/'/g, '');
+	}
+	
 	//맵설정
 	reloadMap(lat_str, lon_str, direction_str, focal_str);
 }
@@ -564,12 +505,12 @@ function reloadMap(lat_str, lon_str, direction_str, focal_str) {
 
 		if(lat>0 && lng>0){
 			setCenterA(lat, lng);
-// 			alert(lat + " : " + lng + " direction_str : " + direction_str + " focal_str : " + focal_str);
 			setAngle(direction_str, focal_str);
 		}
 	}
 }
 
+var oldMarkerData = new Array(); //이전 center marker
 //이미지 클릭시 맵 center change
 function mapCenterChange(objArr){		//tempObj: lat, lon, file, idx, dataKind, origin, thumbnail, id
 	var tempArr = objArr.split(",");
@@ -593,52 +534,45 @@ function mapCenterChange(objArr){		//tempObj: lat, lon, file, idx, dataKind, ori
 			}
 		}else if(kindStr == 'GeoVideo'){
 			if(projectVideo == 1){
-				videoViewer(tempArr[2], tempArr[5], tempArr[7], tempArr[3]);	//file_url, origin_url, id, idx
+				videoViewer(tempArr[2], tempArr[5], tempArr[7], tempArr[3], tempArr[8]);	//file_url, origin_url, id, idx
 			}else{
 				window.open('<c:url value="/upload/GeoVideo/'+tempArr[2]+'"/>', 'openImage', 'width=760, height=550');
 			}
 		}
-// 		$.ajax({
-// 			type: "GET",
-// 			url: "<c:url value='/upload/"+ kindStr + "/" + tempArr[2]+"'/>",
-// 			cache: false,
-// 			success: function(xml) {
-				
-// 			},
-// 			error: function(xhr, status, error) {
-// 				alert('파일이 존재하지 않습니다.');
-// 			}
-// 		});
 		return;
 	}
 	
 	$.each(markerArr, function(idx, val){
 		var tmpMarkerIcon = 'http://maps.google.com/mapfiles/ms/icons/red-dot.png';
 		var tmpMarkerIconClk = 'http://maps.google.com/mapfiles/ms/icons/yellow-dot.png';
-		if(tempArr[9] != null && tempArr[9] != '' && tempArr[9] != undefined && tempArr[9] != 'null'){
-			var tmpSrc = tempArr[9].replace('&ubsp','_');
+		var tmpVal;
+		
+		if(val.id != null && val.id != null && val.id != undefined){
+			tmpVal = val.id.split('_');
+		}
+		if(tmpVal[4] != null && tmpVal[4] != '' && tmpVal[4] != undefined && tmpVal[4] != 'null'){
+			var tmpSrc = tmpVal[4].replace('&ubsp','_');
 			tmpMarkerIcon = {
 				url: '<c:url value="images/geoImg/map/markerIcon/'+ tmpSrc +'"/>',
 				scaledSize: new google.maps.Size(25, 25)
 			};
-			tmpMarkerIconClk = tmpMarkerIcon;
-		}else{
+		}
+		
+		if(tempArr[9] == undefined || tempArr[9] == 'null'){
 			tempArr[9] = '';
 		}
 		
 		if(val.id == tempArr[3]+'_'+tempArr[4]+'_'+tempArr[7]+'_'+tempArr[8] +'_'+ tempArr[9]){
 			val.setIcon(tmpMarkerIconClk);
-// 			val.setIcon('http://maps.google.com/mapfiles/ms/icons/yellow-dot.png');
 			val.setZIndex(google.maps.Marker.MAX_ZINDEX + 1);
 			cnt = 1;
-		}else{
+		}
+
+		if(oldMarkerData != null && oldMarkerData.length > 0 && val.id == oldMarkerData[3]+'_'+oldMarkerData[4]+'_'+oldMarkerData[7]+'_'+oldMarkerData[8] +'_'+ oldMarkerData[9]){
 			val.setIcon(tmpMarkerIcon);
-// 			val.setIcon('http://maps.google.com/mapfiles/ms/icons/red-dot.png');
 			val.setZIndex(google.maps.Marker.MAX_ZINDEX);
 		}
 	});
-	
-// 	markerArr = markerArr.slice(0, markerCnt);
 	
 	//만약 선택 항목의 마커가 로드되어 있지 않으면 새로 그려준다.
 	if(cnt == 0){
@@ -651,6 +585,7 @@ function mapCenterChange(objArr){		//tempObj: lat, lon, file, idx, dataKind, ori
 		map.fitBounds(preBounds);
 	}
 	
+	oldMarkerData = tempArr;
 	map.setCenter(new google.maps.LatLng(lat, lon));
 }
 
@@ -661,9 +596,10 @@ function loadGPS(fileName) {
 	var file_name = buf + '.gpx';
 	var lat_arr = new Array(); 
 	var lng_arr = new Array();
+	
 	$.ajax({
 		type: "GET",
-		url: 'http://'+ location.host + '/GeoVideo/upload/'+ file_name,
+		url: 'http://'+ location.host + '/GeoCMS//upload/GeoVideo/'+ file_name,
 		dataType: "xml",
 		cache: false,
 		success: function(xml) {
@@ -703,12 +639,12 @@ function setDirection(poly_arr) {
 		strokeWeight: 2
 	});
 	draw_direction.setMap(map);
-	
-	var bounds = new google.maps.LatLngBounds();
-	$.each(poly_arr, function(idx, val){
-		bounds.extend(val);
-	});
-	map.fitBounds(bounds);
+	gpx_draw_direction.push(draw_direction);
+// 	var bounds = new google.maps.LatLngBounds();
+// 	$.each(poly_arr, function(idx, val){
+// 		bounds.extend(val);
+// 	});
+// 	map.fitBounds(bounds);
 }
 
 //마커클릭 시 이미지 뷰어 
@@ -734,7 +670,7 @@ function imageViewer(file_url, user_id, idx, projectUserId) {   // 여기서 들
 }
 
 //비디오 뷰어 동작
-function videoViewer(file_url, origin_url, id, idx) {
+function videoViewer(file_url, origin_url, id, idx, projectUserId) {
 	if(editMode == 1) return;
 	var base_url = 'http://'+location.host;
 	var conv_origin_url = encodeURIComponent(origin_url);
@@ -751,7 +687,7 @@ function videoViewer(file_url, origin_url, id, idx) {
 			}else {
 				if(projectVideo == 1){
 					var $dialog = jQuery.FrameDialog.create({
-						url: base_url + '/GeoVideo/geoVideo/video_viewer.do?&file_url='+file_url+'&user_id='+id+'&idx='+idx+'&loginId='+loginId+'&loginType='+loginType+'&loginToken='+loginToken+'&b_contentTabArr='+b_contentTabArr,
+						url: base_url + '/GeoVideo/geoVideo/video_viewer.do?&file_url='+file_url+'&user_id='+id+'&idx='+idx+'&loginId='+loginId+'&loginType='+loginType+'&loginToken='+loginToken+'&b_contentTabArr='+b_contentTabArr+'&projectUserId='+projectUserId,
 						title: 'Video Viewer',
 						width: 1127,
 						height: 650,
@@ -760,23 +696,27 @@ function videoViewer(file_url, origin_url, id, idx) {
 					});
 					$dialog.dialog('open');
 				}else{
-					window.open('<c:url value="/upload/GeoVideo/'+tempArr[2]+'"/>', 'openImage', 'width=760, height=550');
+					window.open('<c:url value="/upload/GeoVideo/'+file_url+'"/>', 'openImage', 'width=760, height=550');
 				}
 			}
 		}
 	});
 }
-var polyBounds = null;
+
+// var polyBounds = null;
 function mapPolygonView(obj){
 	//googlemap polygon
-// 	alert(JSON.stringify(markerFileList));
-// 	polyBounds = new google.maps.LatLngBounds();
 	if(editMode == 1) return;
 	
 	if($(obj).attr('checked')){
-		polyBounds = map.getBounds();
 		$.each(markerFileList,function(idx, val){
-			loadExif(val);
+			if(val != null){
+				if(val.indexOf('ogg.ogg') > -1){
+					loadGPS(val);
+				}else{
+					loadExif(val);
+				}
+			}
 		});
 	}else{
 		$.each(draw_angle_arr,function(idx, val){
@@ -785,8 +725,17 @@ function mapPolygonView(obj){
 		$.each(draw_direction_arr,function(idx, val){
 			val.setMap(null);
 		});
+		$.each(blackMarker, function(idx, val){
+			val.setMap(null);
+		});
+		$.each(gpx_draw_direction, function(idx, val){
+			val.setMap(null);
+		});
+		draw_angle_arr  = new Array();
+		draw_direction_arr  = new Array();
+		blackMarker  = new Array();
+		gpx_draw_direction  = new Array();
 	}
-// 	map.fitBounds(preBounds);
 }
 
 function contentMarker(response){
@@ -809,6 +758,6 @@ function contentMarker(response){
 		<input type="checkbox" id="polygonView" onclick="mapPolygonView(this);" style="vertical-align: middle ;"/>
 		<label style="margin-top: 3px; display: inline-block;">View Mode</label>
 	</div>
-	<div id="map_canvas" style="width:100%; height:100%;"></div>
+	<div id="map_canvas" style="width:100%; height:100%; min-width: 1080px;"></div>
 </body>
 </html>
