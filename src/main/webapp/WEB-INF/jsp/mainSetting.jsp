@@ -123,7 +123,7 @@ function rightTabChang(objId){
 
 //메뉴 설정
 function mainSetting() {
-	tableMap = new Map();	//table list info
+	tableMap = newMap();	//table list info
 	tabSetting();			//상단 리스트 TAB 설정
 	menuSetting();			//메뉴 설정
 }
@@ -236,7 +236,7 @@ function tabMove(text){
 function menuSetting(){
 	$('#menus').empty();
 	//임의 메뉴 설정
-	menuMap = new Map();
+	menuMap = newMap();
 	menuMap.put("logo",{"src": "<c:url value='/images/geoImg/english_images/logo.jpg'/>", "top": 20, "width": 152, "etc": ""});	//이미지 주소, top, width, function 및 id
 	menuMap.put("MyProjects",{"src": "<c:url value='/images/geoImg/english_images/myProjects.png'/>", "top": 55, "width": 77, "etc": "onclick='viewMyProjects(null);'"});
 	menuMap.put("OpenApi",{"src": "<c:url value='/images/geoImg/english_images/menu04.gif'/>", "top": 55, "width": 77, "etc": "onclick='diagOpen()'" /*"id='opener'"*/});
@@ -718,28 +718,62 @@ function loadXML(file_url, data_kind){
 }
 
 //map object
-var Map = function(){
-	this.map = new Object();
-};   
-	
-Map.prototype = {
-	/* key, value 값으로 구성된 데이터를 추가 */
-	put : function(key, value){
-		this.map[key] = value;
-	},   
-    /* 지정한 key값의 value값 반환 */
-    get : function(key){
-        return this.map[key];
-    },
-    /* Map에 구성된 개수 반환 */
-    size : function(){
-      var count = 0;
-      for (var prop in this.map) {
-        count++;
-      }
-      return count;
+function newMap() {
+  var map = {};
+  map.value = {};
+  map.getKey = function(id) {
+    return "k_"+id;
+  };
+  map.put = function(id, value) {
+    var key = map.getKey(id);
+    map.value[key] = value;
+  };
+  map.contains = function(id) {
+    var key = map.getKey(id);
+    if(map.value[key]) {
+      return true;
+    } else {
+      return false;
     }
-};
+  };
+  map.get = function(id) {
+    var key = map.getKey(id);
+    if(map.value[key]) {
+      return map.value[key];
+    }
+    return null;
+  };
+  map.remove = function(id) {
+    var key = map.getKey(id);
+    if(map.contains(id)){
+      map.value[key] = undefined;
+    }
+  };
+ 
+  return map;
+}
+// var Map = function(){
+// 	this.map = new Object();
+// };   
+	
+// Map.prototype = {
+// 	/* key, value 값으로 구성된 데이터를 추가 */
+// 	put : function(key, value){
+// 		this.map[key] = value;
+// 	},   
+//     /* 지정한 key값의 value값 반환 */
+//     get : function(key){
+//         return this.map[key];
+//     },
+//     /* Map에 구성된 개수 반환 */
+//     size : function(){
+//       var count = 0;
+//       for (var prop in this.map) {
+//         count++;
+//       }
+//       return count;
+//     }
+// };
 
 //list 더보기
 function moreListView(viewPageNum, b_nowTabName, selBoardNum){
