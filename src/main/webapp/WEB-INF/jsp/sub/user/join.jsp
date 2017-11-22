@@ -70,7 +70,7 @@ function joinUser(){
 		,success: function(data) {
 			if(data.Code == 100){
 				joinClose();
-				alert("회원가입이 완료 되었습니다.");
+				jAlert("회원가입이 완료 되었습니다.",'정보');
 				location.reload();
 			}else{
 				jAlert(data.Message, '정보');
@@ -156,8 +156,12 @@ function emailCheck(){
 							url: "<c:url value='/geoUserSendMail.do'/>",
 							data: 'thisType=checkEmail&searchEmail='+textVal+'&text='+randomStr,
 							success: function(data) {
-								jAlert('인증메일이 발송 되었습니다.', '정보');
-								checkEmail = 1;
+								if(data == 'success'){
+									jAlert('인증메일이 발송 되었습니다.', '정보');
+									checkEmail = 1;
+								}else{
+									jAlert(data, '정보');
+								}
 							}
 						});
 					}
