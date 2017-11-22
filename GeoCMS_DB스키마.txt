@@ -1,0 +1,109 @@
+﻿/*게시글 테이블*/
+CREATE TABLE `geocms_board_content` (
+  `id` varchar(200) DEFAULT NULL,
+  `title` varchar(200) DEFAULT NULL,
+  `content` varchar(4000) DEFAULT NULL,
+  `filename` varchar(200) DEFAULT NULL,
+  `uDate` datetime DEFAULT NULL,
+  `idx` int(11) NOT NULL AUTO_INCREMENT,
+  `tabName` varchar(200) DEFAULT NULL,
+  `rDate` datetime DEFAULT NULL,
+  `filePath` text,
+  `shareType` int(1) DEFAULT NULL,
+  PRIMARY KEY (`idx`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
+
+/*이미지 테이블*/
+CREATE TABLE `geocms_image_content` (
+  `id` varchar(200) DEFAULT NULL,
+  `title` varchar(200) DEFAULT NULL,
+  `content` varchar(200) DEFAULT NULL,
+  `filename` varchar(200) DEFAULT NULL,
+  `uDate` datetime DEFAULT NULL,
+  `idx` int(11) NOT NULL AUTO_INCREMENT,
+  `latitude` decimal(20,15) DEFAULT NULL,
+  `longitude` decimal(20,15) DEFAULT NULL,
+  `tabName` varchar(200) DEFAULT NULL,
+  `xmlData` text,
+  `shareType` int(1) NOT NULL,
+  `rDate` datetime DEFAULT NULL,
+  `filePath` text,
+  `projectIdx` int(11) DEFAULT NULL,
+  PRIMARY KEY (`idx`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
+
+/*프로젝트 테이블*/
+CREATE TABLE `geocms_project_content` (
+  `id` varchar(200) NOT NULL,
+  `projectName` text NOT NULL,
+  `idx` int(11) NOT NULL AUTO_INCREMENT,
+  `uDate` datetime NOT NULL,
+  `rDate` datetime NOT NULL,
+  `shareType` int(1) NOT NULL,
+  `markerIcon` varchar(200) DEFAULT NULL,
+  PRIMARY KEY (`idx`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
+
+/*화면 셋팅 정보 테이블*/
+CREATE TABLE `geocms_setting` (
+  `contentTab` VARCHAR(400) DEFAULT 'sample',
+  `contentTabType` VARCHAR(400) DEFAULT 'list',
+  `boardTab` VARCHAR(400) DEFAULT 'sample',
+  `contentNum` VARCHAR(400) DEFAULT 500,
+  `boardNum` VARCHAR(400) DEFAULT 300,
+  `openAPI` INT(1) DEFAULT '1',
+  `latestView` INT(1) DEFAULT '1',
+  `mapZoom` INT(10) DEFAULT '8',
+  `userLevel` VARCHAR(100) DEFAULT 'ADMIN,DELETE,MODIFY,WRITE'
+) ENGINE=INNODB DEFAULT CHARSET=utf8;
+
+/*공유 테이블*/
+CREATE TABLE `geocms_share` (
+  `idx` int(11) NOT NULL AUTO_INCREMENT,
+  `uid` int(11) NOT NULL,
+  `shareIdx` int(11) NOT NULL,
+  `shareKind` varchar(20) NOT NULL,
+  `shareEdit` char(1) DEFAULT 'N',
+  PRIMARY KEY (`idx`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
+
+/*사용자 테이블*/
+CREATE TABLE `geocms_user` (
+  `uid` int(20) NOT NULL AUTO_INCREMENT,
+  `id` varchar(20) NOT NULL DEFAULT '',
+  `password` varchar(30) DEFAULT NULL,
+  `type` varchar(30) DEFAULT NULL,
+  `email` varchar(50) DEFAULT NULL,
+  `reg_date` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`,`uid`),
+  KEY `uid` (`uid`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
+
+/*동영상 테이블*/
+CREATE TABLE `geocms_video_content` (
+  `id` varchar(200) DEFAULT NULL,
+  `title` varchar(200) DEFAULT NULL,
+  `content` varchar(200) DEFAULT NULL,
+  `filename` varchar(200) DEFAULT NULL,
+  `thumbnail` varchar(200) DEFAULT NULL,
+  `originname` varchar(200) DEFAULT NULL,
+  `idx` int(11) NOT NULL AUTO_INCREMENT,
+  `uDate` datetime DEFAULT NULL,
+  `latitude` decimal(20,15) DEFAULT NULL,
+  `longitude` decimal(20,15) DEFAULT NULL,
+  `tabName` varchar(200) DEFAULT NULL,
+  `xmlData` text,
+  `shareType` int(1) NOT NULL,
+  `rDate` datetime DEFAULT NULL,
+  `filePath` text,
+  `projectIdx` int(11) DEFAULT NULL,
+  PRIMARY KEY (`idx`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
+
+/*토큰 테이블*/
+CREATE TABLE `token` (
+  `uid` int(11) NOT NULL,
+  `aes` varchar(128) DEFAULT NULL,
+  `date` datetime DEFAULT NULL,
+  PRIMARY KEY (`uid`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
