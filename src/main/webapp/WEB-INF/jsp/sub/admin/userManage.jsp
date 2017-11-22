@@ -314,9 +314,8 @@ function userTypeSave(){
 	if(saveArr == null || saveArr.length == 0){
 		return;
 	}
-	
 	var Url			= baseRoot() + "cms/typeUpdate/";
-	var param		= loginToken + "/"+ saveArr;
+	var param		= loginToken + "/"+ JSON.stringify(saveArr);
 	var callBack	= "?callback=?";
 	
 	$.ajax({
