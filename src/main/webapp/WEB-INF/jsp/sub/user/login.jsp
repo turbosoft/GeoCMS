@@ -95,6 +95,17 @@ function fnFind(){
 	});
 	findDig.dialog('open');
 }
+
+function submitLogin(e){
+	var keycode;
+	if(window.event) keycode = window.event.keyCode;
+	else if(e) keycode = e.which;
+	else return true;
+	if(keycode == 13){
+		loginUser();
+	}
+}
+
 </script>
 
 </head>
@@ -110,7 +121,7 @@ function fnFind(){
 			<tr>
 				<th>ID</th>
 				<td>
-					<input type="text" id="id_input">
+					<input type="text" id="id_input" tabindex="1">
 				</td>
 				<td rowspan="2" style="text-align:center;">
 					<button onclick='loginUser();' class="radiusBtn5" style="height: 50px;">LOGIN</button>
@@ -119,7 +130,7 @@ function fnFind(){
 			<tr>
 				<th>PASS</th>
 				<td>
-					<input type='password' id='pass_input'>
+					<input type='password' id='pass_input' tabindex="2" onkeypress="submitLogin(event);">
 				</td>
 			</tr>
 			<tr>
