@@ -85,25 +85,10 @@ $(document).ready(
 						}
 					});
 					
-					//gpx file save
 					$('#file_upload_gpx').uploadifySettings('script', '<c:url value="/geoUpload.do"/>?uploadType=GeoVideo&saveFileName='+saveFileName);
 					$('#file_upload_gpx').uploadifyUpload();
-					
-// 					saveVideoFn(response);
-					
-// 					//계속 업로드 할 것인지 물음 기능 추가
-// 					jConfirm('게시물을 계속 업로드 하시겠습니까?', '정보', function(type){
-// 						if(!type){
-// 							window.parent.closeUpload();
-// 							window.parent.viewMyContents();
-// 						}
-// 					});
 				}
 			},
-// 			'onQueueFull': function(event, queueSizeLimit) {
-// 		        alert("Please don't put anymore files in me! You can upload " + queueSizeLimit + " files at once");
-// 		        return false;
-// 		    },
 			'cancelImg' : '<c:url value="/lib/uploadify/cancel.png"/>',
 			'folder' : '/upload/GeoVideo',
 			'fileExt' : '*.avi;*.mpg;*.mp4;*.mov;*.ogg;*.flv;*.webm;*.m4v;',
@@ -122,7 +107,6 @@ $(document).ready(
 					saveVideoFn(response);
 				}
 			},
-// 			'script' : 'UploadServlet',
 			'cancelImg' : '<c:url value="/lib/uploadify/cancel.png"/>',
 			'folder' : '/upload/GeoVideo',
 			'fileExt' : '*.gpx;',
@@ -213,6 +197,13 @@ function createContent() {
 		$('#title_area').focus();
 		return;
 	}
+	
+	var gpxUpChk = $('#file_upload_gpxQueue').children().length == 0?false:true;
+	if(!gpxUpChk){
+		jAlert('gpx 파일을 업로드 해 주세요.', '정보');
+		return;
+	}
+	
 	contentSave();
 }
 
