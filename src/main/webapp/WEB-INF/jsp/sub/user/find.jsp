@@ -66,8 +66,12 @@ function sendMail(text,type){
 		url: "<c:url value='/geoUserSendMail.do'/>",
 		data: 'type=search&searchEmail='+$('#'+type+'_email').val()+'&text='+text+'&textType='+type+'&searchType=findPass',
 		success: function(data) {
-			$('#'+type+'_email').val('');
-			alert('요청 하신 '+ type +'가 등록하신 이메일로 발송되었습니다.');
+			if(data == 'success'){
+				$('#'+type+'_email').val('');
+				jAlert('요청 하신 '+ type +'가 등록하신 이메일로 발송되었습니다.');
+			}else{
+				jAlert(data, '정보');
+			}
 		}
 	});
 }
