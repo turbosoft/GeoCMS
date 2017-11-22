@@ -1,7 +1,7 @@
 package kr.co.turbosoft.geocms.controller;
 
 import java.io.IOException;
-import java.io.InputStream;
+import java.io.PrintWriter;
 import java.util.Properties;
 
 import javax.mail.Authenticator;
@@ -38,12 +38,13 @@ public class UserSendMailController {
 		String searchEmail = request.getParameter("searchEmail");
 		String thisType = request.getParameter("thisType"); 
 		Properties props = new Properties();
+		String result = "success";
 
 	        String msgBody = "";
 	        if(thisType != null && thisType != "" && "checkEmail".equals(thisType)){
-	        	msgBody = "인증 번호 는 "+ text +" 입니다.";
+	        	msgBody = "인증 번호는 "+ text +" 입니다.";
 	        }else{
-	        	msgBody = "요청하신 "+ textType +"는 "+ text +" 입니다.";
+	        	msgBody = "요청하신  "+ textType +"는 "+ text +" 입니다.";
 	        }
 
 	        try {
@@ -64,9 +65,19 @@ public class UserSendMailController {
 	        	
 	        } catch (AddressException e) {
 	            e.printStackTrace();
+	            result = "시스템 오류입니다. 오류메시지를 확인해 주세요.";
 	        } catch (MessagingException e) {
-	        	 e.printStackTrace();
-	        }
+	        	e.printStackTrace();
+	        	result = "시스템 오류입니다. 오류메시지를 확인해 주세요.";
+	        } catch (Exception e) {
+	        	e.printStackTrace();
+	        	result = "시스템 오류입니다. 오류메시지를 확인해 주세요.";
+			}
+	        
+	      //setContentType 을 먼저 설정하고 getWriter
+			response.setContentType("text/html;charset=utf-8");
+			PrintWriter out = response.getWriter();
+			out.print(result);
 	}
 	
 	private class PopupAuthenticator extends Authenticator {
