@@ -100,7 +100,7 @@ $(document).ready(
 						$('#modifyBtn').css('display', 'inline-block');
 					}
 				}else{
-					jAlert(data.Message, '정보');
+					jAlert(data.Message, 'Info');
 				}
 				
 // 				var result = data.trim();	//공백제거
