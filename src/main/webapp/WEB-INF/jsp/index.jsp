@@ -305,15 +305,15 @@ function cmsLoadExif(){
 	</div>
 	
 	<!-- edit btn -->
-	<div style="position:absolute;background-color: #ffffff;width:110px;height: 245px;left: 430px;top: 160px;border: 1px solid gray;z-index: 500;display:none;" id="editPopBtn">
+	<div style="position:absolute;background-color: #ffffff;width:130px;height: 245px;left: 430px;top: 160px;border: 1px solid gray;z-index: 500;display:none;" id="editPopBtn">
 		<img src="<c:url value='/images/geoImg/btn_image/edit_add.png'/>" style='width:30px; height:30px; margin:15px 0 0 5px;' onclick="tabEditBtn('ADD');"/>
-		<label style="display: inline-block; float: right; margin: 25px 20px 0 0;">탭 추가</label><br>
+		<label style="display: inline-block; float: right; margin: 25px 20px 0 0;">Add Tab</label><br>
 		
 		<img src="<c:url value='/images/geoImg/btn_image/edit_delete.png'/>" style='width:30px; height:30px; margin:15px 0 0 5px;' onclick="tabEditBtn('DELETE');"/>
-		<label style="display: inline-block; float: right; margin: 25px 20px 0 0;">탭 삭제</label><br>
+		<label style="display: inline-block; float: right; margin: 25px 20px 0 0;">Delete Tab</label><br>
 		
 		<img src="<c:url value='/images/geoImg/btn_image/edit_update.png'/>" style='width:30px; height:30px; margin:15px 0 0 5px;' onclick="tabEditBtn('EDIT');"/>
-		<label style="display: inline-block; float: right; margin: 25px 20px 0 0;">탭 수정</label>
+		<label style="display: inline-block; float: right; margin: 25px 20px 0 0;">Modify Tab</label>
 		
 		<hr>
 		<p class="fnt_12"><input type="checkbox" id="view_OpenApi" name="view_OpenApi" onclick="viewCheck(this);" /> Open API </p>
@@ -363,8 +363,8 @@ function cmsLoadExif(){
 			</tr>
 			<tr>
 				<td colspan="2" style="text-align:center;">
-					<input type="button" style="margin-top:10px;margin-left:110px;" id="saveBtn" value="저장" onclick="addTabData('save');"/>
-					<input type="button" style="margin-top:10px;margin-left:110px;display:none;" id="modifyBtn" value="수정" onclick="addTabData('modify');"/>
+					<input type="button" style="margin-top:10px;margin-left:110px;" id="saveBtn" value="Save" onclick="addTabData('save');"/>
+					<input type="button" style="margin-top:10px;margin-left:110px;display:none;" id="modifyBtn" value="Modify" onclick="addTabData('modify');"/>
 				</td>
 			</tr>
 		</table>
