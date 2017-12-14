@@ -31,7 +31,8 @@ function search() {
 	var text = $('#search_bar').val();
 
 	if(text.length == 0) {
-		jAlert("검색어를 입력해 주세요.", "정보");
+// 		jAlert("검색어를 입력해 주세요.", "정보");
+		jAlert("Please enter a search term.", "Info");
 	}
 	else {
 		var boardChk, imageChk, videoChk, check, display;
@@ -40,7 +41,8 @@ function search() {
 		imageChk = $('#search_image').attr('checked');
 		videoChk = $('#search_video').attr('checked');
 		if(!boardChk && !imageChk && !videoChk){
-			jAlert("키워드 대상을 선택해 주세요.", "정보");
+// 			jAlert("키워드 대상을 선택해 주세요.", "정보");
+			jAlert("Please select a keyword target.", "Info");
 			return;
 		}
 
@@ -50,7 +52,10 @@ function search() {
 		}
 		
 		if($('input[name=search_check1]').attr('checked') && $('input[name=search_check2]').attr('checked')) check = "all";
-		else if(!$('input[name=search_check1]').attr('checked') && !$('input[name=search_check2]').attr('checked')) { jAlert("키워드 대상을 선택해 주세요.", "정보"); }
+		else if(!$('input[name=search_check1]').attr('checked') && !$('input[name=search_check2]').attr('checked')) {
+// 			jAlert("키워드 대상을 선택해 주세요.", "정보"); 
+			jAlert("Please select a keyword target.", "Info")
+			}
 		else {
 			if($('input[name=search_check1]').attr('checked')) check = "content";
 			if($('input[name=search_check2]').attr('checked')) check = "anno";
@@ -61,7 +66,10 @@ function search() {
 		if(check.length>0 && display.length>0) {
 			searchPageInit(text, boardChk, imageChk, videoChk, check, display);
 		}
-		else jAlert('검색 조건이 잘못 되었습니다.', '정보');
+		else {
+// 			jAlert('검색 조건이 잘못 되었습니다.', '정보');
+			jAlert('Invalid search criteria.', 'Info');
+		}
 	}
 }
 
