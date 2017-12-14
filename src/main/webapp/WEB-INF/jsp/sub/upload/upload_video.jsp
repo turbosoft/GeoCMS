@@ -162,6 +162,8 @@ function saveVideoFn(data){
 // 	if(addShareUser == null || addShareUser.length <= 0){
 // 		addShareUser = '&nbsp';
 // 	}
+	title = encodeURIComponent(title);
+	innerStr = encodeURIComponent(innerStr);
 	
 	var Url			= baseRoot() + "cms/saveVideo/";
 	var param		= loginToken + "/" + loginId + "/" + title + "/" + content + "/" + fileName + "/" + filePath + "/" + lat + "/" + lon + "/" + tabName + "/" + projectIdxNum;
@@ -176,15 +178,16 @@ function saveVideoFn(data){
 		, success: function(data) {
 			if(data.Code == 100){
 				//계속 업로드 할 것인지 물음 기능 추가
-				jConfirm('게시물을 계속 업로드 하시겠습니까?', '정보', function(type){
+// 				jConfirm('게시물을 계속 업로드 하시겠습니까?', '정보', function(type){
+				jConfirm('Continue uploading posts?', 'Info', function(type){
 					if(!type){
 						window.parent.closeUpload();
 						window.parent.viewMyProjects(projectIdxNum);
-						jAlert(data.Message, '정보');
+						jAlert(data.Message, 'Info');
 					}
 				});
 			}else{
-				jAlert(data.Message, '정보');
+				jAlert(data.Message, 'Info');
 			}
 		}
 	});
@@ -193,14 +196,16 @@ function saveVideoFn(data){
 //게시물 생성
 function createContent() {
 	if($.trim($('#title_area').val())=='') {
-		jAlert('제목을 입력해 주세요.', '정보');
+// 		jAlert('제목을 입력해 주세요.', '정보');
+		jAlert('Please enter the title.', 'Info');
 		$('#title_area').focus();
 		return;
 	}
 	
 	var gpxUpChk = $('#file_upload_gpxQueue').children().length == 0?false:true;
 	if(!gpxUpChk){
-		jAlert('gpx 파일을 업로드 해 주세요.', '정보');
+// 		jAlert('gpx 파일을 업로드 해 주세요.', '정보');
+		jAlert('Please upload gpx file.', 'Info');
 		return;
 	}
 	
@@ -219,7 +224,8 @@ function contentSave() {
 
 //게시물 생성 취소
 function cancelContent() {
-	jConfirm('게시물 생성을 취소하시겠습니까?', '정보', function(type){
+// 	jConfirm('게시물 생성을 취소하시겠습니까?', '정보', function(type){
+	jConfirm('Are you sure you want to cancel creating posts?', 'Info', function(type){
 		window.parent.closeUpload();
 	});
 }
@@ -291,13 +297,6 @@ function getShareUser(){
 			<textarea id='content_area' style='width:400px; height:370px;'></textarea>
 		</td>
 	</tr>
-<!-- 	<tr class="showDivTR"> -->
-<!-- 		<td colspan="2"> -->
-<!-- 			<div style="float:left;"><input type="radio" value="0" name="shareRadio" checked="checked">비공개</div> -->
-<!-- 			<div style="float:left;"><input type="radio" value="1" name="shareRadio">전체공개</div> -->
-<!-- 			<div style="float:left;"><input type="radio" value="2" name="shareRadio" onclick="getShareUser();">특정인 공개</div> -->
-<!-- 		</td> -->
-<!-- 	</tr> -->
 	<tr>
 		<td id='file_upload_td' width='' height='25' colspan='2'>
 			<input id='file_upload' name='file_upload' type='file'/>

@@ -13,7 +13,14 @@ String loginToken = (String)session.getAttribute("loginToken");			//로그인 to
 
 String ObjIdx = request.getParameter("idx");					//now idx
 String ObjTitle = request.getParameter("title");				//now title
+if(ObjTitle != null && ObjTitle != ""){
+	ObjTitle = ObjTitle.replaceAll("'", "\\\\'");
+}
 String ObjContent = request.getParameter("content");			//now content
+if(ObjContent != null && ObjContent != ""){
+	ObjContent = ObjContent.replaceAll("'", "\\\\'");
+}
+
 String viewPageNum = request.getParameter("viewPageNum");		//now view page number
 String projectImage = request.getParameter("projectImage");		//GeoPhoto conn check
 String projectVideo = request.getParameter("projectVideo");		//GeoVideo conn check
@@ -153,18 +160,21 @@ function createContent() {
 		var addShareUser = $('#shareAdd').val();
 
 		 if(title == null || title == "" || title == 'null'){
-			 jAlert('제목을 입력해 주세요.', '정보');
+// 			 jAlert('제목을 입력해 주세요.', '정보');
+			 jAlert('Please enter the title.', 'Info');
 			 $('#title_area').focus();
 			 return;
 		 }
 		 
 		 if(innerStr == null || innerStr == "" || innerStr == 'null'){
-			 jAlert('내용을 입력해 주세요.', '정보');
+// 			 jAlert('내용을 입력해 주세요.', '정보');
+			 jAlert('Please enter your details.', 'Info');
 			 return;
 		 }
 		 
 		 if(shareType != null && shareType == 2 && (addShareUser == null || addShareUser == '') && oldShareUserLen == 0){
-			 jAlert('공유 유저가 지정되지 않았습니다.', '정보');
+// 			 jAlert('공유 유저가 지정되지 않았습니다.', '정보');
+			 jAlert('No sharing user specified.', 'Info');
 			 return;
 		 }
 		 datasubmit();
@@ -173,7 +183,8 @@ function createContent() {
 	}
 	else {
 		window.parent.closeUpload();
-		jAlert('로그인 정보를 잃었습니다.', '정보');
+// 		jAlert('로그인 정보를 잃었습니다.', '정보');
+		jAlert('I lost my login information.', 'Info');
 	}
 }
 
@@ -273,14 +284,14 @@ function boardDataSave(data){
 		, cache	: false
 		, success: function(data) {
 			if(data.Code == 100){
-				jAlert(data.Message, '정보');
+				jAlert(data.Message, 'Info');
 				window.parent.closeUpload();
 				if(ObjIdx != null && ObjIdx != "" && ObjIdx != "null"){
 // 					window.parent.viewMyContents();
 					backPage();
 				}
 			}else{
-				jAlert(data.Message, '정보');
+				jAlert(data.Message, 'Info');
 			}
 		}
 	});
@@ -290,11 +301,13 @@ function boardDataSave(data){
 //게시물 생성 취소
 function cancelContent() {
 	if(ObjIdx != null && ObjIdx != "" && ObjIdx != "null"){
-		jConfirm('게시물 수정을 취소하시겠습니까?', '정보', function(type){
+// 		jConfirm('게시물 수정을 취소하시겠습니까?', '정보', function(type){
+		jConfirm('Are you sure you want to unpost this post?', 'Info', function(type){
 			backPage();
 		});
 	}else{
-		jConfirm('게시물 생성을 취소하시겠습니까?', '정보', function(type){
+// 		jConfirm('게시물 생성을 취소하시겠습니까?', '정보', function(type){
+		jConfirm('Are you sure you want to cancel creating posts?', 'Info', function(type){
 			if(type) window.parent.closeUpload();
 		});
 	}
@@ -429,9 +442,12 @@ function getShareUser(){
 	</tr>
 	<tr class="showDivTR">
 		<td colspan="2">
-			<div style="float:left;"><input type="radio" value="0" name="shareRadio" checked="checked">비공개</div>
-			<div style="float:left;"><input type="radio" value="1" name="shareRadio">전체공개</div>
-			<div style="float:left;"><input type="radio" value="2" name="shareRadio" onclick="getShareUser();">특정인 공개</div>
+<!-- 			<div style="float:left;"><input type="radio" value="0" name="shareRadio" checked="checked">비공개</div> -->
+<!-- 			<div style="float:left;"><input type="radio" value="1" name="shareRadio">전체공개</div> -->
+<!-- 			<div style="float:left;"><input type="radio" value="2" name="shareRadio" onclick="getShareUser();">특정인 공개</div> -->
+			<div style="float:left;"><input type="radio" value="0" name="shareRadio" checked="checked">Nondisclosure</div>
+			<div style="float:left;"><input type="radio" value="1" name="shareRadio">Full disclosure</div>
+			<div style="float:left;"><input type="radio" value="2" name="shareRadio" onclick="getShareUser();">Selective disclosure</div>
 		</td>
 	</tr>
 	<tr>

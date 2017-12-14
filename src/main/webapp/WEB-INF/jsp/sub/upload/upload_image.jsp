@@ -123,7 +123,8 @@ function createContent() {
 	if(loginId!='' || loginId!=null) {
 		uploadFileLen = $('#file_uploadQueue').children().length;
 		if(uploadFileLen <= 0){
-			 jAlert('컨텐츠를 선택해 주세요.', '정보');
+// 			 jAlert('컨텐츠를 선택해 주세요.', '정보');
+			 jAlert('Please select content.', 'Info');
 			 return;
 		}
 		
@@ -132,15 +133,17 @@ function createContent() {
 		var content = encodeURIComponent(document.getElementById('content_area').value);
 		
 		if(title == null || title == "" || title == 'null'){
-			 jAlert('제목을 입력해 주세요.', '정보');
+// 			 jAlert('제목을 입력해 주세요.', '정보');
+			 jAlert('Please enter the title.', 'Info');
 			 $('#title_area').focus();
 			 return;
 		 }
 		 
 		 if(content == null || content == "" || content == 'null'){
-			 jAlert('내용을 입력해 주세요.', '정보');
-			 $('#content_area').focus();
-			 return;
+// 			 jAlert('내용을 입력해 주세요.', '정보');
+			jAlert('Please enter your content.', 'Info');
+			$('#content_area').focus();
+			return;
 		 }
 		 
 		$('#file_upload').uploadifySettings('script', '<c:url value="/geoUpload.do"/>?uploadType=GeoPhoto');
@@ -149,7 +152,8 @@ function createContent() {
 	}
 	else {
 		window.parent.closeUpload();
-		jAlert('로그인 정보를 잃었습니다.', '정보');
+// 		jAlert('로그인 정보를 잃었습니다.', '정보');
+		jAlert('I lost my login information.', 'Info');
 	}
 }
 
@@ -172,6 +176,8 @@ function saveImageFn(fileName, filePath, lati, longi){
 		if(longi == null || longi == '' || longi == 'null'){
 			longi = '&nbsp';
 		}
+		title = encodeURIComponent(title);
+		innerStr = encodeURIComponent(innerStr);
 		
 		var Url			= baseRoot() + "cms/saveImage/";
 		var param		= loginToken + "/" + loginId + "/" + title + "/" + content + "/" + fileName + "/" + filePath + "/" + lati + "/" + longi + "/" + tabName + "/" + projectIdxNum;
@@ -188,10 +194,10 @@ function saveImageFn(fileName, filePath, lati, longi){
 					if(uploadFileLen == imageUploadCnt){
 						window.parent.closeUpload();
 						window.parent.viewMyProjects(projectIdxNum);
-						jAlert(data.Message, '정보');
+						jAlert(data.Message, 'Info');
 					}
 				}else{
-					jAlert(data.Message, '정보');
+					jAlert(data.Message, 'Info');
 				}
 			}
 		});
@@ -200,7 +206,8 @@ function saveImageFn(fileName, filePath, lati, longi){
 
 //게시물 생성 취소
 function cancelContent() {
-	jConfirm('게시물 생성을 취소하시겠습니까?', '정보', function(type){
+// 	jConfirm('게시물 생성을 취소하시겠습니까?', '정보', function(type){
+	jConfirm('Are you sure you want to cancel creating posts?', 'Info', function(type){
 		if(type) window.parent.closeUpload();
 	});
 }
