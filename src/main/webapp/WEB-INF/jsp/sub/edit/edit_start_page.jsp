@@ -397,9 +397,12 @@ function editLeftBoardSetting(bNowContnetNum, bNowTabelHeight, eTableNum){
 	
 	var innerHTMLStr = "";
 	innerHTMLStr += "<tr style='height:25px;'>";
-	innerHTMLStr += "<td width='200'>제목</td>";
-	innerHTMLStr += "<td width='70'>작성자</td>";
-	innerHTMLStr += "<td width='100'>작성일</td>";
+// 	innerHTMLStr += "<td width='200'>제목</td>";
+// 	innerHTMLStr += "<td width='70'>작성자</td>";
+// 	innerHTMLStr += "<td width='100'>작성일</td>";
+	innerHTMLStr += "<td width='200'>TITLE</td>";
+	innerHTMLStr += "<td width='70'>WRITER</td>";
+	innerHTMLStr += "<td width='100'>DATE</td>";
 	innerHTMLStr += "<tr class='tr_line' bgcolor='#D2D2D2'><td colspan='3'></td></tr>";
 	innerHTMLStr += "<tr class='tr_line' bgcolor='#82B5DF'><td colspan='3'></td></tr>";
 
@@ -511,9 +514,10 @@ function saveTabModify(){
 			
 			if(data.Code == '100'){
 				editExit();
-				jAlert("저장 되었습니다.", '정보');
+// 				jAlert("저장 되었습니다.", '정보');
+				jAlert("Saved.", 'Info');
 			}else{
-				jAlert(data.Message, '정보');
+				jAlert(data.Message, 'Info');
 			}
 		}
 	});
@@ -599,10 +603,12 @@ function tabEditBtn(kind){
 	}else if(kind  == "DELETE"){
 		var thisId = $('input[name=tabRadio]:checked').attr('id').split("_")[1];
 		var thisIndex = $.inArray(thisId , tempTabArr );
-		jConfirm("'" + thisId + "'  탭을 삭제 하시겠습니까?", '', function(text){
+// 		jConfirm("'" + thisId + "'  탭을 삭제 하시겠습니까?", '', function(text){
+		jConfirm("'" + thisId + "'  Are you sure you want to delete the tab?", '', function(text){
 			if(text == true){
 				if(tempTabArr.length <= 1){
-					jAlert("삭제 할 수 없습니다.", '정보');
+// 					jAlert("삭제 할 수 없습니다.", '정보');
+					jAlert("Unable to delete.", 'Info');
 					return;
 				}
 				tempTabArr.splice(thisIndex, 1);
@@ -623,7 +629,8 @@ function addTabData(btn){
 	
 	if(btn == "save"){
 		if($.inArray(tName, tempTabArr) > -1){
-			jAlert("중복된 이름입니다.", '정보');
+// 			jAlert("중복된 이름입니다.", '정보');
+			jAlert("Duplicate name.", 'Info');
 			return;
 		}
 		tempTabArr.push(tName);
