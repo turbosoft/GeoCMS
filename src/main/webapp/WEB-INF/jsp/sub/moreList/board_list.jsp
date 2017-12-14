@@ -74,7 +74,7 @@ function clickBoardPage(pageNum){
 				boardPageSetup(pageNum, data.DataLen);
 			}else{
 				boardFirstSet();
-				jAlert(data.Message, '정보');
+				jAlert(data.Message, 'Info');
 			}
 		}
 	});
@@ -90,10 +90,14 @@ function boardFirstSet(){
 	$('#board_list_table').append(innerHTMLStr);
 
 	innerHTMLStr = "<tr style='text-align:center;'>";
-	innerHTMLStr += "<td width='73'>번호</td>";
-	innerHTMLStr += "<td width='379'>제목</td>";
-	innerHTMLStr += "<td width='73'>작성자</td>";
-	innerHTMLStr += "<td width='164'>작성일</td>";
+// 	innerHTMLStr += "<td width='73'>번호</td>";
+// 	innerHTMLStr += "<td width='379'>제목</td>";
+// 	innerHTMLStr += "<td width='73'>작성자</td>";
+// 	innerHTMLStr += "<td width='164'>작성일</td>";
+	innerHTMLStr += "<td width='73'>NO</td>";
+	innerHTMLStr += "<td width='379'>TITLE</td>";
+	innerHTMLStr += "<td width='73'>WRITER</td>";
+	innerHTMLStr += "<td width='164'>DATE</td>";
 	innerHTMLStr += "<tr style='height:15px;' align='center'></tr>";
 	innerHTMLStr += "<tr class='tr_line' bgcolor='#D2D2D2'><td colspan='4'></td></tr>";
 	innerHTMLStr += "<tr class='tr_line' bgcolor='#82B5DF'><td colspan='4'></td></tr>";
@@ -254,13 +258,13 @@ function boardViewDetail(obj){
 	<select id="selBoardTabType" style="margin:7px 10px 5px 10px;" onchange="clickBoardPage(1);"></select>
 	
 	<select id="selBoardNum" style="margin:7px 10px 5px 780px; display: inline-block;" onchange="clickBoardPage(1);">
-		<option value="5">5개씩</option>
-		<option value="10">10개씩</option>
-		<option value="15" selected="selected">15개씩</option>
-		<option value="20">20개씩</option>
-		<option value="30">30개씩</option>
-		<option value="40">40개씩</option>
-		<option value="50">50개씩</option>
+		<option value="5">5</option>
+		<option value="10">10</option>
+		<option value="15" selected="selected">15</option>
+		<option value="20">20</option>
+		<option value="30">30</option>
+		<option value="40">40</option>
+		<option value="50">50</option>
 	</select>
 	
 	<table id="board_list_table" width="100%" cellpadding="0" cellspacing="0" border="0" style="margin-top:10px;">

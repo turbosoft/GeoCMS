@@ -65,7 +65,7 @@ function viewSelectSetting(){
 		if(i == 0){
 			innerHTMLStr += 'checked=true ';
 		}
-		innerHTMLStr += ' >'+ tmpArr[i] +'개씩</option>';
+		innerHTMLStr += ' >'+ tmpArr[i] +'</option>';
 	}
 	$('#selContentNum').append(innerHTMLStr);
 }
@@ -108,7 +108,7 @@ function clickContentPage(pageNum){
 		tmpLoginToken = '&nbsp';
 	}
 	var tmpIndex = '&nbsp';
-	
+
 	var Url			= baseRoot() + moveUrl;
 	var param		= "list/" + tmpLoginToken + "/" + tmpLoginId + "/" + pageNum + "/" + contentCountNum + "/" + contentnowTabName + "/" + tmpIndex;
 	var callBack	= "?callback=?";
