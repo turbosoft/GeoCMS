@@ -68,7 +68,7 @@ function getUserLevel(){
 					$('.sTypeClass').append(innerHTMLStr);
 				}
 			}else{
-				jAlert(data.Message, '정보');
+				jAlert(data.Message, 'Info');
 			}
 		}
 	});
@@ -173,7 +173,7 @@ function clickUserPage(pageNum){
 					}
 				}
 			}else{
-				jAlert(data.Message, '정보');
+				jAlert(data.Message, 'Info');
 			}
 		}
 	});
@@ -369,13 +369,13 @@ function userTypeSave(){
 	
 	<div style="postion:absolute; margin-top:-18px;">
 		<select id="selUserNum" onchange="clickUserPage(1);">
-			<option value="5">5개씩</option>
-			<option value="10" selected="selected">10개씩</option>
-			<option value="15">15개씩</option>
-			<option value="20">20개씩</option>
-			<option value="30">30개씩</option>
-			<option value="40">40개씩</option>
-			<option value="50">50개씩</option>
+			<option value="5">5</option>
+			<option value="10" selected="selected">10</option>
+			<option value="15">15</option>
+			<option value="20">20</option>
+			<option value="30">30</option>
+			<option value="40">40</option>
+			<option value="50">50</option>
 		</select>
 	</div>
 	<div style="text-align:center;">
