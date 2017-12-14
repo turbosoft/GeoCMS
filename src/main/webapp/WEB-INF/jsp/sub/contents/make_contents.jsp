@@ -23,7 +23,8 @@ $(function() {
 //make contents button click function
 function ContentsMakes(obj, type, boardNowTab, selBoardNum) {
 	if(loginId == null || loginId =='' || loginId == 'null') {
-		jAlert("로그인 정보가 만료되었습니다.\n\n다시 로그인을 수행하여 주세요.", '정보');
+// 		jAlert("로그인 정보가 만료되었습니다.\n\n다시 로그인을 수행하여 주세요.", '정보');
+		jAlert("Your login information has expired.\n\nPlease login again.", 'Info');
 	}
 	else {	//base board upload setting	
 		var tempBoardTab = nowTabName;
@@ -83,7 +84,8 @@ function ContentsMakes(obj, type, boardNowTab, selBoardNum) {
 						});
 						uploadDig.dialog('open');
 					}else{
-						jAlert('프로젝트 생성 후 컨텐츠를 업로드 할수 있습니다.', '정보');
+// 						jAlert('프로젝트 생성 후 컨텐츠를 업로드 할수 있습니다.', '정보');
+						jAlert('You can upload content after creating a project.', 'Info');
 					}
 				}
 			});

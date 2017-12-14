@@ -174,15 +174,18 @@ function addMyContentsCell(callType, response){
 				if(nowCnt == 1){
 					img_row.setAttribute('style', 'height:20px');
 					img_cell.setAttribute('width', '230');
-					img_cell.innerHTML = '제목';
+// 					img_cell.innerHTML = '제목';
+					img_cell.innerHTML = 'TITLE';
 					
 					img_cell = img_row.insertCell(-1);
 					img_cell.setAttribute('width', '100');
-					img_cell.innerHTML = '작성자';
+// 					img_cell.innerHTML = '작성자';
+					img_cell.innerHTML = 'WRITER';
 					
 					img_cell = img_row.insertCell(-1);
 					img_cell.setAttribute('width', '80');
-					img_cell.innerHTML = '작성일';
+// 					img_cell.innerHTML = '작성일';
+					img_cell.innerHTML = 'DATE';
 					
 					img_row = target.insertRow(-1);
 					img_cell = img_row.insertCell(-1);
@@ -236,7 +239,8 @@ function addMyContentsCell(callType, response){
 				tempArr.push(response[i].THUMNAIL);
 				tempArr.push(response[i].ID);
 				innerHTMLStr += "myContentCenterChange('"+ tempArr +"','"+ response[i].DATAKIND + "', 'load');";
-				innerHTMLStr += '"'+" title='제목 : "+ response[i].TITLE +"\n내용 : "+ response[i].CONTENT + "\n작성일 : "+ response[i].U_DATE +"' border='0'>";
+// 				innerHTMLStr += '"'+" title='제목 : "+ response[i].TITLE +"\n내용 : "+ response[i].CONTENT + "\n작성일 : "+ response[i].U_DATE +"' border='0'>";
+				innerHTMLStr += '"'+" title='TITLE : "+ response[i].TITLE +"\nCONTENT : "+ response[i].CONTENT + "\nDATE : "+ response[i].U_DATE +"' border='0'>";
 
 				//image or video icon add
 				innerHTMLStr += "<div style='position:absolute; width:30px; height:30px; margin:15px 0 0 15px;  background-image:url(<c:url value='images/geoImg/"+ response[i].DATAKIND +"_marker.png'/>); zoom:0.7;'></div>";
@@ -257,7 +261,8 @@ function addMyContentsCell(callType, response){
 				bindings: {
 //					'context_modify': function(t) { inputCaption(t.id, text); },
 					'context_delete': function(t) {
-						jConfirm('정말 삭제하시겠습니까?', '정보', function(type){
+// 						jConfirm('정말 삭제하시겠습니까?', '정보', function(type){
+						jConfirm('Are you sure you want to delete?', 'Info', function(type){
 							if(type) {
 //								contentDelete(t.id.split("_")[1]);
 								contentDelete(t.id.split("_")[0], t.id.split("_")[1]);
@@ -284,9 +289,12 @@ function addMyContentsCellBoard(callType, response){
 	for(var i=0; i<myContentsNum; i++) {
 		if(i == 0){
 			innerHTMLStr += "<tr style='height:20px;'>";
-			innerHTMLStr += "<td width='200'>제목</td>";
-			innerHTMLStr += "<td width='70'>작성자</td>";
-			innerHTMLStr += "<td width='100'>작성일</td>";
+// 			innerHTMLStr += "<td width='200'>제목</td>";
+// 			innerHTMLStr += "<td width='70'>작성자</td>";
+// 			innerHTMLStr += "<td width='100'>작성일</td>";
+			innerHTMLStr += "<td width='200'>TITLE</td>";
+			innerHTMLStr += "<td width='70'>WRITER</td>";
+			innerHTMLStr += "<td width='100'>DATE</td>";
 			innerHTMLStr += "<tr height='1' bgcolor='#D2D2D2'><td colspan='3'></td></tr>";
 			innerHTMLStr += "<tr height='1' bgcolor='#82B5DF'><td colspan='3'></td></tr>";
 		}
@@ -467,12 +475,12 @@ function contentDelete(type, tmpIdArr){
 		, success: function(data) {
 			var response = data.Data;
 			if(data.Code == '100'){
-				jAlert(data.Message, '정보');
+				jAlert(data.Message, 'Info');
 				removeModeOnOff(false);
 				clickMyContentPage(type, 1)
 // 				myContentsListSetup(myContentsType);
 			}else{
-				jAlert(data.Message, '정보');
+				jAlert(data.Message, 'Info');
 			}
 		}
 	});
@@ -489,10 +497,12 @@ function removeMyContent(removeType){
 		if(tmpRemoveArr != null && tmpRemoveArr.length > 0){
 			contentDelete(removeType, tmpRemoveArr);
 		}else{
-			jAlert('선택된 content가 없습니다', '정보');
+// 			jAlert('선택된 content가 없습니다', '정보');
+			jAlert('No content selected.', 'Info');
 		}
 	}else{
-		jAlert('선택된 content가 없습니다', '정보');
+// 		jAlert('선택된 content가 없습니다', '정보');
+		jAlert('No content selected', 'Info');
 	}
 }
 
