@@ -60,7 +60,7 @@ function getBase() {
 				rightTabAdd();								//content TAB 추가
 				rightTabChang('content_tab');				//left list content type setting
 			}else{
-				jAlert(data.Message, '정보');
+				jAlert(data.Message, 'Info');
 			}
 		}
 	});
@@ -669,9 +669,12 @@ function addBoardDataCell(id_arr, title_arr, content_arr, file_url_arr, idx_arr,
 	var innerHTMLStr = "";
 	
 	innerHTMLStr += "<tr style='height:25px;'>";
-	innerHTMLStr += "<td width='200'>제목</td>";
-	innerHTMLStr += "<td width='70'>작성자</td>";
-	innerHTMLStr += "<td width='100'>작성일</td>";
+// 	innerHTMLStr += "<td width='200'>제목</td>";
+// 	innerHTMLStr += "<td width='70'>작성자</td>";
+// 	innerHTMLStr += "<td width='100'>작성일</td>";
+	innerHTMLStr += "<td width='200'>TITLE</td>";
+	innerHTMLStr += "<td width='70'>WRITER</td>";
+	innerHTMLStr += "<td width='100'>DATE</td>";
 	innerHTMLStr += "<tr class='tr_line' bgcolor='#D2D2D2'><td colspan='3'></td></tr>";
 	innerHTMLStr += "<tr class='tr_line' bgcolor='#82B5DF'><td colspan='3'></td></tr>";
 
@@ -895,7 +898,7 @@ function viewMyProjects(orderIdx){
 			if(data.Code == '100'){
 				projectGroupListSetup(response);
 			}else{
-				jAlert(data.Message, '정보');
+				jAlert(data.Message, 'Info');
 			}
 		}
 	});
