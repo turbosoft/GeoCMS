@@ -626,7 +626,10 @@ function setGPSData(lat_arr, lng_arr) {
 			poly_arr.push(new google.maps.LatLng(lat_arr[i], lng_arr[i]));
 		}
 	}
-	else { jAlert('GPS 파일의 Latitude 와 Longitude 가 맞지 않습니다.', '정보'); }
+	else {
+// 		jAlert('GPS 파일의 Latitude 와 Longitude 가 맞지 않습니다.', '정보');
+		jAlert('Latitude and Longitude of the GPS file do not match.', 'Info');
+	}
 	setDirection(poly_arr);
 }
 
@@ -683,7 +686,8 @@ function videoViewer(file_url, origin_url, id, idx, projectUserId) {
 		, cache	: false
 		, success: function(response) {
 			if(response =='true') {
-				jAlert('인코딩 중 입니다...', '정보');
+// 				jAlert('인코딩 중 입니다...', '정보');
+				jAlert('Encoding is in progress...', 'Info');
 			}else {
 				if(projectVideo == 1){
 					var $dialog = jQuery.FrameDialog.create({
