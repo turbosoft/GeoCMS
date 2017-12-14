@@ -16,40 +16,47 @@ function joinClose(){
 //회원가입
 function joinUser(){
 	if($.trim($('#id_input').val())=='') {
-		jAlert('아이디를 입력해 주세요.', '정보');
+// 		jAlert('아이디를 입력해 주세요.', '정보');
+		jAlert('Please enter your ID.', 'Info');
 		$('#id_input').focus();
 		return;
 	}
 	if($.trim($('#pass_input1').val())=='') {
-		jAlert('비밀번호를 입력해 주세요.', '정보');
+// 		jAlert('비밀번호를 입력해 주세요.', '정보');
+		jAlert('Please enter a password.', 'Info');
 		$('#pass_input1').focus();
 		return;
 	}
 	
 	if($.trim($('#pass_input2').val())=='') {
-		jAlert('비밀번호를 확인을 해 주세요.', '정보');
+// 		jAlert('비밀번호를 확인을 해 주세요.', '정보');
+		jAlert('Please check your password.', 'Info');
 		$('#pass_input2').focus();
 		return;
 	}
 	
 	if($.trim($('#email_input').val())=='') {
-		jAlert('이메일을 입력해 주세요.', '정보');
+// 		jAlert('이메일을 입력해 주세요.', '정보');
+		jAlert('Please enter your e-mail.', 'Info');
 		$('#email_input').focus();
 		return;
 	}
 	
 	if(checkId == 0){
-		jAlert('아이디 중복체크를 해주세요.', '정보');
+// 		jAlert('아이디 중복체크를 해주세요.', '정보');
+		jAlert('Please check ID duplication.', 'Info');
 		return;
 	}
 	
 	if($.trim($('#pass_input1').val()) != $.trim($('#pass_input2').val())){
-		jAlert('비밀번호가 일치하지 않습니다.', '정보');
+// 		jAlert('비밀번호가 일치하지 않습니다.', '정보');
+		jAlert('Passwords do not match.', 'Info');
 		return;
 	}
 	
 	if(checkEmail != 2){
-		jAlert('이메일 인증을 받으세요.', '정보');
+// 		jAlert('이메일 인증을 받으세요.', '정보');
+		jAlert('Get email verification.', 'Info');
 		return;
 	}
 	
@@ -70,10 +77,11 @@ function joinUser(){
 		,success: function(data) {
 			if(data.Code == 100){
 				joinClose();
-				jAlert("회원가입이 완료 되었습니다.",'정보');
+// 				jAlert("회원가입이 완료 되었습니다.",'정보');
+				jAlert("Sign up is complete.",'Info');
 				location.reload();
 			}else{
-				jAlert(data.Message, '정보');
+				jAlert(data.Message, 'Info');
 			}
 		}
 	});
@@ -83,7 +91,8 @@ var checkId = 0;	//id 중복체크 1:중복체크 ok
 //id 중복체크
 function idCheck(){
 	if($.trim($('#id_input').val())=='') {
-		jAlert('아이디를 입력해 주세요.', '정보');
+// 		jAlert('아이디를 입력해 주세요.', '정보');
+		jAlert('Please enter your ID.', 'Info');
 		$('#id_input').focus();
 		return;
 	}
@@ -107,7 +116,7 @@ function idCheck(){
 			}else{
 				checkId = 0;
 			}
-			jAlert(data.Message, '정보');
+			jAlert(data.Message, 'Info');
 		}
 	});
 }
@@ -126,7 +135,8 @@ var checkEmail = 0;	//email 인증
 //이메일 확인
 function emailCheck(){
 	if($.trim($('#email_input').val())=='') {
-		jAlert('이메일을 입력해 주세요.', '정보');
+// 		jAlert('이메일을 입력해 주세요.', '정보');
+		jAlert('Please enter your e-mail.', 'Info');
 		$('#email_input').focus();
 		return;
 	}
@@ -146,7 +156,8 @@ function emailCheck(){
 		, cache	: false
 		, success: function(data) {
 			if(data.Code == "103"){
-				jConfirm(textVal + ' \n해당 주소로  인증 메일이 발송됩니다.', '정보', function(res){
+// 				jConfirm(textVal + ' \n해당 주소로  인증 메일이 발송됩니다.', '정보', function(res){
+				jConfirm(textVal + ' \nYou will receive a verification email at this address.', 'Info', function(res){
 					if(res){
 						$('#confirmDiv').css('display', 'block');
 						randomStr = Math.random().toString(36).substr(2);
@@ -157,10 +168,11 @@ function emailCheck(){
 							data: 'thisType=checkEmail&searchEmail='+textVal+'&text='+randomStr,
 							success: function(data) {
 								if(data == 'success'){
-									jAlert('인증메일이 발송 되었습니다.', '정보');
+// 									jAlert('인증메일이 발송 되었습니다.', '정보');
+									jAlert('Verification email sent.', 'Info');
 									checkEmail = 1;
 								}else{
-									jAlert(data, '정보');
+									jAlert(data, 'Info');
 								}
 							}
 						});
@@ -168,7 +180,7 @@ function emailCheck(){
 				});
 			}else{
 				checkEmail = 0;
-				jAlert(data.Message, '정보');
+				jAlert(data.Message, 'Info');
 			}
 		}
 	});
@@ -176,16 +188,19 @@ function emailCheck(){
 
 function confirmNumChk(){
 	if(checkEmail != 1){
-		jAlert('인증 메일을 받으세요.', '정보');
+// 		jAlert('인증 메일을 받으세요.', '정보');
+		jAlert('Get a verification email.', 'Info');
 		return;
 	}
 	var text = $.trim($('#email_chkNum').val());
 	if(randomStr != text){
-		jAlert('인증 번호가 일치하지 않습니다.', '정보');
+// 		jAlert('인증 번호가 일치하지 않습니다.', '정보');
+		jAlert('Authentication number mismatch.', 'Info');
 		return;
 	}
 	
-	jAlert('이메일 인증이 완료되었습니다.', '정보');
+// 	jAlert('이메일 인증이 완료되었습니다.', '정보');
+	jAlert('Email verification is complete.', 'Info');
 	checkEmail = 2;
 }
 

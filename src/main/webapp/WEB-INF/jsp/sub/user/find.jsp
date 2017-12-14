@@ -16,12 +16,14 @@ function findClose(){
 //search id or pass
 function searchUserInfo(type){
 	if(type == 'pass' && $.trim($('#pass_id').val())==''){
-		jAlert('아이디를 입력해 주세요.', '정보');
+// 		jAlert('아이디를 입력해 주세요.', '정보');
+		jAlert('Please enter your ID.', 'Info');
 		$('#pass_id').focus();
 		return;
 	}
 	if($.trim($('#'+type+'_email').val())=='') {
-		jAlert('이메일을 입력해 주세요.', '정보');
+// 		jAlert('이메일을 입력해 주세요.', '정보');
+		jAlert('Please enter your e-mail.', 'Info');
 		$('#'+type+'_email').focus();
 		return;
 	}
@@ -47,13 +49,14 @@ function searchUserInfo(type){
 		, success: function(data) {
 			if(data.Code == 100){
 				str = data.Data;
-				jConfirm($('#'+type+'_email').val() + '해당 주소로 등록하신  '+ type + '가 발송됩니다.', '정보', function(res){
+// 				jConfirm($('#'+type+'_email').val() + '해당 주소로 등록하신  '+ type + '가 발송됩니다.', '정보', function(res){
+				jConfirm($('#'+type+'_email').val() + 'We will send you the '+ type +' that you registered with that address.', 'Info', function(res){
 					if(res){
 						sendMail(str,type);
 					}
 				});
 			}else{
-				jAlert(data.Message, '정보');
+				jAlert(data.Message, 'Info');
 			}
 		}
 	});
@@ -68,9 +71,10 @@ function sendMail(text,type){
 		success: function(data) {
 			if(data == 'success'){
 				$('#'+type+'_email').val('');
-				jAlert('요청 하신 '+ type +'가 등록하신 이메일로 발송되었습니다.');
+// 				jAlert('요청 하신 '+ type +'가 등록하신 이메일로 발송되었습니다.');
+				jAlert('The requested '+ type +' has been sent to your email.');
 			}else{
-				jAlert(data, '정보');
+				jAlert(data, 'Info');
 			}
 		}
 	});

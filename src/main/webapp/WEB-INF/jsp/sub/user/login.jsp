@@ -16,12 +16,14 @@ function openLoginPage(){
 //로그인
 function loginUser(){
 	if($.trim($('#id_input').val())=='') {
-		jAlert('아이디를 입력해 주세요.', '정보');
+// 		jAlert('아이디를 입력해 주세요.', '정보');
+		jAlert('Please enter your ID.', 'Info');
 		$('#id_input').focus();
 		return;
 	}
 	if($.trim($('#pass_input').val())=='') {
-		jAlert('비밀번호를 입력해 주세요.', '정보');
+// 		jAlert('비밀번호를 입력해 주세요.', '정보');
+		jAlert('Please enter a password.', 'Info');
 		$('#pass_input1').focus();
 		return;
 	}
@@ -49,7 +51,7 @@ function loginUser(){
 				loginSetting(id, token_code, resType);
 			}
 			else {
-				jAlert(msg, '정보');
+				jAlert(msg, 'Info');
 			}
 		}
 	});
@@ -64,7 +66,7 @@ function loginSetting(id, token, type) {
 			if(data == "100"){
 				window.location.href='/GeoCMS';
 			}else{
-				jAlert(data, '정보');
+				jAlert(data, 'Info');
 			}
 		}
 	});

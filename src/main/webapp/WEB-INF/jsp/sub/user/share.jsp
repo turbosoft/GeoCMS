@@ -106,7 +106,8 @@ function clickUserPage(type, page){
 	var tmpRemoveShare = '&nbsp';
 	
 	if(type == 'search' && (searchText == null || searchText == '' || searchText == 'null')){
-		jAlert('검색 하실 ID를 입력해 주세요.', '정보');
+// 		jAlert('검색 하실 ID를 입력해 주세요.', '정보');
+		jAlert('Please enter ID.', 'Info');
 		return;
 	}
 	
@@ -151,9 +152,11 @@ function clickUserPage(type, page){
 				if(data_line_arr != null && data_line_arr != ''){
 					if(page != null && type == 'search'){
 						if(data.SearchYN == 'Y'){
-							jAlert('이미 공유한 사용자 입니다.', '정보');
+// 							jAlert('이미 공유한 사용자 입니다.', '정보');
+							jAlert('Already shared.', 'Info');
 						}else{
-							jConfirm("'"+ searchText +" 를 공개 유저에 추가 하시겠습니까?", '', function(text){
+// 							jConfirm("'"+ searchText +" 를 공개 유저에 추가 하시겠습니까?", '', function(text){
+							jConfirm("'"+ searchText +"' Do you want to add it to public users?", '', function(text){
 								if(text == true){
 									
 									makeShareArray('add', data_line_arr[0].UID);
@@ -198,9 +201,10 @@ function clickUserPage(type, page){
 				}
 			}else{
 				if(page != null && type == 'search'){
-					jAlert('해당 사용자가 존재하지 않습니다.', '정보');
+// 					jAlert('해당 사용자가 존재하지 않습니다.', '정보');
+					jAlert('This user does not exist.', 'Info');
 				}else if(page != null && type != 'first'){
-					jAlert(data.Message, '정보');
+					jAlert(data.Message, 'Info');
 				}
 			}
 		}
@@ -446,7 +450,8 @@ function allCheckEdit(objChk){
 
 function shareUserSave(){
 	if($('#shareUser_table tr').length<= 2){
-		jAlert('공유 유저를 선택해 주세요', '정보');
+// 		jAlert('공유 유저를 선택해 주세요', '정보');
+		jAlert('Please select a shared user', 'Info');
 		return;
 	}
 	
