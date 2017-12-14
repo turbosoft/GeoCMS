@@ -43,7 +43,7 @@ function searchPageInit(text, boardChk, imageChk, videoChk, check, display) {
 				//이미지 리스트 설정
 				searchListSetup(response);
 			}else{
-				jAlert(data.Message, '정보');
+				jAlert(data.Message, 'Info');
 			}
 		}
 	});
