@@ -148,8 +148,6 @@ function saveVideoFn(data){
 // 	var shareType = $('input[name=shareRadio]:checked').val();
 // 	var addShareUser = $('#shareAdd').val();
 
-	title = title.replace(/\//g,'&sbsp');
-	content = content.replace(/\//g,'&sbsp');
 	filePath = filePath.replace(/\\/g,'&sbsp');
 	
 	if(lat == null || lat == ''){
@@ -162,8 +160,8 @@ function saveVideoFn(data){
 // 	if(addShareUser == null || addShareUser.length <= 0){
 // 		addShareUser = '&nbsp';
 // 	}
-	title = encodeURIComponent(title);
-	innerStr = encodeURIComponent(innerStr);
+	title = title.replace(/\//g,'&sbsp').replace(/\?/g,'&mbsp').replace(/\#/g,'&pbsp').replace(/\./g,'&obsp').replace(/</g,'&lt').replace(/>/g,'&gt').replace(/\\/g,'&bt').replace(/%/g,'&mt').replace(/;/g,'&vbsp');
+	content = content.replace(/\//g,'&sbsp').replace(/\?/g,'&mbsp').replace(/\#/g,'&pbsp').replace(/\./g,'&obsp').replace(/</g,'&lt').replace(/>/g,'&gt').replace(/\\/g,'&bt').replace(/%/g,'&mt').replace(/;/g,'&vbsp');
 	
 	var Url			= baseRoot() + "cms/saveVideo/";
 	var param		= loginToken + "/" + loginId + "/" + title + "/" + content + "/" + fileName + "/" + filePath + "/" + lat + "/" + lon + "/" + tabName + "/" + projectIdxNum;
@@ -195,12 +193,32 @@ function saveVideoFn(data){
 
 //게시물 생성
 function createContent() {
-	if($.trim($('#title_area').val())=='') {
-// 		jAlert('제목을 입력해 주세요.', '정보');
-		jAlert('Please enter the title.', 'Info');
-		$('#title_area').focus();
+	var title = $('#title_area').val();
+	var content = document.getElementById('content_area').value;
+	if(title == null || title == "" || title == 'null'){
+//		 jAlert('제목을 입력해 주세요.', '정보');
+		 jAlert('Please enter the title.', 'Info');
+		 $('#title_area').focus();
+		 return;
+	 }
+	 
+	 if(content == null || content == "" || content == 'null'){
+//		 jAlert('내용을 입력해 주세요.', '정보');
+		 jAlert('Please enter your content.', 'Info');
+		 $('#content_area').focus();
+		 return;
+	 }
+	
+	if(title != null && title.indexOf('\'') > -1){
+// 		alert('특수문자 \' 는 사용할 수 없습니다.');
+		jAlert("Special characters \ ' can not be used.", 'Info');
 		return;
-	}
+ 	}	
+ 	if(content != null && content.indexOf('\'') > -1){
+// 		alert('특수문자 \' 는 사용할 수 없습니다.');
+		jAlert("Special characters \ ' can not be used.", 'Info');
+		return;
+ 	}
 	
 	var gpxUpChk = $('#file_upload_gpxQueue').children().length == 0?false:true;
 	if(!gpxUpChk){

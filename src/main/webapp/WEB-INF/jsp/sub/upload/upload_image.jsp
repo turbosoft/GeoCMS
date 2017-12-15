@@ -76,7 +76,6 @@ $(function() {
 		'uploader' : '<c:url value="/lib/uploadify/uploadify.swf"/>',
 		'onComplete' : function(event, ID, fileObj, response, data) {
 			imageUploadCnt++;
-			
 			if(response != null && response != ''){
 				var tmpArr = response.split(",");
 				var fileName, filePath, lati, longi;
@@ -141,12 +140,24 @@ function createContent() {
 		 
 		 if(content == null || content == "" || content == 'null'){
 // 			 jAlert('내용을 입력해 주세요.', '정보');
-			jAlert('Please enter your content.', 'Info');
-			$('#content_area').focus();
-			return;
+			 jAlert('Please enter your content.', 'Info');
+			 $('#content_area').focus();
+			 return;
 		 }
 		 
+		 if(title != null && title.indexOf('\'') > -1){
+// 			alert('특수문자 \' 는 사용할 수 없습니다.');
+			jAlert("Special characters \ ' can not be used.", 'Info');
+			return;
+		 }	
+		 if(content != null && content.indexOf('\'') > -1){
+// 			alert('특수문자 \' 는 사용할 수 없습니다.');
+			jAlert("Special characters \ ' can not be used.", 'Info');
+			return;
+		 }	
+		 
 		$('#file_upload').uploadifySettings('script', '<c:url value="/geoUpload.do"/>?uploadType=GeoPhoto');
+		
 		//파일 업로드
 		$('#file_upload').uploadifyUpload();
 	}
@@ -158,6 +169,7 @@ function createContent() {
 }
 
 function saveImageFn(fileName, filePath, lati, longi){
+	
 	if(loginId != null && loginId != '' && loginId != 'null') {
 		//게시물 정보 전송 설정
 		var title = $('#title_area').val();
@@ -165,10 +177,10 @@ function saveImageFn(fileName, filePath, lati, longi){
 		var tabName = $('#showKind').val();
 		var projectIdxNum = $('#projectKind').val();
 		
-		title = title.replace(/\//g,'&sbsp');
-		content = content.replace(/\//g,'&sbsp');
+		title = title.replace(/\//g,'&sbsp').replace(/\?/g,'&mbsp').replace(/\#/g,'&pbsp').replace(/\./g,'&obsp').replace(/</g,'&lt').replace(/>/g,'&gt').replace(/\\/g,'&bt').replace(/%/g,'&mt').replace(/;/g,'&vbsp');
+		content = content.replace(/\//g,'&sbsp').replace(/\?/g,'&mbsp').replace(/\#/g,'&pbsp').replace(/\./g,'&obsp').replace(/</g,'&lt').replace(/>/g,'&gt').replace(/\\/g,'&bt').replace(/%/g,'&mt').replace(/;/g,'&vbsp');
 		filePath = filePath.replace(/\\/g,'&sbsp');
-
+		
 		if(lati == null || lati == '' || lati == 'null'){
 			lati = '&nbsp';
 		}
@@ -176,13 +188,14 @@ function saveImageFn(fileName, filePath, lati, longi){
 		if(longi == null || longi == '' || longi == 'null'){
 			longi = '&nbsp';
 		}
-		title = encodeURIComponent(title);
-		innerStr = encodeURIComponent(innerStr);
+// 		title = encodeURIComponent(title);
+// 		content = encodeURIComponent(content);
 		
 		var Url			= baseRoot() + "cms/saveImage/";
+// 		/cms/saveImage/{token}/{loginId}/{title}/{content}/{filesStr}/{filePath}/{latitude}/{longitude}/{tabName}/{projectIdx}
 		var param		= loginToken + "/" + loginId + "/" + title + "/" + content + "/" + fileName + "/" + filePath + "/" + lati + "/" + longi + "/" + tabName + "/" + projectIdxNum;
 		var callBack	= "?callback=?";
-		
+
 		$.ajax({
 			type	: "POST"
 			, url	: Url + param + callBack
