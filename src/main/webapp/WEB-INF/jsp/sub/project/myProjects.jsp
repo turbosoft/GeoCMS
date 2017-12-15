@@ -206,8 +206,15 @@ function addProjectChildCell(response, pageNum){
 				response[i].PROJECTMARKERICON = response[i].PROJECTMARKERICON.replace('_','&ubsp');
 			}
 			tempArr.push(response[i].PROJECTMARKERICON);
-			tempArr.push(response[i].TITLE);
-			tempArr.push(response[i].CONTENT);
+			
+// 			var tmpTitleStr = response[i].TITLE;
+// 			tmpTitleStr = tmpTitleStr.replace(/\"/g,'');
+			tempArr.push("");
+			
+// 			var tmpContentStr = response[i].CONTENT;
+// 			tmpContentStr = tmpContentStr.replace(/\"/g,'');
+			tempArr.push("");
+			
 			tempArr.push(response[i].U_DATE);
 			innerHTMLStr += "mapCenterChange('"+ tempArr +"');";
 // 			innerHTMLStr += '"'+" title='제목 : "+ response[i].TITLE +"\n내용 : "+ response[i].CONTENT +"\n작성자 : "+ response[i].ID +"\n작성일 : "+ response[i].U_DATE +"' border='0'>";
@@ -625,8 +632,8 @@ function moveContentAdd(objArr){
 			var innerHTMLStr = '';
 			innerHTMLStr += "<a class='imageTag' id='MOVE_"+ objArr[4] + "_"+ objArr[3] +"' href='javascript:;' ";
 			var tempArr = new Array; //mapCenterChange에 넘길 객체 생성
-// 			innerHTMLStr += '"'+" title='제목 : "+ objArr[10] +"\n내용 : "+ objArr[11] +"\n작성자 : "+ objArr[7] +"\n작성일 : "+ objArr[12] +"' border='0'>";
-			innerHTMLStr += '"'+" title='TITLE : "+ objArr[10] +"\nCONTENT : "+ objArr[11] +"\nWRITER : "+ objArr[7] +"\nDATE : "+ objArr[12] +"' border='0'>";
+			innerHTMLStr += '"'+" border='0'>";
+// 			innerHTMLStr += '"'+" title='TITLE : "+ objArr[10] +"\nCONTENT : "+ objArr[11] +"\nWRITER : "+ objArr[7] +"\nDATE : "+ objArr[12] +"' border='0'>";
 
 			innerHTMLStr += "<img class='round' src='<c:url value='/"+ localAddress +"'/>' width='80' height='60' hspace='10' vspace='10' style='border:2px solid #888888'/>";
 			innerHTMLStr += "</a>";
