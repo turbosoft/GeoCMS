@@ -580,7 +580,7 @@ function addLeftImageDataCell(id_arr, title_arr, content_arr, file_url_arr, udat
 	
 	var tmpMakerImg = 'images';
 	if(obj.isPop != null && obj.isPop != '' && obj.isPop != 'null'){
-		target = window.frames[1].document.getElementById(obj.table_name);
+		target = window.frames[0].document.getElementById(obj.table_name);
 		tmpMakerImg = '../images';
 	}
 	
