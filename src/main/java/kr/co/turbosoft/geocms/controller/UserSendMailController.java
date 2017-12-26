@@ -2,6 +2,7 @@ package kr.co.turbosoft.geocms.controller;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.Date;
 import java.util.Properties;
 
 import javax.mail.Authenticator;
@@ -37,41 +38,46 @@ public class UserSendMailController {
 		String textType = request.getParameter("textType");
 		String searchEmail = request.getParameter("searchEmail");
 		String thisType = request.getParameter("thisType"); 
-		Properties props = new Properties();
 		String result = "success";
 
 	        String msgBody = "";
 	        if(thisType != null && thisType != "" && "checkEmail".equals(thisType)){
-	        	msgBody = "인증 번호는 "+ text +" 입니다.";
+	        	msgBody = "The authentication number is "+ text +" .";
 	        }else{
-	        	msgBody = "요청하신  "+ textType +"는 "+ text +" 입니다.";
+	        	msgBody = "The requested  "+ textType +" is "+ text +" .";
 	        }
 
 	        try {
-	        	Authenticator auth = new PopupAuthenticator();
-	        	
+	        	Properties props = System.getProperties();
 	        	props.put("mail.smtp.host", "smtp.gmail.com");
 	        	props.put("mail.smtp.port", "587");
 	        	props.put("mail.smtp.starttls.enable", "true");
 	        	props.put("mail.smtp.auth", "true");
 	        	
+	        	Authenticator auth = new PopupAuthenticator();
+	        	
+	        	//session 생성 및  MimeMessage생성
 	        	Session session = Session.getDefaultInstance(props, auth);
  	            Message msg = new MimeMessage(session);
-	            msg.addRecipient(Message.RecipientType.TO,
-	                             new InternetAddress(searchEmail));
+ 	            
+ 	            //편지보낸시간
+ 	            msg.setSentDate(new Date());
+ 	            InternetAddress from = new InternetAddress() ;
+ 	            from = new InternetAddress(emailAddress);
+ 	            // 이메일 발신자
+ 	            msg.setFrom(from);
+ 	            
+ 	            // 이메일 수신자
+ 	            InternetAddress to = new InternetAddress(searchEmail);
+ 	            msg.setRecipient(Message.RecipientType.TO, to);
+ 	            
 	            msg.setSubject("GeoCMS Message");
 	            msg.setText(msgBody);
 	            Transport.send(msg);
 	        	
-	        } catch (AddressException e) {
-	            e.printStackTrace();
-	            result = "시스템 오류입니다. 오류메시지를 확인해 주세요.";
-	        } catch (MessagingException e) {
-	        	e.printStackTrace();
-	        	result = "시스템 오류입니다. 오류메시지를 확인해 주세요.";
 	        } catch (Exception e) {
 	        	e.printStackTrace();
-	        	result = "시스템 오류입니다. 오류메시지를 확인해 주세요.";
+	        	result = "System error. Please check the error message.";
 			}
 	        
 	      //setContentType 을 먼저 설정하고 getWriter
