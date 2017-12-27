@@ -49,10 +49,10 @@ function getBase() {
 				b_boardTabArr = result.boardTab.split(",");				//board tab list
 				b_boardNum= result.boardNum.split(",");					//board num
 				
-				if(result.openAPI == '0') {								//openAPI 보여주기 여부  {0:안보이기, 1:보이기}
+// 				if(result.openAPI == '0') {								//openAPI 보여주기 여부  {0:안보이기, 1:보이기}
 					var idx = $.inArray('OpenApi', menuArr);	
 					menuArr[idx] = 'OpenApi_off';
-				}
+// 				}
 				if(result.latestView == '0'){					//latest Upload 보여주기 여부  {0:안보이기, 1:보이기}
 					var idx = $.inArray('latestUpload', menuArr);
 					menuArr[idx] = 'latestUpload_off';

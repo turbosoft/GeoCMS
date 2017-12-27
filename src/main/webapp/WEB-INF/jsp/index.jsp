@@ -305,7 +305,7 @@ function cmsLoadExif(){
 	</div>
 	
 	<!-- edit btn -->
-	<div style="position:absolute;background-color: #ffffff;width:130px;height: 245px;left: 430px;top: 160px;border: 1px solid gray;z-index: 500;display:none;" id="editPopBtn">
+	<div style="position:absolute;background-color: #ffffff;width:130px;height: 200px;left: 430px;top: 160px;border: 1px solid gray;z-index: 500;display:none;" id="editPopBtn">
 		<img src="<c:url value='/images/geoImg/btn_image/edit_add.png'/>" style='width:30px; height:30px; margin:15px 0 0 5px;' onclick="tabEditBtn('ADD');"/>
 		<label style="display: inline-block; float: right; margin: 25px 20px 0 0;">Add Tab</label><br>
 		
@@ -316,7 +316,7 @@ function cmsLoadExif(){
 		<label style="display: inline-block; float: right; margin: 25px 20px 0 0;">Modify Tab</label>
 		
 		<hr>
-		<p class="fnt_12"><input type="checkbox" id="view_OpenApi" name="view_OpenApi" onclick="viewCheck(this);" /> Open API </p>
+		<p class="fnt_12" style="display: none;"><input type="checkbox" id="view_OpenApi" name="view_OpenApi" onclick="viewCheck(this);" /> Open API </p>
 		<p class="fnt_12"><input type="checkbox" id="view_latestUpload" name="view_latestUpload" onclick="viewCheck(this);" /> Latest Uploads </p>
 		
 	</div>
