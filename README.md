@@ -1,4 +1,4 @@
-GeoCMS version 1.0
+GeoCMS version 1.00
 ========================
 
 공간정보 SW활용을 위한 오픈소스 가공기술 개발
