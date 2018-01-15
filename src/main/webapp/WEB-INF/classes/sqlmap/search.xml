@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="search">
+     <select id="selectSearchList" parameterType="paramMap" resultType="resultMap">
+        SELECT 
+        	* 
+        FROM 
+        	(
+        	<if test="boardChk != null and boardChk.equalsIgnoreCase('true')">
+        		SELECT
+        			 ID
+        			,TITLE
+        			,CONTENT
+        			,FILENAME
+        			,TO_CHAR(UDATE,'YYYY-mm-dd') U_DATE
+        			,UDATE
+        			,IDX
+        			,(SELECT tabname FROM GEOCMS_TAB WHERE tabidx = GEOCMS_BOARD_CONTENT.tabidx AND tabgroup = 'board') AS TABNAME
+        			,NULL AS LATITUDE
+					,NULL AS LONGITUDE
+					,NULL AS THUMBNAIL
+					,NULL AS ORIGINNAME
+					,NULL AS XMLDATA
+					,'GeoCMS' AS DATAKIND
+					,SHARETYPE
+				FROM
+					GEOCMS_BOARD_CONTENT
+				WHERE
+					1 = 1
+        		AND
+        			(TITLE LIKE '%${text}%' OR CONTENT LIKE '%${text}%')
+        	</if>
+        	
+        	<if test="boardChk != null and boardChk.equalsIgnoreCase('true') and(
+        		(imageChk != null and imageChk.equalsIgnoreCase('true')) or (videoChk != null and videoChk.equalsIgnoreCase('true'))
+        	)">
+        		UNION
+        	</if>
+        	
+        	<if test="imageChk != null and imageChk.equalsIgnoreCase('true')">
+        		SELECT
+        			 ID
+        			,TITLE
+        			,CONTENT
+        			,FILENAME
+        			,TO_CHAR(UDATE,'YYYY-mm-dd') U_DATE
+        			,UDATE
+        			,IDX
+        			,(SELECT tabname FROM GEOCMS_TAB WHERE tabidx = (SELECT tabIdx FROM GEOCMS_PROJECT_CONTENT WHERE GEOCMS_PROJECT_CONTENT.idx = GEOCMS_IMAGE_CONTENT.projectIdx)AND tabgroup = 'content') AS TABNAME
+        			,LATITUDE
+					,LONGITUDE
+					,NULL AS THUMBNAIL
+					,NULL AS ORIGINNAME
+					,XMLDATA
+					,'GeoPhoto' AS DATAKIND
+					,SHARETYPE
+				FROM
+					GEOCMS_IMAGE_CONTENT
+				WHERE
+					1 = 1
+		        <if test="check != null and check.equalsIgnoreCase('content')">
+	        		AND
+	        			(TITLE LIKE '%${text}%' OR CONTENT LIKE '%${text}%')
+	        	</if>
+	        	<if test="check != null and check.equalsIgnoreCase('anno')">
+	        		AND
+	        			XMLDATA LIKE '%${text}%'
+	        	</if>
+	        	<if test="check != null and check.equalsIgnoreCase('all')">
+	        		AND
+	        			(TITLE LIKE '%${text}%' OR CONTENT LIKE '%${text}%' 
+	        				OR 
+	        					XMLDATA LIKE '%${text}%'
+	        			)
+	        	</if>
+        	</if>
+        	
+        	<if test="(imageChk != null and imageChk.equalsIgnoreCase('true')) and
+        		(videoChk != null and videoChk.equalsIgnoreCase('true'))">
+        		UNION
+        	</if>
+        	
+        	<if test="videoChk != null and videoChk.equalsIgnoreCase('true')">
+        		SELECT
+        			 ID
+        			,TITLE
+        			,CONTENT 
+        			,FILENAME
+        			,TO_CHAR(UDATE,'YYYY-mm-dd') U_DATE
+        			,UDATE
+        			,IDX
+        			,(SELECT tabname FROM GEOCMS_TAB WHERE tabidx = (SELECT tabIdx FROM GEOCMS_PROJECT_CONTENT WHERE GEOCMS_PROJECT_CONTENT.idx = GEOCMS_VIDEO_CONTENT.projectIdx)AND tabgroup = 'content') AS TABNAME
+        			,LATITUDE
+					,LONGITUDE
+					,THUMBNAIL
+					,(select ORIGINNAME from geocms_content_child where parentIdx = IDX  limit 1 ) AS ORIGINNAME
+					,XMLDATA
+					,'GeoVideo' AS DATAKIND
+					,SHARETYPE
+				FROM
+					GEOCMS_VIDEO_CONTENT
+				WHERE
+					1 = 1
+				<if test="check != null and check.equalsIgnoreCase('content')">
+	        		AND
+	        			(TITLE LIKE '%${text}%' OR CONTENT LIKE '%${text}%')
+	        	</if>
+	        	<if test="check != null and check.equalsIgnoreCase('anno')">
+	        		AND
+	        			XMLDATA LIKE '%${text}%'
+	        	</if>
+	        	<if test="check != null and check.equalsIgnoreCase('all')">
+	        		AND
+	        			(TITLE LIKE '%${text}%' OR CONTENT LIKE '%${text}%' 
+	        				OR 
+	        					XMLDATA LIKE '%${text}%'
+	        			)
+	        	</if>
+        	</if>
+        	) TMPTABLE
+        WHERE
+        	1 = 1
+        AND
+	    	(
+	    		ID = '${loginId}' 
+	    	OR 
+	    		(SELECT TYPE FROM geocms_user WHERE id = '${loginId}') = 'ADMIN'
+	    	OR
+	    		SHARETYPE = 1
+	    	OR 
+	    		(
+	    			SHARETYPE = 2
+	    		AND 
+	    			'${loginId}' IN 
+	    			(
+	    				SELECT 
+	    					ID 
+	    				FROM 
+	    					GEOCMS_SHARE 
+	    				LEFT JOIN GEOCMS_USER ON GEOCMS_USER.UID = GEOCMS_SHARE.UID
+	    				WHERE 
+	    					SHAREKIND = TMPTABLE.DATAKIND
+	    				AND
+	    					SHAREIDX = TMPTABLE.IDX
+	    			)
+	    		)
+	    	)
+	    <if test="display != null and !display.equalsIgnoreCase('')">
+        	ORDER BY UDATE DESC LIMIT ${display}
+        </if>
+    </select>
+</mapper>

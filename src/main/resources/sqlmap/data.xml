@@ -1,0 +1,1835 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="data">
+     <select id="selectBase" parameterType="paramMap" resultType="resultMap">
+        SELECT 
+        	OPENAPI,
+        	LATESTVIEW,
+        	MAPZOOM,
+        	USERLEVEL,
+        	NULL AS TABIDX,
+			NULL AS 	TABNAME,
+			NULL AS 	TABHEIGHT,
+			NULL AS 	TABTYPE,
+			NULL AS 	TABGROUP
+        FROM 
+        	GEOCMS_SETTING
+        UNION
+        SELECT
+			NULL AS OPENAPI,
+        	NULL AS LATESTVIEW,
+        	NULL AS MAPZOOM,
+        	NULL AS USERLEVEL,
+			TABIDX,
+			TABNAME,
+			TABHEIGHT,
+			TABTYPE,
+			TABGROUP
+		FROM
+			GEOCMS_TAB
+		ORDER BY
+			OPENAPI, TABIDX
+    </select>
+    
+    <update id="updateBase" parameterType="paramMap">
+    	UPDATE
+    		GEOCMS_SETTING
+    	SET
+    		 OPENAPI			= '${openAPI}'
+    		,LATESTVIEW			= '${latestView}'
+    		,MAPZOOM 			= '${mapZoom}'
+    </update>
+    
+    <select id="selectTabList" parameterType="paramMap" resultType="resultMap">
+    	SELECT
+    		  IDX
+    		 ,TABIDX
+        	 ,TABNAME
+        	 ,TABHEIGHT
+        	 ,TABTYPE
+        	 ,TABGROUP
+        	 ,TO_CHAR(RDATE,'YYYY-mm-dd') R_DATE
+        	 ,TO_CHAR(UDATE,'YYYY-mm-dd') U_DATE
+        	 ,ID
+       	FROM
+       		GEOCMS_TAB
+       	WHERE
+       		1 = 1
+       	<if test="tabName != null and tabName != ''">
+       		AND
+       			TABNAME = '${tabName}'
+       	</if>
+       	<if test="tabGroup != null and tabGroup != ''">
+       		AND
+       			TABGROUP = '${tabGroup}'
+       	</if>
+       	<if test="saveIdxArr != null">
+       		<foreach collection="saveIdxArr" item="saveIdxArr" open= "AND TABIDX NOT IN (" separator =","  close=")" >
+       			${saveIdxArr}
+       		</foreach>
+       	</if>
+    </select>
+    
+    <insert id="insertTab" parameterType="paramMap" useGeneratedKeys="true" keyProperty="idx">
+        INSERT INTO GEOCMS_TAB
+        (
+        	  TABIDX
+        	 ,TABNAME
+        	 ,TABHEIGHT
+        	 ,TABTYPE
+        	 ,TABGROUP
+        )
+        VALUES
+        (	  ${tabIdx}
+        	,'${tabName}'
+        	, ${tabHeight}
+        	,'${tabType}'
+        	,'${tabGroup}'
+        )
+        <selectKey keyProperty="idx" resultType="int" order="AFTER">
+        	SELECT CURRVAL (pg_get_serial_sequence ('GEOCMS_TAB', 'idx'))
+   		</selectKey>
+    </insert>
+    
+    <update id="updateTab" parameterType="paramMap">
+    	UPDATE
+    		GEOCMS_TAB
+    	SET
+    		 UDATE 			= now()
+    		,TABIDX 		= ${tabIdx}
+    		,TABNAME 		='${tabName}'
+    		,TABHEIGHT 		= ${tabHeight}
+    		,TABTYPE 		='${tabType}'
+    		,TABGROUP 		='${tabGroup}'
+    		,ID 			='${userId}'
+    	WHERE
+    		IDX			= ${idx}
+    </update>
+    
+    <delete id="deleteTab">
+    	DELETE
+    		FROM
+    			GEOCMS_TAB
+    	WHERE
+    		TABGROUP = '${nowRightTabName}'
+    	<if test="removeList != null">
+       		<foreach collection="removeList" item="removeList" open= "AND IDX IN (" separator =","  close=")" >
+       			${removeList.idx}
+       		</foreach>
+       	</if>
+    		
+    </delete>
+    
+    <update id="updateTabIdxBoard" parameterType="paramMap">
+    	UPDATE
+    		GEOCMS_BOARD_CONTENT
+    	SET
+    		TABIDX 			= ${newTabIdx}
+    	WHERE
+    		TABIDX			= ${oldTabIdx}
+    </update>
+    
+    <update id="updateTabBoardIdx" parameterType="paramMap">
+    	UPDATE
+    		GEOCMS_BOARD_CONTENT
+    	SET
+    		TABIDX 			= ${newTabIdx}
+    	WHERE
+    		<foreach collection="oldTabBoard" item="oldTabBoard" open= " IDX IN (" separator =","  close=")" >
+       			${oldTabBoard.idx}
+       		</foreach>
+    </update>
+    
+    <update id="updateTabIdxProject" parameterType="paramMap">
+    	UPDATE
+    		GEOCMS_PROJECT_CONTENT
+    	SET
+    		TABIDX 			= ${newTabIdx}
+    	WHERE
+    		TABIDX			= ${oldTabIdx}
+    </update>
+    
+    <update id="updateTabProjectIdx" parameterType="paramMap">
+    	UPDATE
+    		GEOCMS_PROJECT_CONTENT
+    	SET
+    		TABIDX 			= ${newTabIdx}
+    	WHERE
+    		<foreach collection="oldTabProject" item="oldTabProject" open= " IDX IN (" separator =","  close=")" >
+       			${oldTabProject.idx}
+       		</foreach>
+    </update>
+    
+    <select id="selectBoardList" parameterType="paramMap" resultType="resultMap">
+	    SELECT 
+			 ID
+        	,TITLE
+        	,CONTENT
+        	,FILENAME
+        	,TO_CHAR(UDATE,'YYYY-mm-dd') R_DATE
+        	,RDATE
+        	,TO_CHAR(UDATE,'YYYY-mm-dd') U_DATE
+        	,UDATE
+        	,IDX
+        	,TABIDX
+        	,(SELECT tabname FROM GEOCMS_TAB WHERE tabidx = GEOCMS_BOARD_CONTENT.tabidx AND tabgroup = 'board') AS TABNAME
+        	,NULL AS LATITUDE
+		   	,NULL AS LONGITUDE
+		    ,NULL AS THUMBNAIL
+		    ,NULL AS ORIGINNAME
+		    ,'GeoCMS' AS DATAKIND
+        	,SHARETYPE
+		FROM 
+			GEOCMS_BOARD_CONTENT
+		WHERE
+			1 = 1
+		AND
+	    	(
+	    		ID = '${loginId}'
+	    	<if test="myContent == null || (myContent != null and !myContent.equalsIgnoreCase('Y'))">
+	    	OR 
+	    		(SELECT TYPE FROM geocms_user WHERE id = '${loginId}') = 'ADMIN'
+	    	OR
+	    		SHARETYPE = 1
+	    	OR 
+	    		(
+	    			SHARETYPE = 2
+	    		AND 
+	    			'${loginId}' IN 
+	    			(
+	    				SELECT 
+	    					ID 
+	    				FROM 
+	    					GEOCMS_SHARE 
+	    				LEFT JOIN GEOCMS_USER ON GEOCMS_USER.UID = GEOCMS_SHARE.UID
+	    				WHERE 
+	    					SHAREKIND = 'GeoCMS' 
+	    				AND
+	    					SHAREIDX = GEOCMS_BOARD_CONTENT.IDX
+	    			)
+	    		)
+	    	 </if>
+	    	)
+	    	
+			<if test="tabIdx != null and !tabIdx.equalsIgnoreCase('') and !tabIdx.equalsIgnoreCase('0') and type != null and !type.equalsIgnoreCase('latest')">
+				AND
+					TABIDX = ${tabIdx}
+			</if>	
+			<if test="idx != null and !idx.equalsIgnoreCase('')">
+		 		AND
+		 			IDX = ${idx}
+			</if>
+		 
+		 	<choose>
+				<when test="pageNum != null and pageNum != '' and pageNum.equalsIgnoreCase('1')">
+					ORDER BY UDATE DESC LIMIT ${contentNum}
+				</when>
+				<when test="orderIdx != null and orderIdx != ''">
+					ORDER BY IDX DESC LIMIT ${orderIdx}
+				</when>
+				<when test="pageNum != null and pageNum != '' and !pageNum.equalsIgnoreCase('1')">
+					ORDER BY UDATE DESC LIMIT ${contentNum} OFFSET ${offset}
+				</when>
+				<when test="contentNum != null and contentNum != ''">
+					ORDER BY IDX DESC LIMIT ${contentNum}
+				</when>
+			</choose>
+    </select>
+    
+    <select id="selectBoardListLen" parameterType="paramMap" resultType="resultMap">
+	    SELECT 
+			COUNT(*) TOTAL_CNT
+		FROM 
+			GEOCMS_BOARD_CONTENT
+		WHERE
+			1 = 1
+		AND
+	    	(
+	    		ID = '${loginId}'
+	    	<if test="myContent == null || (myContent != null and !myContent.equalsIgnoreCase('Y'))">
+	    	OR 
+	    		(SELECT TYPE FROM geocms_user WHERE id = '${loginId}') = 'ADMIN'
+	    	OR
+	    		SHARETYPE = 1
+	    	OR 
+	    		(
+	    			SHARETYPE = 2
+	    		AND 
+	    			'${loginId}' IN 
+	    			(
+	    				SELECT 
+	    					ID 
+	    				FROM 
+	    					GEOCMS_SHARE 
+	    				LEFT JOIN GEOCMS_USER ON GEOCMS_USER.UID = GEOCMS_SHARE.UID
+	    				WHERE 
+	    					SHAREKIND = 'GeoCMS' 
+	    				AND
+	    					SHAREIDX = GEOCMS_BOARD_CONTENT.IDX
+	    			)
+	    		)
+	    	 </if>
+	    	)
+		<if test="tabIdx != null and !tabIdx.equalsIgnoreCase('') and !tabIdx.equalsIgnoreCase('0')">
+			AND
+					TABIDX = ${tabIdx}
+		</if>
+    </select>
+    
+    <insert id="insertBoard" parameterType="paramMap" useGeneratedKeys="true" keyProperty="idx">
+        INSERT INTO GEOCMS_BOARD_CONTENT
+        (
+        	 ID
+        	,TITLE
+        	,CONTENT
+        	,FILENAME
+        	,RDATE
+        	,UDATE
+        	,SHARETYPE
+        )
+        VALUES
+        (
+        	 '${loginId}'
+        	,'${title}'
+        	,'${content}'
+        	,'${files}'
+        	, NOW()
+        	, NOW()
+        	, ${shareType}
+        )
+        <selectKey keyProperty="idx" resultType="int" order="AFTER">
+        	SELECT CURRVAL (pg_get_serial_sequence ('GEOCMS_BOARD_CONTENT', 'idx'))
+   		</selectKey>
+    </insert>
+    
+    <update id="updateBoard" parameterType="paramMap">
+    	UPDATE
+    		GEOCMS_BOARD_CONTENT
+    	SET
+    		 UDATE 		= NOW()
+    		 <if test="title != null and title != ''">
+    			,TITLE 		= '${title}'
+    		 </if>
+    		 <if test="content != null and content != ''">
+    			,CONTENT 	= '${content}'
+    		 </if>
+    		 <if test="files != null and files != ''">
+    			,FILENAME	= '${files}'
+    		 </if>
+    		 <if test="shareType != null and shareType != ''">
+    			,SHARETYPE 	=  ${shareType}
+    		 </if>
+    		 <if test="tabIdx != null and !tabIdx.equalsIgnoreCase('')">
+    			,TABIDX 	=  ${tabIdx}
+    		 </if>
+    	WHERE 
+    		1 = 1
+    	AND
+    		IDX = ${idx}
+    </update>
+    
+    <delete id="deleteBoard">
+    	DELETE
+    		FROM
+    			GEOCMS_BOARD_CONTENT
+    		WHERE
+    			IDX = ${idx}
+    		AND
+    			ID = '${loginId}'
+    </delete>
+    
+    <select id="selectAllContentList" parameterType="paramMap" resultType="resultMap">
+    	SELECT
+	    	*
+	    FROM
+	    	(
+			    SELECT
+			    	 ID
+			    	,TITLE
+			    	,CONTENT
+			    	,FILENAME
+			    	,RDATE
+			    	,TO_CHAR(UDATE,'YYYY-mm-dd') R_DATE
+			    	,UDATE
+			    	,TO_CHAR(UDATE,'YYYY-mm-dd') U_DATE
+			    	,IDX
+			    	,(SELECT tabIdx FROM GEOCMS_PROJECT_CONTENT WHERE GEOCMS_PROJECT_CONTENT.idx = GEOCMS_IMAGE_CONTENT.projectIdx) AS TABIDX								
+					,(SELECT tabname FROM GEOCMS_TAB WHERE tabidx = (SELECT tabIdx FROM GEOCMS_PROJECT_CONTENT WHERE GEOCMS_PROJECT_CONTENT.idx = GEOCMS_IMAGE_CONTENT.projectIdx)AND tabgroup = 'content') AS TABNAME	
+			    	,LATITUDE
+			    	,LONGITUDE
+			    	,NULL AS THUMBNAIL
+			    	,NULL AS ORIGINNAME
+			    	,'GeoPhoto' AS DATAKIND
+			    	,SHARETYPE
+			    	,PROJECTIDX
+			    	,(SELECT id FROM GEOCMS_PROJECT_CONTENT WHERE GEOCMS_PROJECT_CONTENT.idx = GEOCMS_IMAGE_CONTENT.PROJECTIDX) projectUserId
+			    	,SEQNUM
+			    	,DRONETYPE
+			    	,STATUS
+			    FROM
+			    	GEOCMS_IMAGE_CONTENT
+				UNION
+			    SELECT
+			    	 ID
+			    	,TITLE
+			    	,CONTENT
+			    	,FILENAME
+			    	,RDATE
+			    	,TO_CHAR(UDATE,'YYYY-mm-dd') R_DATE
+			    	,UDATE
+			    	,TO_CHAR(UDATE,'YYYY-mm-dd') U_DATE
+			    	,IDX
+			    	,(SELECT tabIdx FROM GEOCMS_PROJECT_CONTENT WHERE GEOCMS_PROJECT_CONTENT.idx = GEOCMS_VIDEO_CONTENT.projectIdx) AS TABIDX								
+					,(SELECT tabname FROM GEOCMS_TAB WHERE tabidx = (SELECT tabIdx FROM GEOCMS_PROJECT_CONTENT WHERE GEOCMS_PROJECT_CONTENT.idx = GEOCMS_VIDEO_CONTENT.projectIdx)AND tabgroup = 'content') AS TABNAME
+			    	,LATITUDE
+			    	,LONGITUDE
+			    	,THUMBNAIL
+			    	,ORIGINNAME
+			    	,'GeoVideo' AS DATAKIND
+			    	,SHARETYPE
+			    	,PROJECTIDX
+			    	,(SELECT id FROM GEOCMS_PROJECT_CONTENT WHERE GEOCMS_PROJECT_CONTENT.idx = GEOCMS_VIDEO_CONTENT.PROJECTIDX) projectUserId
+			    	,SEQNUM
+			    	,DRONETYPE
+			    	,(SELECT status FROM GEOCMS_LOG WHERE contentType = 'GeoVideo' and contentIdx = CAST(GEOCMS_VIDEO_CONTENT.IDX as text)) STATUS
+			    FROM
+			    	GEOCMS_VIDEO_CONTENT
+			) TEST_CONTENT
+			
+		    WHERE
+		    	1 = 1
+		 	<if test="copySeqArr != null">
+				<foreach collection="copySeqArr" item="copySeqArr" open= "AND (" separator ="OR"  close=")" >
+    				(TEST_CONTENT.DATAKIND = '${copySeqArr.dataKind}' AND TEST_CONTENT.IDX = ${copySeqArr.idx})
+    			</foreach>
+			</if>
+			
+		 	<choose>
+		 		<when test="copyOrder != null and copyOrder.equalsIgnoreCase('Y')">
+					ORDER BY SEQNUM
+				</when>
+		 	</choose>
+    </select>
+    
+    <select id="selectContentList" parameterType="paramMap" resultType="resultMap">
+	    SELECT
+	    	*
+	    FROM
+	    	(
+			    SELECT
+			    	 ID
+			    	,TITLE
+			    	,CONTENT
+			    	,FILENAME
+			    	,RDATE
+			    	,TO_CHAR(UDATE,'YYYY-mm-dd') R_DATE
+			    	,UDATE
+			    	,TO_CHAR(UDATE,'YYYY-mm-dd') U_DATE
+			    	,IDX
+			    	,(SELECT tabIdx FROM GEOCMS_PROJECT_CONTENT WHERE GEOCMS_PROJECT_CONTENT.idx = GEOCMS_IMAGE_CONTENT.projectIdx) AS TABIDX								
+					,(SELECT tabname FROM GEOCMS_TAB WHERE tabidx = (SELECT tabIdx FROM GEOCMS_PROJECT_CONTENT WHERE GEOCMS_PROJECT_CONTENT.idx = GEOCMS_IMAGE_CONTENT.projectIdx)AND tabgroup = 'content') AS TABNAME	
+			    	,LATITUDE
+			    	,LONGITUDE
+			    	,NULL AS THUMBNAIL
+			    	,NULL AS ORIGINNAME
+			    	,'GeoPhoto' AS DATAKIND
+			    	,SHARETYPE
+			    	,PROJECTIDX
+			    	,(SELECT id FROM GEOCMS_PROJECT_CONTENT WHERE GEOCMS_PROJECT_CONTENT.idx = GEOCMS_IMAGE_CONTENT.PROJECTIDX) projectUserId
+			    	,SEQNUM
+			    	,DRONETYPE
+			    	,STATUS
+			    FROM
+			    	GEOCMS_IMAGE_CONTENT
+				UNION
+			    SELECT
+			    	 ID
+			    	,TITLE
+			    	,CONTENT
+			    	,FILENAME
+			    	,RDATE
+			    	,TO_CHAR(UDATE,'YYYY-mm-dd') R_DATE
+			    	,UDATE
+			    	,TO_CHAR(UDATE,'YYYY-mm-dd') U_DATE
+			    	,IDX
+			    	,(SELECT tabIdx FROM GEOCMS_PROJECT_CONTENT WHERE GEOCMS_PROJECT_CONTENT.idx = GEOCMS_VIDEO_CONTENT.projectIdx) AS TABIDX								
+					,(SELECT tabname FROM GEOCMS_TAB WHERE tabidx = (SELECT tabIdx FROM GEOCMS_PROJECT_CONTENT WHERE GEOCMS_PROJECT_CONTENT.idx = GEOCMS_VIDEO_CONTENT.projectIdx)AND tabgroup = 'content') AS TABNAME
+			    	,LATITUDE
+			    	,LONGITUDE
+			    	,THUMBNAIL
+			    	,ORIGINNAME
+			    	,'GeoVideo' AS DATAKIND
+			    	,SHARETYPE
+			    	,PROJECTIDX
+			    	,(SELECT id FROM GEOCMS_PROJECT_CONTENT WHERE GEOCMS_PROJECT_CONTENT.idx = GEOCMS_VIDEO_CONTENT.PROJECTIDX) projectUserId
+			    	,SEQNUM
+			    	,DRONETYPE
+			    	,(SELECT status FROM GEOCMS_LOG WHERE contentType = 'GeoVideo' and contentIdx = CAST(GEOCMS_VIDEO_CONTENT.IDX as text)) STATUS
+			    FROM
+			    	GEOCMS_VIDEO_CONTENT
+			) TEST_CONTENT
+			
+		    WHERE
+		    	1 = 1
+		    AND
+	    	(
+	    		ID = '${loginId}'
+	    	<if test="myContentMarker == null">
+	    	OR 
+	    		(SELECT TYPE FROM geocms_user WHERE id = '${loginId}') = 'ADMIN'
+	    	OR
+	    		SHARETYPE = 1
+	    	OR 
+	    		(
+	    			SHARETYPE = 2
+	    		AND 
+	    			(
+						'${loginId}' IN
+						(
+		    				SELECT 
+		    					ID 
+		    				FROM 
+		    					GEOCMS_SHARE 
+		    				LEFT JOIN GEOCMS_USER ON GEOCMS_USER.UID = GEOCMS_SHARE.UID
+		    				WHERE 
+		    					SHAREKIND IN('GeoPhoto', 'GeoVideo') 
+		    				AND  
+		    					SHAREIDX = TEST_CONTENT.IDX
+						)
+					OR
+						'${loginId}' IN
+						(SELECT ID FROM GEOCMS_PROJECT_CONTENT WHERE IDX = TEST_CONTENT.PROJECTIDX)
+	    			)
+	    		)
+	    	 </if>
+	    	)
+	    	<if test="tabIdx != null and !tabIdx.equalsIgnoreCase('') and !tabIdx.equalsIgnoreCase('0') and type != null and !type.equalsIgnoreCase('latest')">
+				AND
+					TABIDX = ${tabIdx}
+			</if>
+			<if test="type != null and type.equalsIgnoreCase('marker')">
+				AND 
+		 			LATITUDE IS NOT NULL 
+		 		AND  
+		 			LONGITUDE IS NOT NULL
+		 		AND 
+		 			LATITUDE != 0
+		 		AND 
+		 			LONGITUDE != 0
+		 	</if>
+		 	
+		 	<if test="projectIdx != null and !projectIdx.equalsIgnoreCase('')">
+		 		AND
+		 			PROJECTIDX = ${projectIdx}
+			</if>
+			
+			AND
+	    		STATUS = 'COMPLETE'
+		 	
+		 	<choose>
+		 		<when test="contentNum != null and contentNum != '' and !type.equalsIgnoreCase('marker') and ((pageNum != null and pageNum != '' and pageNum == 1) or(type != null and type.equalsIgnoreCase('latest')))">
+					ORDER BY UDATE DESC LIMIT ${contentNum}
+				</when>
+				<when test="type != null and type != '' and (!type.equalsIgnoreCase('marker') and !type.equalsIgnoreCase('one') and contentNum != null and contentNum != '' and offset != null and offset != '')">
+					ORDER BY UDATE DESC LIMIT ${contentNum} OFFSET ${offset}
+				</when>
+				<when test="type != null and type.equalsIgnoreCase('marker')">
+					ORDER BY PROJECTIDX , SEQNUM
+				</when>
+		 	</choose>
+    </select>
+    
+    <select id="selectContentListLen" parameterType="paramMap" resultType="resultMap">
+    	SELECT
+    		COUNT(*) TOTAL_CNT
+    	FROM
+    		(
+			    SELECT
+			    	 ID
+			    	,TITLE
+			    	,CONTENT
+			    	,FILENAME
+			    	,TO_CHAR(UDATE,'YYYY-mm-dd') R_DATE
+			    	,TO_CHAR(UDATE,'YYYY-mm-dd') U_DATE
+			    	,IDX
+					,(SELECT tabIdx FROM GEOCMS_PROJECT_CONTENT WHERE GEOCMS_PROJECT_CONTENT.idx = GEOCMS_IMAGE_CONTENT.projectIdx) AS TABIDX								
+					,(SELECT tabname FROM GEOCMS_TAB WHERE tabidx = (SELECT tabIdx FROM GEOCMS_PROJECT_CONTENT WHERE GEOCMS_PROJECT_CONTENT.idx = GEOCMS_IMAGE_CONTENT.projectIdx)AND tabgroup = 'content') AS TABNAME	
+			    	,LATITUDE
+			    	,LONGITUDE
+			    	,NULL AS THUMBNAIL
+			    	,NULL AS ORIGINNAME
+			    	,'GeoPhoto' AS DATAKIND
+			    	,SHARETYPE
+			    	,PROJECTIDX
+			    	,SEQNUM
+			    	,DRONETYPE
+			    	,STATUS
+			    FROM
+			    	GEOCMS_IMAGE_CONTENT
+				UNION
+			    SELECT
+			    	 ID
+			    	,TITLE
+			    	,CONTENT
+			    	,FILENAME
+			    	,TO_CHAR(UDATE,'YYYY-mm-dd') R_DATE
+			    	,TO_CHAR(UDATE,'YYYY-mm-dd') U_DATE
+			    	,IDX
+			    	,(SELECT tabIdx FROM GEOCMS_PROJECT_CONTENT WHERE GEOCMS_PROJECT_CONTENT.idx = GEOCMS_VIDEO_CONTENT.projectIdx) AS TABIDX								
+					,(SELECT tabname FROM GEOCMS_TAB WHERE tabidx = (SELECT tabIdx FROM GEOCMS_PROJECT_CONTENT WHERE GEOCMS_PROJECT_CONTENT.idx = GEOCMS_VIDEO_CONTENT.projectIdx)AND tabgroup = 'content') AS TABNAME	
+			    	,LATITUDE
+			    	,LONGITUDE
+			    	,THUMBNAIL
+			    	,ORIGINNAME
+			    	,'GeoVideo' AS DATAKIND
+			    	,SHARETYPE
+			    	,PROJECTIDX
+			    	,SEQNUM
+			    	,DRONETYPE
+			    	,(SELECT status FROM GEOCMS_LOG WHERE contentType = 'GeoVideo' and contentIdx = CAST(GEOCMS_VIDEO_CONTENT.IDX as text)) STATUS
+			    FROM
+			    	GEOCMS_VIDEO_CONTENT
+			) TEST_CONTENT
+			
+		    WHERE
+		    	1 = 1
+		    AND
+	    	(
+	    		ID = '${loginId}'
+	    	<if test="myContentMarker == null">
+	    	OR 
+	    		(SELECT TYPE FROM geocms_user WHERE id = '${loginId}') = 'ADMIN'
+	    	OR
+	    		SHARETYPE = 1
+	    	OR 
+	    		(
+	    			SHARETYPE = 2
+	    		AND 
+	    			(
+						'${loginId}' IN
+						(
+		    				SELECT 
+		    					ID 
+		    				FROM 
+		    					GEOCMS_SHARE 
+		    				LEFT JOIN GEOCMS_USER ON GEOCMS_USER.UID = GEOCMS_SHARE.UID
+		    				WHERE 
+		    					SHAREKIND IN('GeoPhoto', 'GeoVideo') 
+		    				AND  
+		    					SHAREIDX = TEST_CONTENT.IDX
+						)
+					OR
+						'${loginId}' IN
+						(SELECT ID FROM GEOCMS_PROJECT_CONTENT WHERE IDX = TEST_CONTENT.PROJECTIDX)
+	    			)
+	    		)
+	    	 </if>
+	    	)
+	    	<if test="tabIdx != null and !tabIdx.equalsIgnoreCase('') and !tabIdx.equalsIgnoreCase('0') and type != null and !type.equalsIgnoreCase('latest')">
+				AND
+					TABIDX = ${tabIdx}
+			</if>
+			<if test="projectIdx != null and !projectIdx.equalsIgnoreCase('')">
+		 		AND
+		 			PROJECTIDX = ${projectIdx}
+			</if>
+			
+			AND
+	    		STATUS = 'COMPLETE'
+    </select>
+    
+    <select id="selectImageList" parameterType="paramMap" resultType="resultMap">
+    	SELECT * FROM(
+			SELECT 
+				 ID
+				,TITLE
+				,CONTENT
+				,FILENAME
+				,TO_CHAR(UDATE,'YYYY-mm-dd') R_DATE
+				,RDATE
+				,TO_CHAR(UDATE,'YYYY-mm-dd') U_DATE
+				,UDATE
+				,IDX
+				,(SELECT tabIdx FROM GEOCMS_PROJECT_CONTENT WHERE GEOCMS_PROJECT_CONTENT.idx = GEOCMS_IMAGE_CONTENT.projectIdx) AS TABIDX								
+						,(SELECT tabname FROM GEOCMS_TAB WHERE tabidx = (SELECT tabIdx FROM GEOCMS_PROJECT_CONTENT WHERE GEOCMS_PROJECT_CONTENT.idx = GEOCMS_IMAGE_CONTENT.projectIdx)AND tabgroup = 'content') AS TABNAME	
+				,LATITUDE
+				,LONGITUDE
+				,NULL AS THUMBNAIL
+				,NULL AS ORIGINNAME
+				,'GeoPhoto' AS DATAKIND
+				,SHARETYPE
+				,STATUS
+				,DRONETYPE
+				,PROJECTIDX
+			FROM 
+				GEOCMS_IMAGE_CONTENT
+		)T_TABLE
+		WHERE
+			1 = 1
+		AND
+	    	(	
+	    		ID = '${loginId}'
+	    	<if test="myContent == null || (myContent != null and !myContent.equalsIgnoreCase('Y'))">
+	    	OR
+	    		(SELECT TYPE FROM geocms_user WHERE id = '${loginId}') = 'ADMIN'
+	    	OR
+	    		SHARETYPE = 1
+	    	OR 
+	    		(
+	    			SHARETYPE = 2
+	    		AND 
+	    			(
+						'${loginId}' IN
+						(
+		    				SELECT 
+		    					ID 
+		    				FROM 
+		    					GEOCMS_SHARE 
+		    				LEFT JOIN GEOCMS_USER ON GEOCMS_USER.UID = GEOCMS_SHARE.UID
+		    				WHERE 
+		    					SHAREKIND IN('GeoPhoto') 
+		    				AND  
+		    					SHAREIDX = T_TABLE.IDX
+						)
+					OR
+						'${loginId}' IN
+						(SELECT ID FROM GEOCMS_PROJECT_CONTENT WHERE IDX = T_TABLE.PROJECTIDX)
+	    			)
+	    		)
+	    	 </if>
+	    	 <if test="type != null and type.equalsIgnoreCase('one') and idx != null and !idx.equalsIgnoreCase('')">
+	    		OR
+	    			1 = 1
+	    	</if>
+	    	)
+	    	
+			<if test="tabIdx != null and !tabIdx.equalsIgnoreCase('') and !tabIdx.equalsIgnoreCase('0') and type != null and !type.equalsIgnoreCase('latest')">
+				AND
+					TABIDX = ${tabIdx}
+			</if>
+			<if test="type != null and type.equalsIgnoreCase('marker')">
+				AND 
+		 			LATITUDE IS NOT NULL 
+		 		AND  
+		 			LONGITUDE IS NOT NULL
+		 		AND 
+		 			LATITUDE != 0
+		 		AND 
+		 			LONGITUDE != 0
+		 	</if>
+		 	<if test="idx != null and !idx.equalsIgnoreCase('')">
+		 		AND
+		 			IDX = ${idx}
+			</if>
+			<if test="copySeqArr != null">
+				<foreach collection="copySeqArr" item="copySeqArr" open= "AND IDX IN(" separator =","  close=")" >
+    				${copySeqArr}
+    			</foreach>
+			</if>
+			
+			AND
+	    		STATUS = 'COMPLETE'
+
+		 	<choose>
+		 		<when test="(pageNum != null and pageNum == 1) or(type != null and type.equalsIgnoreCase('latest') and contentNum != null and contentNum != '')">
+					ORDER BY UDATE DESC LIMIT ${contentNum}
+				</when>
+				<when test="type != null and (!type.equalsIgnoreCase('marker') and !type.equalsIgnoreCase('one')) and contentNum != null and contentNum != '' and offset != null and offset != ''">
+					ORDER BY UDATE DESC LIMIT ${contentNum} OFFSET ${offset}
+				</when>
+		 	</choose>
+    </select>
+    
+    <select id="selectImageListLen" parameterType="paramMap" resultType="resultMap">
+    	SELECT 
+			COUNT(*) TOTAL_CNT
+		FROM(
+			SELECT * FROM(
+				SELECT
+					*	
+					,(SELECT tabIdx FROM GEOCMS_PROJECT_CONTENT WHERE GEOCMS_PROJECT_CONTENT.idx = GEOCMS_IMAGE_CONTENT.projectIdx) AS TABIDX
+				FROM 
+					GEOCMS_IMAGE_CONTENT
+			)T_TABLE
+			WHERE
+				1 = 1
+			AND
+		    	(
+		    		ID = '${loginId}'
+		    	<if test="myContent == null || (myContent != null and !myContent.equalsIgnoreCase('Y'))">
+		    	OR 
+		    		(SELECT TYPE FROM geocms_user WHERE id = '${loginId}') = 'ADMIN'
+		    	OR
+		    		SHARETYPE = 1
+		    	OR 
+		    		(
+		    			SHARETYPE = 2
+		    		AND 
+		    			(
+							'${loginId}' IN
+							(
+			    				SELECT 
+			    					ID 
+			    				FROM 
+			    					GEOCMS_SHARE 
+			    				LEFT JOIN GEOCMS_USER ON GEOCMS_USER.UID = GEOCMS_SHARE.UID
+			    				WHERE 
+			    					SHAREKIND IN('GeoPhoto') 
+			    				AND  
+			    					SHAREIDX = T_TABLE.IDX
+							)
+						OR
+							'${loginId}' IN
+							(SELECT ID FROM GEOCMS_PROJECT_CONTENT WHERE IDX = T_TABLE.PROJECTIDX)
+		    			)
+		    		)
+		    	 </if>
+		    	)	
+		    	
+				<if test="tabIdx != null and !tabIdx.equalsIgnoreCase('') and !tabIdx.equalsIgnoreCase('0')">
+					AND
+						TABIDX = ${tabIdx}
+				</if>
+			)TT_TABLE	
+    </select>
+    
+    <insert id="insertImage" parameterType="paramMap" useGeneratedKeys="true" keyProperty="idx">
+        INSERT INTO GEOCMS_IMAGE_CONTENT
+        (
+        	 ID
+        	,TITLE
+        	,CONTENT
+        	,FILENAME
+        	,LONGITUDE
+        	,LATITUDE
+        	,RDATE
+        	,UDATE
+        	,SHARETYPE
+        	,PROJECTIDX
+        	,STATUS
+        	,SEQNUM
+        	,DRONETYPE
+        )
+        VALUES
+        (
+        	 '${loginid}'
+        	,'${title}'
+        	,'${content}'
+        	,'${filename}'
+        	, ${longitude}
+        	, ${latitude}
+        	, NOW()
+        	, NOW()
+        	, ${sharetype}
+        	, ${projectidx}
+        	,'${status}'
+        	,'${seqnum}'
+        	,'${dronetype}'
+        )
+        
+        <selectKey keyProperty="idx" resultType="int" order="AFTER">
+        	SELECT CURRVAL (pg_get_serial_sequence ('GEOCMS_IMAGE_CONTENT', 'idx'))
+   		</selectKey>
+    </insert>
+    
+    <update id="updateImage" parameterType="paramMap">
+    	UPDATE
+    		GEOCMS_IMAGE_CONTENT
+    	SET
+    		  UDATE			=  NOW()
+    		 ,XMLDATA		= '${xmlData}'
+    		<if test="title != null and title != ''">
+    			,TITLE			= '${title}'
+    		</if>
+    		<if test="content != null and content != ''">
+    			,CONTENT		= '${content}'
+    		</if>
+    		<if test="shareType != null and shareType != ''">
+    			,SHARETYPE		=  ${shareType}
+    		</if>
+    		<if test="longitude != null and longitude != ''">
+    			,LONGITUDE		= '${longitude}'
+    		</if>
+    		<if test="latitude != null and latitude != ''">
+    			,LATITUDE		= '${latitude}'
+    		</if>
+    		<if test="status != null and status != ''">
+    			,STATUS		= '${status}'
+    		</if>
+    	WHERE 
+    		1 = 1
+    	AND
+    		IDX = ${idx}
+    </update>
+    
+    <delete id="deleteImage">
+    	DELETE
+    		FROM
+    			GEOCMS_IMAGE_CONTENT
+    		WHERE
+    			IDX = ${idx}
+    		AND
+    			ID = '${loginId}'
+    </delete>
+    
+    <update id="updateXmlData" parameterType="paramMap">
+    	UPDATE
+    		GEOCMS_IMAGE_CONTENT
+    	SET
+    		 XMLDATA		= '${xmlData}'
+    	WHERE 
+    		1 = 1
+    	AND
+    		IDX = ${idx}
+    </update>
+    
+    <update id="updateImageMove" parameterType="paramMap">
+    	UPDATE
+    		GEOCMS_IMAGE_CONTENT
+    	SET
+    		 UDATE			=  NOW()
+    		,SHARETYPE		=  ${shareType}
+    		<if test="projectIdx != null">
+    			,PROJECTIDX		=  ${projectIdx}
+    		</if>
+    		<if test="nowSeq != null">
+    			,SEQNUM		= ${nowSeq}
+    		</if>
+    	WHERE 
+    		1 = 1
+    	AND
+    		IDX = ${moveContent}
+    </update>
+    
+    <select id="selectVideoList" parameterType="paramMap" resultType="resultMap">
+    	SELECT * FROM(
+			SELECT 
+				 ID
+				,TITLE
+				,CONTENT
+				,FILENAME
+				,TO_CHAR(UDATE,'YYYY-mm-dd') R_DATE
+				,RDATE
+				,TO_CHAR(UDATE,'YYYY-mm-dd') U_DATE
+				,UDATE
+				,IDX
+				,(SELECT tabIdx FROM GEOCMS_PROJECT_CONTENT WHERE GEOCMS_PROJECT_CONTENT.idx = GEOCMS_VIDEO_CONTENT.projectIdx) AS TABIDX								
+				,(SELECT tabname FROM GEOCMS_TAB WHERE tabidx = (SELECT tabIdx FROM GEOCMS_PROJECT_CONTENT WHERE GEOCMS_PROJECT_CONTENT.idx = GEOCMS_VIDEO_CONTENT.projectIdx)AND tabgroup = 'content') AS TABNAME
+				,LATITUDE
+				,LONGITUDE
+				,THUMBNAIL
+				,ORIGINNAME
+				,'GeoVideo' AS DATAKIND
+				,SHARETYPE
+				,(SELECT STATUS FROM GEOCMS_LOG WHERE contentType = 'GeoVideo' AND contentIdx = CAST(GEOCMS_VIDEO_CONTENT.IDX as text)) STATUS
+				,DRONETYPE
+			FROM 
+				GEOCMS_VIDEO_CONTENT
+		) T_TABLE
+		WHERE
+			1 = 1
+		AND
+	    	(	
+	    		ID = '${loginId}'
+	    	<if test="myContent == null || (myContent != null and !myContent.equalsIgnoreCase('Y'))">
+	    	OR
+	    		(SELECT TYPE FROM geocms_user WHERE id = '${loginId}') = 'ADMIN'
+	    	OR
+	    		SHARETYPE = 1
+	    	OR 
+	    		(
+	    			SHARETYPE = 2
+	    		AND 
+	    			'${loginId}' IN 
+	    			(
+	    				SELECT 
+	    					ID 
+	    				FROM 
+	    					GEOCMS_SHARE 
+	    				LEFT JOIN GEOCMS_USER ON GEOCMS_USER.UID = GEOCMS_SHARE.UID
+	    				WHERE 
+	    					SHAREKIND = 'GeoVideo' 
+	    				AND
+	    					SHAREIDX = T_TABLE.IDX
+	    			)
+	    		)
+	    	 </if>
+	    	)
+	    	
+			<if test="tabIdx != null and !tabIdx.equalsIgnoreCase('') and !tabIdx.equalsIgnoreCase('0') and type != null and !type.equalsIgnoreCase('latest')">
+				AND
+					TABIDX = ${tabIdx}
+			</if>
+			<if test="type != null and type.equalsIgnoreCase('marker')">
+				AND 
+		 			LATITUDE IS NOT NULL 
+		 		AND  
+		 			LONGITUDE IS NOT NULL
+		 		AND 
+		 			LATITUDE != 0
+		 		AND 
+		 			LONGITUDE != 0
+		 	</if>
+		 	<if test="idx != null and !idx.equalsIgnoreCase('')">
+		 		AND
+		 			IDX = ${idx}
+			</if>
+		 	
+		 	AND
+	    		(SELECT STATUS FROM GEOCMS_LOG WHERE contentType = 'GeoVideo' AND contentIdx = CAST(T_TABLE.IDX as text)) = 'COMPLETE'
+		 	<choose>
+		 		<when test="(pageNum != null and pageNum == 1) or(type != null and type.equalsIgnoreCase('latest')) and contentNum != null and contentNum != ''">
+					ORDER BY UDATE DESC LIMIT ${contentNum}
+				</when>
+				<when test="type != null and (!type.equalsIgnoreCase('marker') and !type.equalsIgnoreCase('one')) and contentNum != null and contentNum != '' and offset != null and offset != ''">
+					ORDER BY UDATE DESC LIMIT ${contentNum} OFFSET ${offset}
+				</when>
+		 	</choose>
+    </select>
+    
+    <select id="selectVideoListLen" parameterType="paramMap" resultType="resultMap">
+    	SELECT 
+			COUNT(*) TOTAL_CNT
+		FROM(
+			SELECT * FROM(
+				SELECT
+					*	
+					,(SELECT tabIdx FROM GEOCMS_PROJECT_CONTENT WHERE GEOCMS_PROJECT_CONTENT.idx = GEOCMS_VIDEO_CONTENT.projectIdx) AS TABIDX
+					,(SELECT STATUS FROM GEOCMS_LOG WHERE contentType = 'GeoVideo' AND contentIdx = CAST(GEOCMS_VIDEO_CONTENT.IDX as text)) STATUS
+				FROM 
+					GEOCMS_VIDEO_CONTENT
+			)T_TABLE
+			WHERE
+				1 = 1
+			AND
+		    	(
+		    		ID = '${loginId}'
+		    	<if test="myContent == null || (myContent != null and !myContent.equalsIgnoreCase('Y'))">
+		    	OR 
+		    		(SELECT TYPE FROM geocms_user WHERE id = '${loginId}') = 'ADMIN'
+		    	OR
+		    		SHARETYPE = 1
+		    	OR 
+		    		(
+		    			SHARETYPE = 2
+		    		AND 
+		    			'${loginId}' IN
+		    			(
+		    				SELECT 
+		    					ID 
+		    				FROM 
+		    					GEOCMS_SHARE 
+		    				LEFT JOIN GEOCMS_USER ON GEOCMS_USER.UID = GEOCMS_SHARE.UID
+		    				WHERE 
+		    					SHAREKIND = 'GeoVideo' 
+		    				AND  
+		    					SHAREIDX = T_TABLE.IDX
+		    			)
+		    		)
+		    	 </if>
+		    	)	
+		    	
+				<if test="tabIdx != null and !tabIdx.equalsIgnoreCase('') and !tabIdx.equalsIgnoreCase('0')">
+					AND
+						TABIDX = ${tabIdx}
+				</if>
+				AND
+		    		(SELECT STATUS FROM GEOCMS_LOG WHERE contentType = 'GeoVideo' AND contentIdx = CAST(T_TABLE.IDX as text)) = 'COMPLETE'
+    	)TT_TABLE
+    </select>
+    
+    <insert id="insertVideo" parameterType="paramMap" useGeneratedKeys="true" keyProperty="idx">
+        INSERT INTO GEOCMS_VIDEO_CONTENT
+        (
+        	 ID
+        	,TITLE
+        	,CONTENT
+        	,ORIGINNAME
+        	,FILENAME
+        	,THUMBNAIL
+        	,LONGITUDE
+        	,LATITUDE
+        	,RDATE
+        	,UDATE
+        	,SHARETYPE
+        	,PROJECTIDX
+        	,SEQNUM
+        	,DRONETYPE
+        )
+      	VALUES
+        (
+        	 '${loginId}'
+        	,'${title}'
+        	,'${content}'
+        	,'${originname}'
+        	,'${filename}'
+        	,'${thumbnail}'
+        	, ${longitude}
+        	, ${latitude}
+        	, NOW()
+        	, NOW()
+        	, ${sharetype}
+        	,'${projectidx}'
+        	,${seqnum}
+        	,'${dronetype}'
+        )
+        
+
+        <selectKey keyProperty="idx" resultType="int" order="AFTER">
+        	SELECT CURRVAL (pg_get_serial_sequence ('GEOCMS_VIDEO_CONTENT', 'idx'))
+   		</selectKey>
+    </insert>
+    
+    <update id="updateVideo" parameterType="paramMap">
+    	UPDATE
+    		GEOCMS_VIDEO_CONTENT
+    	SET
+    		  UDATE			=  NOW()
+    		 ,XMLDATA		= '${xmlData}'
+    		<if test="title != null and title != ''">
+    			,TITLE			= '${title}'
+    		</if>
+    		<if test="content != null and content != ''">
+    			,CONTENT		= '${content}'
+    		</if>
+    		<if test="shareType != null and shareType != ''">
+    			,SHARETYPE		=  ${shareType}
+    		</if>
+    		<if test="projectIdx != null and projectIdx != ''">
+    			,PROJECTIDX		=  ${projectIdx}
+    		</if>
+    		<if test="latitude != null and latitude != ''">
+    			,LATITUDE		=  ${latitude}
+    		</if>
+    		<if test="longitude != null and longitude != ''">
+    			,LONGITUDE		=  ${longitude}
+    		</if>
+    	WHERE 
+    		1 = 1
+    	AND
+    		IDX = ${idx}
+    </update>
+    
+    <delete id="deleteVideo">
+    	DELETE
+    		FROM
+    			GEOCMS_VIDEO_CONTENT
+    		WHERE
+    			IDX = ${idx}
+    		AND
+    			ID = '${loginId}'
+    </delete>
+    
+    <update id="updateVideoMove" parameterType="paramMap">
+    	UPDATE
+    		GEOCMS_VIDEO_CONTENT
+    	SET
+    		 UDATE			=  NOW()
+    		,SHARETYPE		=  ${shareType}
+    		<if test="projectIdx != null and projectIdx != ''">
+    			,PROJECTIDX		=  ${projectIdx}
+    		</if>
+    		<if test="nowSeq != null">
+    			,SEQNUM		= ${nowSeq}
+    		</if>
+    	WHERE 
+    		1 = 1
+    	AND
+    		IDX = ${moveContent}
+    </update>
+    
+    <select id="selectAllProjectList" parameterType="paramMap" resultType="resultMap">
+    	SELECT
+    		 ID
+		    ,PROJECTNAME
+		    ,IDX
+		    ,TO_CHAR(GEOCMS_PROJECT_CONTENT.UDATE,'YYYY-mm-dd') U_DATE
+		    ,UDATE
+		    ,RDATE
+		    ,SHARETYPE
+		    ,TABIDX
+    	FROM
+    		GEOCMS_PROJECT_CONTENT
+    	WHERE
+    		1 = 1
+    	<if test="projectIdx != null and projectIdx != ''">
+    		AND
+    			IDX		=  ${projectIdx}
+    	</if>
+    	<if test="loginId != null and loginId != ''">
+    		AND
+    			ID		=  '${loginId}'
+    	</if>
+    	<if test="tabIdx != null and tabIdx != ''">
+    		AND
+    			TABIDX		=  ${tabIdx}
+    	</if>
+    </select>
+    
+    <select id="selectProjectList" parameterType="paramMap" resultType="resultMap">
+    	SELECT
+    		ID, PROJECTNAME, IDX, U_DATE, UDATE, RDATE, SHARETYPE, TABIDX, MAX(IMG_UDATE) IMG_UDATE, EDITUSERIN
+    	FROM
+    		(
+			SELECT 
+				 GEOCMS_PROJECT_CONTENT.ID
+		       	,GEOCMS_PROJECT_CONTENT.PROJECTNAME
+		       	,GEOCMS_PROJECT_CONTENT.IDX
+		       	,TO_CHAR(GEOCMS_PROJECT_CONTENT.UDATE,'YYYY-mm-dd') U_DATE
+		       	,GEOCMS_PROJECT_CONTENT.UDATE
+		       	,GEOCMS_PROJECT_CONTENT.RDATE
+		       	,GEOCMS_PROJECT_CONTENT.SHARETYPE
+		       	,GEOCMS_PROJECT_CONTENT.TABIDX
+		       	,CASE
+				 	WHEN GEOCMS_PROJECT_CONTENT.UDATE > coalesce(GEOCMS_IMAGE_CONTENT.UDATE,'1999-01-01')
+				 	THEN 
+						CASE 
+							WHEN GEOCMS_PROJECT_CONTENT.UDATE > coalesce(GEOCMS_VIDEO_CONTENT.UDATE,'1999-01-01')
+							THEN GEOCMS_PROJECT_CONTENT.UDATE
+							ELSE GEOCMS_VIDEO_CONTENT.UDATE
+						END 
+				 	ELSE 
+						CASE 
+							WHEN GEOCMS_IMAGE_CONTENT.UDATE > coalesce(GEOCMS_VIDEO_CONTENT.UDATE,'1999-01-01')
+							THEN GEOCMS_IMAGE_CONTENT.UDATE
+							ELSE GEOCMS_VIDEO_CONTENT.UDATE
+						END
+				 END IMG_UDATE
+				,CASE
+					WHEN '${loginId}' IN (SELECT 
+			    					  	ID 
+			    					  FROM 
+			    					  	GEOCMS_SHARE 
+			    					  LEFT JOIN GEOCMS_USER ON GEOCMS_USER.UID = GEOCMS_SHARE.UID
+			    				      WHERE 
+			    					  	SHAREKIND = 'GeoProject' 
+			    				      AND
+			    					  	SHAREIDX = GEOCMS_PROJECT_CONTENT.IDX
+			    				      AND
+			    						SHAREEDIT = 'Y') 
+			    	THEN 'Y'
+			    	ELSE 'N'
+			    END AS editUserIn
+			FROM 
+				GEOCMS_PROJECT_CONTENT
+			LEFT JOIN GEOCMS_IMAGE_CONTENT ON GEOCMS_IMAGE_CONTENT.PROJECTIDX = GEOCMS_PROJECT_CONTENT.IDX
+			LEFT JOIN GEOCMS_VIDEO_CONTENT ON GEOCMS_VIDEO_CONTENT.PROJECTIDX = GEOCMS_PROJECT_CONTENT.IDX
+			WHERE
+					1 = 1
+				AND
+			    	(	
+			    		GEOCMS_PROJECT_CONTENT.ID = '${loginId}'
+			    	OR 
+			    		(
+			    			GEOCMS_PROJECT_CONTENT.SHARETYPE = 2
+			    		AND 
+			    			'${loginId}' IN 
+			    			(
+			    				SELECT 
+			    					ID 
+			    				FROM 
+			    					GEOCMS_SHARE 
+			    				LEFT JOIN GEOCMS_USER ON GEOCMS_USER.UID = GEOCMS_SHARE.UID
+			    				WHERE 
+			    					SHAREKIND = 'GeoProject' 
+			    				AND
+			    					SHAREIDX = GEOCMS_PROJECT_CONTENT.IDX
+			    				<if test="shareEdit != null and shareEdit.equalsIgnoreCase('Y')">
+			    					AND SHAREEDIT = 'Y'
+			    				</if>
+			    			)
+			    		)
+			    	)
+			    <if test="projectIdx != null">
+			    	AND GEOCMS_PROJECT_CONTENT.IDX = ${projectIdx}
+			    </if>
+			 ORDER BY IMG_UDATE DESC
+			)PROJECTGROUP
+		GROUP BY
+			ID, PROJECTNAME, IDX, U_DATE, UDATE, RDATE, SHARETYPE, TABIDX, EDITUSERIN
+		ORDER BY 
+			<if test="orderIdx != null and !orderIdx.equalsIgnoreCase('')">
+			    IDX = ${orderIdx} DESC,
+			</if>
+			IMG_UDATE DESC
+    </select>
+    
+   <select id="selectProjectContentList" parameterType="paramMap" resultType="resultMap">
+    	SELECT 
+    		*
+    		,GEOCMS_PROJECT_CONTENT.PROJECTNAME 					PROJECTNAME
+    		,TO_CHAR(GEOCMS_PROJECT_CONTENT.UDATE,'YYYY-mm-dd')		PROJECTUDATE
+    		,GEOCMS_PROJECT_CONTENT.SHARETYPE						PROJECTSHARE
+    	FROM(
+		    SELECT
+		    	 ID
+		    	,TITLE
+		    	,CONTENT
+		    	,FILENAME
+		    	,TO_CHAR(UDATE,'YYYY-mm-dd') R_DATE
+		    	,RDATE
+		    	,TO_CHAR(UDATE,'YYYY-mm-dd') U_DATE
+		    	,UDATE
+		    	,IDX
+		    	,(SELECT tabname FROM GEOCMS_TAB WHERE tabidx = (SELECT tabIdx FROM GEOCMS_PROJECT_CONTENT WHERE GEOCMS_PROJECT_CONTENT.idx = GEOCMS_IMAGE_CONTENT.projectIdx)AND tabgroup = 'content') AS TABNAME		
+		    	,LATITUDE
+		    	,LONGITUDE
+		    	,NULL AS THUMBNAIL
+		    	,NULL AS ORIGINNAME
+		    	,PROJECTIDX
+		    	,'GeoPhoto' AS DATAKIND
+		    	,SHARETYPE
+		    	,(SELECT id FROM GEOCMS_PROJECT_CONTENT WHERE GEOCMS_PROJECT_CONTENT.idx = GEOCMS_IMAGE_CONTENT.projectIdx) projectUserId
+		    	,SEQNUM
+		    	,DRONETYPE
+		    	,STATUS
+		    FROM
+		    	GEOCMS_IMAGE_CONTENT
+	  		UNION
+		    SELECT
+		    	 ID
+		    	,TITLE
+		    	,CONTENT
+		    	,(select filename from geocms_content_child where parentidx = GEOCMS_VIDEO_CONTENT.idx order by idx limit 1) FILENAME
+		    	,TO_CHAR(UDATE,'YYYY-mm-dd') R_DATE
+		    	,RDATE
+		    	,TO_CHAR(UDATE,'YYYY-mm-dd') U_DATE
+		    	,UDATE
+		    	,IDX
+		    	,(SELECT tabname FROM GEOCMS_TAB WHERE tabidx = (SELECT tabIdx FROM GEOCMS_PROJECT_CONTENT WHERE GEOCMS_PROJECT_CONTENT.idx = GEOCMS_VIDEO_CONTENT.projectIdx)AND tabgroup = 'content') AS TABNAME		
+		    	,LATITUDE
+		    	,LONGITUDE
+		    	,THUMBNAIL
+		    	,(select originname from geocms_content_child where parentidx = GEOCMS_VIDEO_CONTENT.idx order by idx limit 1) ORIGINNAME
+		    	,PROJECTIDX
+		    	,'GeoVideo' AS DATAKIND
+		    	,SHARETYPE
+		    	,(SELECT id FROM GEOCMS_PROJECT_CONTENT WHERE GEOCMS_PROJECT_CONTENT.idx = GEOCMS_VIDEO_CONTENT.projectIdx) projectUserId
+		    	,SEQNUM
+		    	,DRONETYPE
+		    	,(SELECT STATUS FROM GEOCMS_LOG WHERE contentType = 'GeoVideo' AND contentIdx = cast(GEOCMS_VIDEO_CONTENT.IDX as text)) STATUS
+		    FROM
+		    	GEOCMS_VIDEO_CONTENT
+	    ) CONTENT_TABLE
+	    LEFT JOIN GEOCMS_PROJECT_CONTENT ON GEOCMS_PROJECT_CONTENT.IDX = CONTENT_TABLE.PROJECTIDX 
+	    WHERE
+	    	1 = 1
+	    <if test="projectIdx != null">
+	    	AND 
+	    		GEOCMS_PROJECT_CONTENT.IDX = ${projectIdx}
+	    </if>
+	    <if test="type != null and type.equalsIgnoreCase('marker')">
+			AND 
+				CONTENT_TABLE.LATITUDE IS NOT NULL 
+			AND  
+				CONTENT_TABLE.LONGITUDE IS NOT NULL
+			AND 
+				CONTENT_TABLE.LATITUDE != 0
+			AND 
+				CONTENT_TABLE.LONGITUDE != 0
+		</if>
+	    
+	    <if test="getProject != null and getProject.equalsIgnoreCase('Y')">
+	    AND
+	    	(
+	    		CONTENT_TABLE.ID = '${loginId}'
+	    	OR 
+	    		(SELECT TYPE FROM geocms_user WHERE id = '${loginId}') = 'ADMIN'
+	    	OR
+	    		CONTENT_TABLE.SHARETYPE = 1
+	    	OR 
+	    		(
+	    			CONTENT_TABLE.SHARETYPE = 2
+	    		AND 
+	    			(
+						'${loginId}' IN
+						(
+		    				SELECT 
+		    					ID 
+		    				FROM 
+		    					GEOCMS_SHARE 
+		    				LEFT JOIN GEOCMS_USER ON GEOCMS_USER.UID = GEOCMS_SHARE.UID
+		    				WHERE 
+		    					SHAREKIND IN('GeoPhoto', 'GeoVideo') 
+		    				AND  
+		    					SHAREIDX = CONTENT_TABLE.IDX
+						)
+					OR
+						'${loginId}' IN
+						(SELECT ID FROM GEOCMS_PROJECT_CONTENT WHERE IDX = CONTENT_TABLE.PROJECTIDX)
+	    			)
+	    		)
+	    	)
+	    </if>
+	    AND
+	    	STATUS = 'COMPLETE'
+	    <choose>
+			<when test="pageNum != null and pageNum == 1 and contentNum != null and contentNum != '' and !type.equalsIgnoreCase('marker')">
+				ORDER BY CONTENT_TABLE.SEQNUM DESC, GEOCMS_PROJECT_CONTENT.IDX DESC LIMIT ${contentNum}
+			</when>
+			<when test="pageNum != null and pageNum != '' and contentNum != null and contentNum != '' and offset != null and offset != '' and !type.equalsIgnoreCase('marker')">
+				ORDER BY CONTENT_TABLE.SEQNUM DESC, GEOCMS_PROJECT_CONTENT.IDX DESC LIMIT ${contentNum} OFFSET ${offset}
+			</when>
+			<when test="type != null and type.equalsIgnoreCase('marker')">
+				ORDER BY GEOCMS_PROJECT_CONTENT.IDX, CONTENT_TABLE.SEQNUM
+			</when>
+			<when test="pageNum == null and contentNum == null">
+				ORDER BY CONTENT_TABLE.SEQNUM DESC, GEOCMS_PROJECT_CONTENT.IDX DESC
+			</when>
+		</choose>
+    </select>
+    
+    <select id="selectProjectContentListLen" parameterType="paramMap" resultType="resultMap">
+    	SELECT 
+    		COUNT(*) TOTAL_CNT
+    	FROM(
+		    SELECT
+		    	 ID
+		    	,TITLE
+		    	,CONTENT
+		    	,FILENAME
+		    	,TO_CHAR(UDATE,'YYYY-mm-dd') R_DATE
+		    	,TO_CHAR(UDATE,'YYYY-mm-dd') U_DATE
+		    	,IDX
+		    	,(SELECT tabname FROM GEOCMS_TAB WHERE tabidx = (SELECT tabIdx FROM GEOCMS_PROJECT_CONTENT WHERE GEOCMS_PROJECT_CONTENT.idx = GEOCMS_IMAGE_CONTENT.projectIdx)AND tabgroup = 'content') AS TABNAME		
+		    	,LATITUDE
+		    	,LONGITUDE
+		    	,NULL AS THUMBNAIL
+		    	,NULL AS ORIGINNAME
+		    	,PROJECTIDX
+		    	,'GeoPhoto' AS DATAKIND
+		    	,SHARETYPE
+		    	,SEQNUM
+		    	,DRONETYPE
+		    	,STATUS
+		    FROM
+		    	GEOCMS_IMAGE_CONTENT
+	  		UNION
+		    SELECT
+		    	 ID
+		    	,TITLE
+		    	,CONTENT
+		    	,FILENAME
+		    	,TO_CHAR(UDATE,'YYYY-mm-dd') R_DATE
+		    	,TO_CHAR(UDATE,'YYYY-mm-dd') U_DATE
+		    	,IDX
+		    	,(SELECT tabname FROM GEOCMS_TAB WHERE tabidx = (SELECT tabIdx FROM GEOCMS_PROJECT_CONTENT WHERE GEOCMS_PROJECT_CONTENT.idx = GEOCMS_VIDEO_CONTENT.projectIdx)AND tabgroup = 'content') AS TABNAME		
+		    	,LATITUDE
+		    	,LONGITUDE
+		    	,THUMBNAIL
+		    	,ORIGINNAME
+		    	,PROJECTIDX
+		    	,'GeoVideo' AS DATAKIND
+		    	,SHARETYPE
+		    	,SEQNUM
+		    	,DRONETYPE
+		    	,(SELECT STATUS FROM GEOCMS_LOG WHERE contentType = 'GeoVideo' AND contentIdx = CAST(GEOCMS_VIDEO_CONTENT.IDX as text)) STATUS
+		    FROM
+		    	GEOCMS_VIDEO_CONTENT
+	    ) CONTENT_TABLE
+	    LEFT JOIN GEOCMS_PROJECT_CONTENT ON GEOCMS_PROJECT_CONTENT.IDX = CONTENT_TABLE.PROJECTIDX 
+	    WHERE
+	    	1 = 1
+	    <if test="projectIdx != null">
+	    	AND GEOCMS_PROJECT_CONTENT.IDX = ${projectIdx}
+	    </if>
+	    <if test="getProject != null and getProject.equalsIgnoreCase('Y')">
+	    AND
+	    	(
+	    		CONTENT_TABLE.ID = '${loginId}'
+	    	OR 
+	    		(SELECT TYPE FROM geocms_user WHERE id = '${loginId}') = 'ADMIN'
+	    	OR
+	    		CONTENT_TABLE.SHARETYPE = 1
+	    	OR 
+	    		(
+	    			CONTENT_TABLE.SHARETYPE = 2
+	    		AND 
+	    			(
+						'${loginId}' IN
+						(
+		    				SELECT 
+		    					ID 
+		    				FROM 
+		    					GEOCMS_SHARE 
+		    				LEFT JOIN GEOCMS_USER ON GEOCMS_USER.UID = GEOCMS_SHARE.UID
+		    				WHERE 
+		    					SHAREKIND IN('GeoPhoto', 'GeoVideo') 
+		    				AND  
+		    					SHAREIDX = CONTENT_TABLE.IDX
+						)
+					OR
+						'${loginId}' IN
+						(SELECT ID FROM GEOCMS_PROJECT_CONTENT WHERE IDX = CONTENT_TABLE.PROJECTIDX)
+	    			)
+	    		)
+	    	)
+	    </if>
+	    AND
+	    	STATUS = 'COMPLETE'
+    </select>
+    
+    <select id="selectProjectMaxSeq" parameterType="paramMap" resultType="resultMap">
+    	SELECT 
+    		MAX(seqNum) MAX_SEQ
+    	FROM(
+		    SELECT
+		    	 ID
+		    	,TITLE
+		    	,CONTENT
+		    	,FILENAME
+		    	,TO_CHAR(UDATE,'YYYY-mm-dd') R_DATE
+		    	,TO_CHAR(UDATE,'YYYY-mm-dd') U_DATE
+		    	,IDX
+		    	,(SELECT tabname FROM GEOCMS_TAB WHERE tabidx = (SELECT tabIdx FROM GEOCMS_PROJECT_CONTENT WHERE GEOCMS_PROJECT_CONTENT.idx = GEOCMS_IMAGE_CONTENT.projectIdx)AND tabgroup = 'content') AS TABNAME		
+		    	,LATITUDE
+		    	,LONGITUDE
+		    	,NULL AS THUMBNAIL
+		    	,NULL AS ORIGINNAME
+		    	,PROJECTIDX
+		    	,'GeoPhoto' AS DATAKIND
+		    	,SHARETYPE
+		    	,SEQNUM
+		    	,DRONETYPE
+		    FROM
+		    	GEOCMS_IMAGE_CONTENT
+	  		UNION
+		    SELECT
+		    	 ID
+		    	,TITLE
+		    	,CONTENT
+		    	,FILENAME
+		    	,TO_CHAR(UDATE,'YYYY-mm-dd') R_DATE
+		    	,TO_CHAR(UDATE,'YYYY-mm-dd') U_DATE
+		    	,IDX
+		    	,(SELECT tabname FROM GEOCMS_TAB WHERE tabidx = (SELECT tabIdx FROM GEOCMS_PROJECT_CONTENT WHERE GEOCMS_PROJECT_CONTENT.idx = GEOCMS_VIDEO_CONTENT.projectIdx)AND tabgroup = 'content') AS TABNAME		
+		    	,LATITUDE
+		    	,LONGITUDE
+		    	,THUMBNAIL
+		    	,ORIGINNAME
+		    	,PROJECTIDX
+		    	,'GeoVideo' AS DATAKIND
+		    	,SHARETYPE
+		    	,SEQNUM
+		    	,DRONETYPE
+		    FROM
+		    	GEOCMS_VIDEO_CONTENT
+	    ) CONTENT_TABLE
+		WHERE
+			1 = 1
+		AND
+	    	CONTENT_TABLE.PROJECTIDX = ${projectIdx}
+    </select>
+    
+    <insert id="insertProject" parameterType="paramMap" useGeneratedKeys="true" keyProperty="idx">
+        INSERT INTO GEOCMS_PROJECT_CONTENT
+        (
+        	 ID
+        	,PROJECTNAME
+        	,RDATE
+        	,UDATE
+        	,SHARETYPE
+        	<if test="tabIdx != null and !tabIdx.equalsIgnoreCase('null')">
+        		,TABIDX
+        	</if>
+        )
+        VALUES
+        (
+        	 '${loginId}'
+        	,'${projectName}'
+        	, NOW()
+        	, NOW()
+        	, ${shareType}
+        	<if test="tabIdx != null and !tabIdx.equalsIgnoreCase('null')">
+        		,'${tabIdx}'
+        	</if>
+        )
+        <selectKey keyProperty="idx" resultType="int" order="AFTER">
+        	SELECT CURRVAL (pg_get_serial_sequence ('GEOCMS_PROJECT_CONTENT', 'idx'))
+   		</selectKey>
+    </insert>
+    
+    <update id="updateProject" parameterType="paramMap">
+    	UPDATE
+    		GEOCMS_PROJECT_CONTENT
+    	SET
+    		 UDATE				=  NOW()
+    		<if test="projectName != null and projectName != ''">
+    			,PROJECTNAME	= '${projectName}'
+    		</if>
+    		<if test="shareType != null and shareType != ''">
+    			,SHARETYPE		=  ${shareType}
+    		</if>
+    		<if test="tabIdx != null and !tabIdx.equalsIgnoreCase('')">
+    			,TABIDX			=  ${tabIdx}
+    		</if>
+    	WHERE 
+    		1 = 1
+    	AND
+    		IDX = ${idx}
+    	AND
+	    	ID = '${loginId}'
+    </update>
+    
+    <delete id="deleteProject">
+    	DELETE
+    		FROM
+    			GEOCMS_PROJECT_CONTENT
+    		WHERE
+    			IDX = ${projectIdx}
+    		AND
+    			ID = '${loginId}'
+    </delete>
+    
+    <select id="selectMarkerList" parameterType="paramMap" resultType="resultMap">
+	    SELECT
+	    	 IDX
+	    	,FILENAME
+	    	,TYPE
+	    	,FILESEQ
+	    	,RDATE
+	    	,UDATE
+	    	,CONTENT    	
+	    FROM
+	    	GEOCMS_MARKER_CONTENT
+		WHERE
+			1 = 1
+		ORDER BY FILESEQ
+    </select>
+    
+    <select id="selectContentLogList" parameterType="paramMap" resultType="resultMap">
+	    SELECT
+	    	 IDX
+	    	,ID
+	    	,STATUS
+	    	,RDATE
+	    	,UDATE
+	    	,CONTENTIDX
+	    	,CONTENTTYPE
+	    FROM
+	    	GEOCMS_LOG
+		WHERE
+			1 = 1
+		AND
+    		IDX = ${idx}
+    	AND
+    		ID = '${loginId}'
+    </select>
+    
+    <insert id="insertLog" parameterType="paramMap" useGeneratedKeys="true" keyProperty="idx">
+        INSERT INTO GEOCMS_LOG
+        (
+        	  ID
+        	 ,STATUS
+        	 ,RDATE
+        	 ,UDATE
+        	 ,CONTENTIDX
+        	 ,CONTENTTYPE
+        )
+        VALUES
+        (
+        	 '${loginId}'
+        	,'${status}'
+        	, NOW()
+        	, NOW()
+        	,'${contentIdx}'
+        	,'${contentType}'
+        )
+        <selectKey keyProperty="idx" resultType="int" order="AFTER">
+        	SELECT CURRVAL (pg_get_serial_sequence ('GEOCMS_LOG', 'idx'))
+   		</selectKey>
+    </insert>
+    
+    <update id="updateLog" parameterType="paramMap">
+    	UPDATE
+    		GEOCMS_LOG
+    	SET
+    		 STATUS			= '${status}'
+    		,UDATE			=  NOW()
+    	WHERE 
+    		1 = 1
+    	AND
+    		IDX = ${idx}
+    	AND
+    		ID = '${loginId}'
+    </update>
+    
+    <select id="selectContentChildList" parameterType="paramMap" resultType="resultMap">
+	    SELECT
+	    	 IDX
+	    	,FILENAME
+	    	,ORIGINNAME
+	    	,THUMBNAIL
+	    	,PARENTIDX
+	    	,STATUS
+	    	,(select projectidx from geocms_video_content where idx = GEOCMS_CONTENT_CHILD.parentidx ) PROJECTIDX
+	    FROM
+	    	GEOCMS_CONTENT_CHILD
+		WHERE
+			1 = 1
+		<if test="idx != null and idx != ''">
+			AND
+    			IDX = ${idx}
+    	</if>
+    	<if test="parentIdx != null and parentIdx != ''">
+    		AND
+    			PARENTIDX = ${parentIdx}
+    	</if>
+    	<if test="fileName != null and fileName != ''">
+    		AND
+    			FILENAME = '${fileName}'
+    	</if>
+    	ORDER BY
+    		IDX
+    </select>
+    
+    <insert id="insertChildContent" parameterType="paramMap" useGeneratedKeys="true" keyProperty="idx">
+        INSERT INTO GEOCMS_CONTENT_CHILD
+        (
+        	  FILENAME
+        	 ,ORIGINNAME
+        	 ,THUMBNAIL
+        	 ,PARENTIDX
+        	 ,STATUS
+        )
+        VALUES
+		(
+        	 '${fileName}'
+        	,'${originName}'
+        	,'${thumbnail}'
+        	,${parentIdx}
+        	,'PROGRESS'
+        )
+        <selectKey keyProperty="idx" resultType="int" order="AFTER">
+        	SELECT CURRVAL (pg_get_serial_sequence ('GEOCMS_CONTENT_CHILD', 'idx'))
+   		</selectKey>
+    </insert>
+    
+    <insert id="insertChildContentFromParent" parameterType="paramMap">
+        INSERT INTO GEOCMS_CONTENT_CHILD
+        (
+        	 FILENAME
+        	,ORIGINNAME
+        	,THUMBNAIL
+        	,STATUS
+        	,PARENTIDX
+        )
+        (
+        SELECT
+        	 FILENAME
+        	,ORIGINNAME
+        	,THUMBNAIL
+        	,STATUS
+        	,${newParentIdx}
+        FROM
+        	GEOCMS_CONTENT_CHILD
+        WHERE
+        	1 = 1
+        AND
+        	PARENTIDX = ${oldParentIdx}
+        )
+    </insert>
+    
+    <delete id="deleteContentChild">
+    	DELETE
+    		FROM
+    			GEOCMS_CONTENT_CHILD
+    		WHERE
+    			1 = 1
+    		AND
+    			PARENTIDX = ${parentIdx}
+    		AND
+    			CONTENTKIND = '${contentKind}'
+    </delete>
+    
+    <select id="selectImageFileList" parameterType="paramMap" resultType="resultMap">
+		SELECT 
+			 ID
+			,TITLE
+			,CONTENT
+			,FILENAME
+			,TO_CHAR(UDATE,'YYYY-mm-dd') U_DATE
+			,UDATE
+			,IDX
+			,(SELECT tabname FROM GEOCMS_TAB WHERE tabidx = (SELECT tabIdx FROM GEOCMS_PROJECT_CONTENT WHERE GEOCMS_PROJECT_CONTENT.idx = GEOCMS_IMAGE_CONTENT.projectIdx)AND tabgroup = 'content') AS TABNAME	
+			,LATITUDE
+			,LONGITUDE
+			,NULL AS THUMBNAIL
+			,NULL AS ORIGINNAME
+			,'GeoPhoto' AS DATAKIND
+			,SHARETYPE
+		FROM 
+			GEOCMS_IMAGE_CONTENT
+		WHERE
+			1 = 1
+		<if test="searchWord == null or (searchWord != null and !searchWord.equalsIgnoreCase('Y'))">
+			AND
+				FILENAME = '${fileName}'
+		</if>
+		<if test="searchWord != null and searchWord.equalsIgnoreCase('Y')">
+			AND
+				FILENAME like '${fileName}%'
+			AND
+				PROJECTIDX = ${projectIdx}
+		</if>
+	</select>
+	
+	<select id="selectVideoFileList" parameterType="paramMap" resultType="resultMap">
+		SELECT 
+			 ID
+			,TITLE
+			,CONTENT
+			,FILENAME
+			,TO_CHAR(UDATE,'YYYY-mm-dd') U_DATE
+			,UDATE
+			,IDX
+			,(SELECT tabname FROM GEOCMS_TAB WHERE tabidx = (SELECT tabIdx FROM GEOCMS_PROJECT_CONTENT WHERE GEOCMS_PROJECT_CONTENT.idx = GEOCMS_VIDEO_CONTENT.projectIdx)AND tabgroup = 'content') AS TABNAME	
+			,LATITUDE
+			,LONGITUDE
+			,THUMBNAIL
+			,ORIGINNAME
+			,'GeoVideo' AS DATAKIND
+			,SHARETYPE
+		FROM 
+			GEOCMS_VIDEO_CONTENT
+		WHERE
+			1 = 1
+		<if test="searchWord == null or (searchWord != null and !searchWord.equalsIgnoreCase('Y'))">
+			AND
+				THUMBNAIL = '${thumbNail}'
+		</if>
+		<if test="searchWord != null and searchWord.equalsIgnoreCase('Y')">
+			AND
+				THUMBNAIL like '${thumbNail}%'
+			AND
+				PROJECTIDX = ${projectIdx}
+		</if>
+	</select>
+	
+	<update id="updateImageStatus" parameterType="paramMap">
+    	UPDATE
+    		GEOCMS_IMAGE_CONTENT
+    	SET
+    		 UDATE			=  NOW()
+    		,STATUS		= '${status}'
+    	WHERE 
+    		1 = 1
+    		<foreach collection="fileIdxs" item="fileIdxs" open= "AND IDX IN(" separator =","  close=")" >
+    			${fileIdxs}
+    		</foreach>
+    </update>
+    
+    <update id="updateContentChildStatus" parameterType="paramMap">
+    	UPDATE
+    		GEOCMS_CONTENT_CHILD
+    	SET
+    		STATUS		= '${status}'
+    	WHERE 
+    		1 = 1
+    		<foreach collection="fileIdxs" item="fileIdxs" open= "AND IDX IN(" separator =","  close=")" >
+    			${fileIdxs}
+    		</foreach>
+    </update>
+	
+</mapper>
