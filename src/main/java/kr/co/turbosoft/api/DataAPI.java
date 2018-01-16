@@ -611,8 +611,10 @@ public class DataAPI  {
 					return callback + "(" + resultJSON.toString() + ")";
 				}
 				
-				if(title != null && !"".equals(title) && !"null".equals(title)){ title = title.replaceAll("&sbsp","/"); }
-				if(content != null && !"".equals(content) && !"null".equals(content)){ content = content.replaceAll("&sbsp","/"); }
+//				if(title != null && !"".equals(title) && !"null".equals(title)){ title = title.replaceAll("&sbsp","/"); }
+//				if(content != null && !"".equals(content) && !"null".equals(content)){ content = content.replaceAll("&sbsp","/"); }
+				title = dataReplaceFun(title);
+				content = dataReplaceFun(content);
 				if(addShare != null && !"".equals(addShare) && !"null".equals(addShare)){ addShare = addShare.replaceAll("&nbsp",""); }
 				if(removeShare != null && !"".equals(removeShare) && !"null".equals(removeShare)){ removeShare = removeShare.replaceAll("&nbsp",""); }
 				if(editYes != null && !"".equals(editYes) && !"null".equals(editYes)){ editYes = editYes.replaceAll("&nbsp",""); }
@@ -916,8 +918,10 @@ public class DataAPI  {
 					
 				}
 				
-				if(title != null && !"".equals(title) && !"null".equals(title)){ title = title.replaceAll("&sbsp","/"); }
-				if(content != null && !"".equals(content) && !"null".equals(content)){ content = content.replaceAll("&sbsp","/"); }
+//				if(title != null && !"".equals(title) && !"null".equals(title)){ title = title.replaceAll("&sbsp","/"); }
+//				if(content != null && !"".equals(content) && !"null".equals(content)){ content = content.replaceAll("&sbsp","/"); }
+				title = dataReplaceFun(title);
+				content = dataReplaceFun(content);
 				if(addShare != null && !"".equals(addShare) && !"null".equals(addShare)){ addShare = addShare.replaceAll("&nbsp",""); }
 				if(removeShare != null && !"".equals(removeShare) && !"null".equals(removeShare)){ removeShare = removeShare.replaceAll("&nbsp",""); }
 				if(editYes != null && !"".equals(editYes) && !"null".equals(editYes)){ editYes = editYes.replaceAll("&nbsp",""); }
