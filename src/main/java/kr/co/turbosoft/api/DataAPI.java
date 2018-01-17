@@ -1009,7 +1009,8 @@ public class DataAPI  {
 						String[] tmpContent = content.split("<img src=\"");
 						for(int m= 0; m<tmpContent.length; m++){
 							tmpoldFileName = "";
-							if(tmpContent[m] != null && tmpContent[m].contains("turbosoft1")){
+//							if(tmpContent[m] != null && tmpContent[m].contains("turbosoft1")){
+							if(tmpContent[m] != null && tmpContent[m].contains("GeoCMS/")){
 								String tmpText1 = tmpContent[m].substring(0, tmpContent[m].lastIndexOf("GeoCMS/"));
 								tmpoldFileName = tmpContent[m].replace(tmpText1+"GeoCMS/", "");
 								tmpoldFileName = tmpoldFileName.split("id=")[0];
@@ -1198,7 +1199,8 @@ public class DataAPI  {
 							makeContentStr += tmpContent[m].replace(tmpText1, fileNames.get(tmpInt));
 							filesStr += fileNames.get(tmpInt) + ",";
 							tmpInt ++;
-						}else if(tmpContent[m] != null && tmpContent[m].contains("turbosoft1")){
+//						}else if(tmpContent[m] != null && tmpContent[m].contains("turbosoft1")){
+						}else if(tmpContent[m] != null && tmpContent[m].contains("GeoCMS/")){
 							String tmpText1 = tmpContent[m].substring(0, tmpContent[m].lastIndexOf("GeoCMS/"));
 							makeContentStr += "<img src=\"";
 							tmpoldFileName = tmpContent[m].replace(tmpText1+"GeoCMS/", "");
@@ -4503,7 +4505,9 @@ public class DataAPI  {
 		String result = "";
 		List<Map<String,Object>> resList = new ArrayList<Map<String,Object>>();
 		Map<String,Object> resMap = new HashMap<String, Object>();
-		file_name = "http://turbosoft1.iptime.org/shares/GeoCMS/GeoVideo/"+file_name;
+		
+		file_name = "http://"+ serverUrlStr + "/shares/"+saveFilePathStr +"/GeoVideo/"+file_name;
+		
 		try {			   
 			URL gamelan = new URL(file_name);
 			Authenticator.setDefault(new Authenticator()
