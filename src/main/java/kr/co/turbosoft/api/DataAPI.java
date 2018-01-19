@@ -3333,24 +3333,31 @@ public class DataAPI  {
 							for(int a=0;a<resultList.size();a++){
 								HashMap<String, String> tmpMap = (HashMap<String, String>)resultList.get(a);
 								if(tmpMap != null){
-									//�대�吏�怨듭� ��� 蹂�꼍
-									tmpMap.put("moveContent", String.valueOf(tmpMap.get("idx")));
-									tmpMap.put("shareType", shareType);
-									resultIntegerValue += dataDao.updateImageMove(tmpMap);
-									
-									//怨듭� ��� ���
-									imgTmp2 = new HashMap<String, Object>();
-									imgTmp2.put("shareIdx", String.valueOf(tmpMap.get("idx")));
-									imgTmp2.put("shareKind", tmpMap.get("datakind"));
-									resultIntegerValue += userDao.deleteShare(imgTmp2);
-									
-									if("2".equals(shareType)){
-										//怨듭� ��� 異��
-										imgTmp.put("shareIdx", String.valueOf(tmpMap.get("idx")));
-										imgTmp.put("shareKind", tmpMap.get("datakind"));
-										resultIntegerValue += userDao.insertShareFormProject(imgTmp);
+									if(tmpMap.get("datakind") != null){
+										//datakind change
+										if("GeoPhoto".equals(tmpMap.get("datakind"))){
+											tmpMap.put("moveContent", String.valueOf(tmpMap.get("idx")));
+											tmpMap.put("shareType", shareType);
+											resultIntegerValue += dataDao.updateImageMove(tmpMap);
+										}else if("GeoVideo".equals(tmpMap.get("datakind"))){
+											tmpMap.put("moveContent", String.valueOf(tmpMap.get("idx")));
+											tmpMap.put("shareType", shareType);
+											resultIntegerValue += dataDao.updateVideoMove(tmpMap);
+										}
+										
+										//share type change
+										imgTmp2 = new HashMap<String, Object>();
+										imgTmp2.put("shareIdx", String.valueOf(tmpMap.get("idx")));
+										imgTmp2.put("shareKind", tmpMap.get("datakind"));
+										resultIntegerValue += userDao.deleteShare(imgTmp2);
+										
+										if("2".equals(shareType)){
+											//share user insert
+											imgTmp.put("shareIdx", String.valueOf(tmpMap.get("idx")));
+											imgTmp.put("shareKind", tmpMap.get("datakind"));
+											resultIntegerValue += userDao.insertShareFormProject(imgTmp);
+										}
 									}
-									
 								}
 							}
 						}
