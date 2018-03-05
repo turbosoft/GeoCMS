@@ -848,18 +848,11 @@ function closeMarkerIconChange(){
 				<td style="width:100px;">Project Name</td>
 				<td><input type="text" id="projectNameTxt" style="width:100%;" /></td>
 			</tr>
-	<!-- 		<tr id="addProjectTr"> -->
-	<!-- 			<td colspan="2"> -->
-	<!-- 				<label>Share User</label> -->
-	<!-- 				<div id="projectShareUser"> -->
-	<!-- 				</div> -->
-	<!-- 			</td> -->
-	<!-- 		</tr> -->
 			<tr class="showDivTR">
 				<td colspan="2">
-					<div style="float:left;"><input type="radio" value="0" name="shareRadio" checked="checked" onclick="shareInit();">비공개</div>
-					<div style="float:left;"><input type="radio" value="1" name="shareRadio" onclick="shareInit();">전체공개</div>
-					<div style="float:left;"><input type="radio" value="2" name="shareRadio" onclick="getShareUser();">특정인 공개</div>
+					<div style="float:left;"><input type="radio" value="0" name="shareRadio" checked="checked" onclick="shareInit();">Nondisclosure</div>
+					<div style="float:left;"><input type="radio" value="1" name="shareRadio" onclick="shareInit();">Full disclosure</div>
+					<div style="float:left;"><input type="radio" value="2" name="shareRadio" onclick="getShareUser();">Selective disclosure</div>
 				</td>
 			</tr>
 			<tr style="display:none;">
