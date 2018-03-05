@@ -746,7 +746,7 @@ function projectMarkerData(tmpProIdx){
 	}
 	
 	var Url			= baseRoot() + "cms/getProject/";
-	var param		= loginToken + "/" + loginId + "/marker/" + markerProArr + "/&nbsp;/&nbsp;";
+	var param		= loginToken + "/" + loginId + "/marker/" + markerProArr + "/&nbsp/&nbsp";
 	var callBack	= "?callback=?";
 	
 	$.ajax({
