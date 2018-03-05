@@ -760,7 +760,6 @@ function projectMarkerData(tmpProIdx){
 			if(response != null && response != '' && data.Code == '100'){
 				markDataMake(response);
 			}else{
-// 				jAlert("위치정보가 존재하지 않습니다.", '정보');
 				jAlert("Location information does not exist.", 'Info');
 				var marker_latlng = new google.maps.LatLng(37.5663889, 126.9997222);
 		    	map.setCenter(marker_latlng);
