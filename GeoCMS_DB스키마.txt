@@ -54,7 +54,9 @@ CREATE TABLE `geocms_setting` (
   `openAPI` INT(1) DEFAULT '1',
   `latestView` INT(1) DEFAULT '1',
   `mapZoom` INT(10) DEFAULT '8',
-  `userLevel` VARCHAR(100) DEFAULT 'ADMIN,DELETE,MODIFY,WRITE'
+  `userLevel` VARCHAR(100) DEFAULT 'ADMIN,DELETE,MODIFY,WRITE',
+  `latitude` decimal(20,15) DEFAULT NULL,
+  `longitude` decimal(20,15) DEFAULT NULL
 ) ENGINE=INNODB DEFAULT CHARSET=utf8;
 
 /*공유 테이블*/
