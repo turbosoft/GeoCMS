@@ -5,7 +5,7 @@
 <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
 <meta http-equiv="content-type" content="text/html; charset=utf-8"/>
 
-<script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?key=AIzaSyAth-_FyQxRomNh2JkI_MvAWXRJuLOEXNI"></script>
+<script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?key=AIzaSyAth-_FyQxRomNh2JkI_MvAWXRJuLOEXNI&v=3.exp&sensor=false&libraries=places,geometry"></script>
 <script type='text/javascript'>
 
 /* --------------------- 내부 함수 --------------------*/
@@ -420,7 +420,13 @@ function gridMap(LocationData) {
     var infowindow = new google.maps.InfoWindow();
 
     if(LocationData == null || LocationData.length <= 0){	//base map setting
-    	var marker_latlng = new google.maps.LatLng(37.5663889, 126.9997222);
+    	if(dMarkerLat == null || dMarkerLat == ""){
+    		dMarkerLat = 37.5663889;
+    	}
+    	if(dMarkerLng == null || dMarkerLng == ""){
+    		dMarkerLng = 126.9997222;
+    	}
+    	var marker_latlng = new google.maps.LatLng(dMarkerLat, dMarkerLng);
     	map.setCenter(marker_latlng);
     	map.setZoom(10);
     	return;
@@ -525,7 +531,8 @@ function mapCenterChange(objArr){		//tempObj: lat, lon, file, idx, dataKind, ori
 	//좌표정보 없을 시 viewer 팝업
 	if(lat == null || lat == '' || lat == 'null' || lat == 0 || lon == null || lon == '' || lon == 'null'|| lon == 0){
 		var kindStr = tempArr[4];
-		alert('좌표 정보가 없습니다. viewer로 이동합니다.');
+// 		alert('좌표 정보가 없습니다. viewer로 이동합니다.');
+		jAlert('No coordinate information. Go to viewer','Info');
 		if(kindStr == 'GeoPhoto'){
 			if(projectImage == 1){
 				imageViewer(tempArr[2],  tempArr[7], tempArr[3], tempArr[8]);
@@ -745,12 +752,10 @@ function mapPolygonView(obj){
 function contentMarker(response){
 	markerArr = new Array();
 	markerFileList = null;
-	
 	//set map option
 	var myOptions = { mapTypeId: google.maps.MapTypeId.ROADMAP, streetViewControl:false, scaleControl:false };
 	//create map
 	map = new google.maps.Map(document.getElementById("map_canvas"), myOptions);
-	
 	markDataMake(response);
 }
 
@@ -762,6 +767,19 @@ function contentMarker(response){
 		<input type="checkbox" id="polygonView" onclick="mapPolygonView(this);" style="vertical-align: middle ;"/>
 		<label style="margin-top: 3px; display: inline-block;">View Mode</label>
 	</div>
+	<div class="morkerModeCls1" id="morkerModeOpen" onclick="defaultMarkerSet('open');" style="display: none; height: 30px;width: 130px;position: absolute;left: 100px;top: 10px;z-index: 9;background-color: #ffffff;text-align: center;cursor: pointer;">
+		<div style="margin-top: 3px; display: inline-block;">Set default location</div>
+	</div>
+<!-- 	<div class="morkerModeCls2" id="morkerModeSave" onclick="defaultMarkerSet('save');" style="display: none; height: 30px;width: 140px;position: absolute;left: 100px;top: 10px;z-index: 9;background-color: #ffffff;text-align: center;cursor: pointer;"> -->
+<!-- 		<div style="margin-top: 3px; display: inline-block;">Save default location</div> -->
+<!-- 	</div> -->
+	<div class="morkerModeCls2" id="morkerModeCenCle" onclick="defaultMarkerSet('cencle');" style="display: none; height: 30px;width: 200px;position: absolute;left: 105px;top: 10px;z-index: 9;background-color: #ffffff;text-align: center;cursor: pointer;">
+		<div style="margin-top: 3px; display: inline-block;">Reset default location settings</div>
+	</div>
+	<div class="morkerModeCls2" style="display: none; height: 30px;width: 350px;position: absolute;left: 320px;top: 10px;z-index: 9;text-align: center;cursor: pointer;">
+		<input type="text" id="searchDefaultPlace" style="margin-top: 3px; display: inline-block; width: 100%;" placeholder="Enter location">
+	</div>
+	
 	<div id="map_canvas" style="width:100%; height:100%; min-width: 1080px;"></div>
 </body>
 </html>
