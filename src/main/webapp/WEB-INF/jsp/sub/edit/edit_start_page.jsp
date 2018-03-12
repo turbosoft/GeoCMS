@@ -49,6 +49,9 @@ $(function(){
 //편집 모드
 function contentMove(){
 	if(editMode == 0){
+		//지도 초기 설정
+		editMapSetting();
+		
 		$('#editPopBtn').css('display', 'block');
 		$('#moreViewImg').css('display', 'none');
 		
@@ -472,9 +475,12 @@ function editBtnEvent(kind){
 		setObj.openAPI = apiCheck;
 		setObj.latestView = latestCheck;
 		
+		setObj.latitude = homeMarker.getPosition().lat();
+		setObj.longitude = homeMarker.getPosition().lng();
+		
 		var Url			= baseRoot() + "cms/updateBase/";
 		var param		= loginToken + "/" + setObj.contentTab + "/" + setObj.contentTabType + "/" + setObj.boardTab + "/" + setObj.contentNum 
-							+ "/" + setObj.boardNum + "/" + setObj.openAPI + "/" + setObj.latestView + "/" + setObj.mapZoom;
+							+ "/" + setObj.boardNum + "/" + setObj.openAPI + "/" + setObj.latestView +"/"+ setObj.latitude +"/"+ setObj.longitude +"/" + setObj.mapZoom;
 		var callBack	= "?callback=?";
 		
 		$.ajax({
@@ -489,7 +495,8 @@ function editBtnEvent(kind){
 		});
 		
 	}else if(kind == "CANCEL"){ //cancel 버튼 클릭
-		editExit();
+// 		editExit();
+		cancelEditExit();
 		setTimeout(function(){
 			contentMove();
 		},200);
@@ -513,9 +520,10 @@ function saveTabModify(){
 		, success: function(data) {
 			
 			if(data.Code == '100'){
-				editExit();
 // 				jAlert("저장 되었습니다.", '정보');
-				jAlert("Saved.", 'Info');
+				jAlert("Saved.", 'Info',function(){
+					editExit();
+				});
 			}else{
 				jAlert(data.Message, 'Info');
 			}
@@ -540,6 +548,14 @@ function replaceArray(arr){
 
 //exit 버튼 클릭 이벤트 , 편집 모드 빠져나가기
 function editExit(){
+	window.location.href='/GeoCMS';
+}
+
+function cancelEditExit(){
+	$('.viewModeCls').css('display','block');
+	$('.morkerModeCls1').css('display','none');
+	$('.morkerModeCls2').css('display','none');
+	
 	editMode = 0;		//편집 불가 모드로 변경
 	nowTabName = "";
 	$('#image_map').css('z-index',10);	//구글 맵 이벤트 복구
@@ -685,5 +701,93 @@ function userManage(){
 		autoOpen:false
 	});
 	manageDig.dialog('open');
+}
+
+//edit marker init
+function editMapSetting(){
+	typeShape = "forSearch";
+	LocationData = null;
+	initialize();
+	$('#searchDefaultPlace').val("");
+	$('.viewModeCls').css('display','none');
+	$('.morkerModeCls1').css('display','block');
+	$('.morkerModeCls2').css('display','none');
+	var tmpMarkerIcon = 'http://maps.google.com/mapfiles/ms/icons/red-dot.png';
+	var marker_latlng = new google.maps.LatLng(dMarkerLat, dMarkerLng);
+	homeMarker = new google.maps.Marker({
+        position: marker_latlng,
+        map: map,
+        title: "default",				// jpg file name
+        id: "default",			//p[3]: index, p[4]: kind(GeoPhoto, GeoVideo), p[7]: use_id, p[8]: project make user id, p[9]: project marker icon
+        label: {
+        	text: "default",	//p[2]: file , p[5]: origin file name
+        	fontSize: '0px'
+        },
+        icon: tmpMarkerIcon
+    });
+}
+
+//place text click
+function onPlaceChanged() {
+    var place = mapAutocomplete.getPlace();
+    if (place.geometry) {
+      map.panTo(place.geometry.location);
+      map.setZoom(15);
+      homeMarker.setPosition(place.geometry.location);
+    } else {
+      document.getElementById('searchDefaultPlace').placeholder = 'Enter a city';
+    }
+  }
+  
+var homeMarker = null;
+var mapAutocomplete = null;
+function defaultMarkerSet(setType){
+	if(setType == 'open'){
+		google.maps.event.addListener(map, 'click', function(event) {
+			var latitude = event.latLng.lat();
+		    var longitude = event.latLng.lng();
+		    homeMarker.setPosition(event.latLng);
+	    });
+		
+		$('.morkerModeCls1').css('display','none');
+		$('.morkerModeCls2').css('display','block');
+		
+		mapAutocomplete = new google.maps.places.Autocomplete(
+	            /** @type {!HTMLInputElement} */ (
+	                document.getElementById('searchDefaultPlace')), {
+// 	              types: ['(cities)'],
+// 	              componentRestrictions: countryRestrict
+	            });
+	        places = new google.maps.places.PlacesService(map);
+
+	        mapAutocomplete.addListener('place_changed', onPlaceChanged);
+		
+	}else if(setType == 'save'){
+		setObj.latitude = homeMarker.getPosition().lat();
+		setObj.longitude = homeMarker.getPosition().lng();
+		var Url			= baseRoot() + "cms/updateBase/";
+		var param		= loginToken + "/" + setObj.contentTab + "/" + setObj.contentTabType + "/" + setObj.boardTab + "/" + setObj.contentNum 
+							+ "/" + setObj.boardNum + "/" + setObj.openAPI + "/" + setObj.latestView +"/"+ setObj.latitude +"/"+ setObj.longitude +"/"+ setObj.mapZoom;
+		var callBack	= "?callback=?";
+		
+		$.ajax({
+			type	: "get"
+			, url	: Url + param + callBack
+			, dataType	: "jsonp"
+			, async	: false
+			, cache	: false
+			, success: function(data) {
+				dMarkerLat = homeMarker.getPosition().lat();
+				dMarkerLng = homeMarker.getPosition().lng();
+				editMapSetting();
+				google.maps.event.clearListeners(map, 'click');
+				jAlert('default marker save complete','Info');
+			}
+		});
+		
+	}else if(setType == 'cencle'){
+		editMapSetting();
+	}
+	
 }
 </script>
