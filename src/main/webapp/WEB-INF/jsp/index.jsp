@@ -40,6 +40,8 @@ var projectImage = 0;	//GeoPhoto 다운여부
 var projectVideo = 0;	//GeoVideo 다운여부
 var b_url = '';			//url
 var request = null;		//request;
+var dMarkerLat = 0;		//default marker latitude
+var dMarkerLng = 0;		//default marker longitude
 
 $(function(){
 	session_check();	//login check
