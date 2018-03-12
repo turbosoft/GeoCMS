@@ -493,7 +493,7 @@ function shareUserSave(){
 				<th width="30" class="shareTD"><input type="checkbox" onclick="allCheck(this.checked);" class="shareChk allCheckBox"></th>
 				<th class="shareTD">ID</th>
 				<th width="80" class="editTD"><input type="checkbox" onclick="allCheckEdit(this.checked);" class="editChk allCheckBoxEdit">
-					<label>편집권한</label>
+					<label>Edit authority</label>
 				</th>
 			</tr>
 		</tbody>
