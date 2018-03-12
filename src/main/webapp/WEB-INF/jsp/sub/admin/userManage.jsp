@@ -79,7 +79,7 @@ function clickUserPage(pageNum){
 	if($('#userSearchSel').val() == 'REG_DATE'){
 		if(($('#startDate').val() != '' && $('#startDate').val().length < 8) || ($('#endDate').val() != '' && $('#endDate').val().length < 8)){
 // 			alert('날짜를 입력해 주십시오./n ex)YYYYMMDD');
-			alert('Enter date./n ex)YYYYMMDD');
+			jAlert('Enter date./n ex)YYYYMMDD','Info');
 			return;
 		}
 		if($('#startDate').val() != ''){
@@ -87,7 +87,7 @@ function clickUserPage(pageNum){
 			stDate = new Date(stDate);
 			if(isNaN(stDate.getDate())){
 // 				alert('날짜를 입력해 주십시오./n ex)YYYYMMDD');
-				alert('Enter date./n ex)YYYYMMDD');
+				jAlert('Enter date./n ex)YYYYMMDD','Info');
 				return;
 			}
 		}
@@ -96,8 +96,8 @@ function clickUserPage(pageNum){
 			var edDate = $('#endDate').val().substring(0,4)+'-'+$('#endDate').val().substring(4,6) + '-'+$('#endDate').val().substring(6,8);
 			edDate = new Date(edDate);
 			if(isNaN(edDate.getDate())){
-				alert('날짜를 입력해 주십시오./n ex)YYYYMMDD');
-				alert('Enter date./n ex)YYYYMMDD');;
+// 				alert('날짜를 입력해 주십시오./n ex)YYYYMMDD');
+				jAlert('Enter date./n ex)YYYYMMDD','Info');;
 				return;
 			}
 		}
@@ -329,7 +329,7 @@ function userTypeSave(){
 		, cache	: false
 		, success: function(data) {
 			var response = data.Message;
-			alert(response);
+			jAlert(response,'Info');
 		}
 	});
 }
