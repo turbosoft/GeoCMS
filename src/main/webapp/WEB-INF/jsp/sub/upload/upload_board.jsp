@@ -135,7 +135,7 @@ function fileSaveInfo(){
 	    	},
 	     	error: function(jqXHR, textStatus, errorThrown) 
 	     	{
-	     		alert(jqXHR + " : " + textStatus + " : " +errorThrown );
+	     		jAlert(jqXHR + " : " + textStatus + " : " +errorThrown,'Info' );
 	     	}          
 	    });
     }else{
