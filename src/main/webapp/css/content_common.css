@@ -88,7 +88,7 @@ button
 .onProjectDiv{/* 	background-color: #6d808f; */ 	background-color: #00BCD4; color: white; font-weight: bold; height: 45px; margin-top: 5px;}
 .offProjectDiv{	background-color: gray;	color: white; font-weight: normal; height: 45px; margin-top: 5px;}
 .f_s_12{ font-size:12px;}
-.editProBtn{ float: right; margin: 10px;}
+.editProBtn{ float: right; margin: 10px 5px;}
 .subDivCls{font-size: 10px;}
 .titleLabel{ vertical-align:bottom; margin-left:10px; font-size: 15px; width:280px; display: inline-table;}
 
