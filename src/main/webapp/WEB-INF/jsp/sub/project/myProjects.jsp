@@ -739,7 +739,7 @@ function projectMarkerData(tmpProIdx){
 	}
 	
 	if(markerProArr == null || markerProArr.length <= 0){
-		var marker_latlng = new google.maps.LatLng(37.5663889, 126.9997222);
+		var marker_latlng = new google.maps.LatLng(dMarkerLat, dMarkerLng);
     	map.setCenter(marker_latlng);
     	map.setZoom(10);
     	return;
@@ -760,8 +760,9 @@ function projectMarkerData(tmpProIdx){
 			if(response != null && response != '' && data.Code == '100'){
 				markDataMake(response);
 			}else{
+// 				jAlert("위치정보가 존재하지 않습니다.", '정보');
 				jAlert("Location information does not exist.", 'Info');
-				var marker_latlng = new google.maps.LatLng(37.5663889, 126.9997222);
+				var marker_latlng = new google.maps.LatLng(dMarkerLat, dMarkerLng);
 		    	map.setCenter(marker_latlng);
 		    	map.setZoom(10);
 		    	return;
@@ -848,8 +849,18 @@ function closeMarkerIconChange(){
 				<td style="width:100px;">Project Name</td>
 				<td><input type="text" id="projectNameTxt" style="width:100%;" /></td>
 			</tr>
+	<!-- 		<tr id="addProjectTr"> -->
+	<!-- 			<td colspan="2"> -->
+	<!-- 				<label>Share User</label> -->
+	<!-- 				<div id="projectShareUser"> -->
+	<!-- 				</div> -->
+	<!-- 			</td> -->
+	<!-- 		</tr> -->
 			<tr class="showDivTR">
 				<td colspan="2">
+<!-- 					<div style="float:left;"><input type="radio" value="0" name="shareRadio" checked="checked" onclick="shareInit();">비공개</div> -->
+<!-- 					<div style="float:left;"><input type="radio" value="1" name="shareRadio" onclick="shareInit();">전체공개</div> -->
+<!-- 					<div style="float:left;"><input type="radio" value="2" name="shareRadio" onclick="getShareUser();">특정인 공개</div> -->
 					<div style="float:left;"><input type="radio" value="0" name="shareRadio" checked="checked" onclick="shareInit();">Nondisclosure</div>
 					<div style="float:left;"><input type="radio" value="1" name="shareRadio" onclick="shareInit();">Full disclosure</div>
 					<div style="float:left;"><input type="radio" value="2" name="shareRadio" onclick="getShareUser();">Selective disclosure</div>
