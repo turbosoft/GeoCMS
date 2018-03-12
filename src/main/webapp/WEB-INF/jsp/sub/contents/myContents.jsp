@@ -450,11 +450,11 @@ function myContentCenterChange(tmpArr, type, contentType){
 
 function myContentChkRm(obj){
 	var thisIndex = $.inArray(obj.id.replace("removeOn_",""), myContentRemoveArr);
-	alert('thisIndex : ' + thisIndex + 'obj.id.replace) : ' + obj.id.replace("removeOn_","") + " myContentRemoveArr : " + JSON.stringify(myContentRemoveArr));
+// 	alert('thisIndex : ' + thisIndex + 'obj.id.replace) : ' + obj.id.replace("removeOn_","") + " myContentRemoveArr : " + JSON.stringify(myContentRemoveArr));
 	if(thisIndex > -1){
 		myContentRemoveArr.splice(thisIndex, 1);
 	}
-	alert('thisIndex : ' + thisIndex + 'obj.id.replace) : ' + obj.id.replace("removeOn_","") + " myContentRemoveArr : " + JSON.stringify(myContentRemoveArr));
+// 	alert('thisIndex : ' + thisIndex + 'obj.id.replace) : ' + obj.id.replace("removeOn_","") + " myContentRemoveArr : " + JSON.stringify(myContentRemoveArr));
 	$(obj).remove();
 }
 
