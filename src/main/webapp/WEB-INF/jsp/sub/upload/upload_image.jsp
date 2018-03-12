@@ -177,8 +177,8 @@ function saveImageFn(fileName, filePath, lati, longi){
 		var tabName = $('#showKind').val();
 		var projectIdxNum = $('#projectKind').val();
 		
-		title = title.replace(/\//g,'&sbsp').replace(/\?/g,'&mbsp').replace(/\#/g,'&pbsp').replace(/\./g,'&obsp').replace(/</g,'&lt').replace(/>/g,'&gt').replace(/\\/g,'&bt').replace(/%/g,'&mt').replace(/;/g,'&vbsp');
-		content = content.replace(/\//g,'&sbsp').replace(/\?/g,'&mbsp').replace(/\#/g,'&pbsp').replace(/\./g,'&obsp').replace(/</g,'&lt').replace(/>/g,'&gt').replace(/\\/g,'&bt').replace(/%/g,'&mt').replace(/;/g,'&vbsp');
+		title = title.replace(/\//g,'&sbsp').replace(/\?/g,'&mbsp').replace(/\#/g,'&pbsp').replace(/\./g,'&obsp').replace(/</g,'&lt').replace(/>/g,'&gt').replace(/\\/g,'&bt').replace(/%/g,'&mt').replace(/;/g,'&vbsp').replace(/\r/g,'&rnsp').replace(/\n/g,'&nnsp');
+		content = content.replace(/\//g,'&sbsp').replace(/\?/g,'&mbsp').replace(/\#/g,'&pbsp').replace(/\./g,'&obsp').replace(/</g,'&lt').replace(/>/g,'&gt').replace(/\\/g,'&bt').replace(/%/g,'&mt').replace(/;/g,'&vbsp').replace(/\r/g,'&rnsp').replace(/\n/g,'&nnsp');
 		filePath = filePath.replace(/\\/g,'&sbsp');
 		
 		if(lati == null || lati == '' || lati == 'null'){
