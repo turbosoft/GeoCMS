@@ -49,6 +49,9 @@ function getBase() {
 				b_boardTabArr = result.boardTab.split(",");				//board tab list
 				b_boardNum= result.boardNum.split(",");					//board num
 				
+				dMarkerLat = result.latitude;
+				dMarkerLng = result.longitude;
+				
 // 				if(result.openAPI == '0') {								//openAPI 보여주기 여부  {0:안보이기, 1:보이기}
 					var idx = $.inArray('OpenApi', menuArr);	
 					menuArr[idx] = 'OpenApi_off';
@@ -237,7 +240,7 @@ function menuSetting(){
 	$('#menus').empty();
 	//임의 메뉴 설정
 	menuMap = newMap();
-	menuMap.put("logo",{"src": "<c:url value='/images/geoImg/english_images/logo.jpg'/>", "top": 20, "width": 152, "etc": ""});	//이미지 주소, top, width, function 및 id
+	menuMap.put("logo",{"src": "<c:url value='/images/geoImg/main_images/logo.jpg'/>", "top": 20, "width": 152, "etc": ""});	//이미지 주소, top, width, function 및 id
 	menuMap.put("MyProjects",{"src": "<c:url value='/images/geoImg/english_images/myProjects.png'/>", "top": 55, "width": 77, "etc": "onclick='viewMyProjects(null);'"});
 	menuMap.put("OpenApi",{"src": "<c:url value='/images/geoImg/english_images/menu04.gif'/>", "top": 55, "width": 77, "etc": "onclick='diagOpen()'" /*"id='opener'"*/});
 	menuMap.put("searchBox",{"src": "<c:url value='/images/geoImg/btn_image/search.png'/>", "top": 55, "width": 28, "etc": "alt='검색버튼' onclick='searchAction();'"});
@@ -267,6 +270,8 @@ function menuSetting(){
 			innerHTMLStr += "<img src='" + menuMap.get(menuId).src + "' id='" + menuId + "' class='menu_images' style='width:" + menuMap.get(menuId).width + "px; margin-top:" + menuMap.get(menuId).top + "px; left:" + leftNum + "px; position:absolute; cursor: pointer; ";
 			if(menuArr[i].split("_")[1] == "off"){
 				innerHTMLStr += "display:none;'";
+			}else if(menuId == "logo"){
+				innerHTMLStr += "height:57px;'";
 			}else{
 				innerHTMLStr += "'";
 			}
