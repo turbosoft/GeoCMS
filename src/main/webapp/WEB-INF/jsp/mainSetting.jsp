@@ -904,6 +904,7 @@ function viewMyProjects(orderIdx){
 				projectGroupListSetup(response);
 			}else{
 				jAlert(data.Message, 'Info');
+				projectMarkerData(0);
 			}
 		}
 	});
