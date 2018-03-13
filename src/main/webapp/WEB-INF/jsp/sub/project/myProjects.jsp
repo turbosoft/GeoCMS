@@ -37,13 +37,13 @@ function addProjectGroupCell(response){
 			var proShare = '';
 			if(response[i].SHARETYPE == '1'){
 // 				proShare = '전체공개';
-				proShare = 'Full disclosure';
+				proShare = 'FULL';
 			}else if(response[i].SHARETYPE == '0'){
 // 				proShare = '비공개';
-				proShare = 'Nondisclosure';
+				proShare = 'NON';
 			}else{
 // 				proShare = '선택공개';
-				proShare = 'Selective disclosure';
+				proShare = 'SELECTIVE';
 			}
 			
 			var projectNameTxt = response[i].PROJECTNAME.length>22? response[i].PROJECTNAME.substring(0,22)+'...' : response[i].PROJECTNAME;
@@ -67,7 +67,7 @@ function addProjectGroupCell(response){
 			var tmpUserId = response[i].ID.length>7? response[i].ID.substring(0,7)+'...' : response[i].ID;
 			
 // 			innerHTML += '<div class="subDivCls"><label class="m_l_10">작성자: </label><label style="display:inline-block; width:65px;">'+ tmpUserId + '</label><label class="m_l_10">등록일: </label><label>' + response[i].U_DATE + '</label><label class="m_l_15">'+ proShare + '</label></div>';
-			innerHTML += '<div class="subDivCls"><label class="m_l_10">TITLE: </label><label style="display:inline-block; width:65px;">'+ tmpUserId + '</label><label class="m_l_10">DATE: </label><label>' + response[i].U_DATE + '</label><label class="m_l_10">'+ proShare + '</label></div>';
+			innerHTML += '<div class="subDivCls"><label class="m_l_10">WRITER: </label><label style="display:inline-block; width:70px;">'+ tmpUserId + '</label><label class="m_l_10">DATE: </label><label>' + response[i].U_DATE + '</label><label class="m_l_10">'+ proShare + '</label></div>';
 			innerHTML += '</div>';
 			
 			innerHTML += '<table id="pChild_'+ response[i].IDX + '" style="border:1px solid gray; width:100%;"/>';
