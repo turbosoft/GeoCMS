@@ -376,7 +376,7 @@ function editLeftSetting(eimgType1, eContnetNum, eNowTabelHeight, eTableNum){
 //edit mode sample content list2
 function editlatestSetting(eImgType){
 	//latest table draw
-	var eTableH = 800 - $('#imageMoveArea').children().first().height() - $('#tabHeader').height() - Number(nowTabelHeight) - 60;
+	var eTableH = mainMapHeight - $('#imageMoveArea').children().first().height() - $('#tabHeader').height() - Number(nowTabelHeight) - 60;
 	var etableT = Number(nowTabelHeight) + 220;
 	var eTableN = Math.floor((eImgType == "gellery")?eTableH/150: eTableH/102);
 	
@@ -432,7 +432,7 @@ function editLeftBoardSetting(bNowContnetNum, bNowTabelHeight, eTableNum){
 //edit mode sample boaard list2
 function editlatestBoardSetting(){
 	//latest table draw
-	var eTableH = 800 - $('#imageMoveArea').children().first().outerHeight() - $('#tabHeader').height() - Number(nowTabelHeight) - 100;
+	var eTableH = mainMapHeight - $('#imageMoveArea').children().first().outerHeight() - $('#tabHeader').height() - Number(nowTabelHeight) - 100;
 	var eTableN = Math.floor(eTableH/26)-1;
 	
 	$('#left_list_table_2').empty();
