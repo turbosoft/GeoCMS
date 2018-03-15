@@ -42,12 +42,17 @@ var b_url = '';			//url
 var request = null;		//request;
 var dMarkerLat = 0;		//default marker latitude
 var dMarkerLng = 0;		//default marker longitude
+var mainMapHeight = 800;
 
 $(function(){
 	session_check();	//login check
 	
-	var mapWidth = $(window).width()- $('#image_list').width()	//화면 크기에 따라 이미지 크기 조정
+	var mapWidth = $(window).width()- $('#image_list').width();	//화면 크기에 따라 이미지 크기 조정
 	$('#image_map').css('width', mapWidth);
+	
+	mainMapHeight = $(window).height()- $('#menus').height() - $('#footer').height();	//화면 크기에 따라 이미지 크기 조정
+	$('#image_map').css('height', mainMapHeight);
+	$('#footer').css('top', $('#menus').height()+mainMapHeight);
 	
     $('#dialog').dialog({	//openApi dialog
       autoOpen: false,

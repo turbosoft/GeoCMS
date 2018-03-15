@@ -339,14 +339,14 @@ function leftMenuSetting(tableNum, type, pageNum, contentNum){	//tableNum, type,
 		var obj1 = tableMap.get("1");
 		var tableTrHeight =  $('#left_list_table_1 tr').height()+2;
 		var table_two_count = 0;
-		
+
 		if(nowRightTabName == 'content'){
-			table_two_count = Math.floor((800-$('#imageMoveArea').children().first().outerHeight() - $('#tabs').height())/102);
+			table_two_count = Math.floor((mainMapHeight-$('#imageMoveArea').children().first().outerHeight() - $('#tabs').height())/102);
 			if(type == 'gellery'){
-				table_two_count = Math.floor((800-$('#imageMoveArea').children().first().outerHeight() - $('#tabs').height())/150)*3;
+				table_two_count = Math.floor((mainMapHeight-$('#imageMoveArea').children().first().outerHeight() - $('#tabs').height())/150)*3;
 			}
 		}else{
-			table_two_count = Math.floor((800-$('#imageMoveArea').children().first().outerHeight() - $('#tabs').height() - 40)/26)-1;
+			table_two_count = Math.floor((mainMapHeight-$('#imageMoveArea').children().first().outerHeight() - $('#tabs').height() - 40)/26)-1;
 		}
 
 
