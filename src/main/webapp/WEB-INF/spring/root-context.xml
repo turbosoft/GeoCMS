@@ -3,67 +3,9 @@
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xmlns:util="http://www.springframework.org/schema/util"
 	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
-	http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd
-	">
+	http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd">
 	
 	<!-- Root Context: defines shared resources visible to all other web components -->
-	<!--  load configuration file -->
-	<bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
-		<property name="locations">
-			<value>/WEB-INF/spring/config/config.properties</value>
-		</property>
-	</bean>
-    
-	<!--  create rest service object and inject dao -->
-	<bean class="kr.co.turbosoft.api.UserAPI" id="userAPI">
-		<property name="userDao" ref="userdao" />
-		<property name="dataDao" ref="datadao" />
-		<property name="dataAPI" ref="dataAPI" />
-	</bean>
-    <bean class="kr.co.turbosoft.api.DataAPI" id="dataAPI">
-		<property name="dataDao" ref="datadao" />
-		<property name="userDao" ref="userdao" />
-    </bean>
-    <bean class="kr.co.turbosoft.api.SearchAPI" id="searchAPI">
-		<property name="searchDao" ref="searchdao" />
-		<property name="userDao" ref="userdao" />
-		<property name="dataAPI" ref="dataAPI" />
-    </bean>
-    
-    <!-- declare dao object  -->
-    <bean class="kr.co.turbosoft.dao.impl.UserDaoImpl" id="userdao">
-		<property name="sqlSessionFactory" ref="sqlSessionFactory" />
-    </bean>
-    <bean class="kr.co.turbosoft.dao.impl.DataDaoImpl" id="datadao">
-		<property name="sqlSessionFactory" ref="sqlSessionFactory" />
-    </bean>
-    <bean class="kr.co.turbosoft.dao.impl.SearchDaoImpl" id="searchdao">
-		<property name="sqlSessionFactory" ref="sqlSessionFactory" />
-    </bean>
-    
-	<!--
-		mybatis configuration
-		sqlSessionFactory & sqlSessionTemplate are required
-    -->
-	<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
-		<property name="dataSource" ref="dataSource" />
-		<property name="configLocation" value="/WEB-INF/spring/config/mybatis-config.xml"/>
-	</bean>
-	<bean id="sqlSessionTemplate" class="org.mybatis.spring.SqlSessionTemplate">
-		<constructor-arg ref="sqlSessionFactory" />
-	</bean>
-  
-   <!-- 
-		data source configuration
-		for testing purpose , it uses simple jdbc datasource
-	-->
-	<bean id="dataSource" class="org.springframework.jdbc.datasource.SimpleDriverDataSource">
-		<property name="driverClass" value="${jdbc.driver}"/>
-		<property name="url" value="${jdbc.url}" />
-		<property name="username" value="${jdbc.username}" />
-		<property name="password" value="${jdbc.password}" />
-	</bean>
-
-	<util:properties id="props" location="classpath:/properties/geocms.properties"/>     
 		
+	<util:properties id="props" location="classpath:/properties/geocms.properties" />     
 </beans>
