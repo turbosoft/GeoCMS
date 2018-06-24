@@ -1,0 +1,186 @@
+@CHARSET "UTF-8";
+
+*
+{
+	font-size: 13px;
+}
+
+input[type="text"], input[type="password"]
+{
+	line-height: 20px;
+}
+
+table
+{
+	border-collapse: collapse;
+}
+
+table tr
+{
+	height: 35px;
+}
+
+select
+{
+	height: 22px;
+}
+
+button
+{
+	cursor: pointer;
+}
+
+.tr_line {height:1px;}
+
+.col_white {background-color: #ffffff;}
+.col_black {background-color: #444444;}
+.col_gray1 {background-color: #e3e3e3;}
+.col_gray2 {background-color: #7a8fa2;}
+.col_gray3 {background-color: #6d808f;}
+.col_blue {background-color: #066ab0;}
+
+.ui-dialog >.ui-widget-header {
+ 	background:#6d808f;
+ 	color:#ffffff;
+}
+
+.radiusBtn5{border-radius:5px;}
+
+/* index.jsp */
+.fnt_12 {font-size: 12px;}
+
+/* login.jsp */
+.loginCls th {padding: 5px; text-align: left;}
+.loginCls input {width: 210px;margin: 5px;}
+.loginCls th:FIRST-CHILD {width:70px;}
+.loginCls tbody tr:FIRST-CHILD + FIRST-CHILD {width:60%}
+
+/* join.jsp */
+.joinCls th {padding: 5px; text-align: left;}
+.joinCls input {width: 210px;margin: 5px;}
+.joinCls th:FIRST-CHILD {width:90px;}
+.joinCls tbody tr:FIRST-CHILD + FIRST-CHILD {width:60%}
+
+/* search_page.jsp */
+#search_div table tr {height:28px;}
+
+#manage_table {width:100%; border-collapse:collapse;}
+#manage_table th, #manage_table td {border:1px solid #D0CECE;}
+#manage_table td {padding:5px;}
+#manage_table tr:first-child td {border:none; padding:10px 5px;}
+#manage_table tr:last-child td:last-child {border:none;}
+
+/* content_list.jsp */
+.paging_DL {position:absolute; margin-top:4px; background-image: url(\"../../images/btn_image/paging_DL.png\"); width: 18px;height: 14px; background-repeat:no-repeat;cursor:pointer;}
+.paging_L {position:absolute; margin-top:4px; background-image: url(\"../../images/btn_image/paging_L.png\"); width: 18px;height: 14px; background-repeat:no-repeat;}
+.paging_R {position:absolute; margin-top:4px; background-image: url(\"../../images/btn_image/paging_R.png\"); width: 18px;height: 14px; background-repeat:no-repeat;}
+.paging_DR {position:absolute; margin-top:4px; background-image: url(\"../../images/btn_image/paging_DR.png\"); width: 18px;height: 14px; background-repeat:no-repeat;}
+.pickerTable tr {height: 14px;}
+
+/* image_google_map.jsp */
+.viewModeCls{position: absolute;z-index: 9;background-color: white;left: 90px;top: 10px;height: 30px;width: 100px;}
+#copyReqStart{width: 180px; left: 200px;}
+#copyReqExit{width: 140px; left: 200px;}
+#copyReqNewIn{width: 140px; left: 350px;}
+#copyReqNewOut{width: 150px; left: 500px;}
+.copyCssClass{z-index: 9;position: absolute;;background: gray;color: #ffffff;text-align: center;height: 30px;line-height: 30px;top: 10px;cursor: pointer;}
+
+/* myProject.jsp */
+#proAddBtn{background-color: #066ab0;color:white; border-radius: 5px;}
+#makeContents{position:absolute; left:300px; top:780px;background-color: #3f51b5;color:white; border-radius: 5px;}
+.m_l_10{margin-left: 10px;}
+.m_l_15{margin-left: 15px;}
+.onProjectDiv{background-color: #00BCD4; color: white; font-weight: bold; height: 45px; margin-top: 5px;}
+.offProjectDiv{	background-color: gray;	color: white; font-weight: normal; height: 45px; margin-top: 5px;}
+.f_s_12{ font-size:12px;}
+.editProBtn{ float: right; margin: 10px 5px;}
+.subDivCls{font-size: 10px;}
+.titleLabel{ vertical-align:bottom; margin-left:10px; font-size: 15px; width:280px; display: inline-table;}
+
+#moveContentView{ width: 530px;	height: 790px; background-color: #e3e3e3; position: absolute; top: 0px;	left: 420px; border-left: 10px solid #6d808f; border-right: 10px solid #6d808f;	border-bottom: 10px solid #6d808f;}
+#moveContentView div:FIRST-CHILD{ background-color: #6d808f;}
+#moveContentSel{ margin: 10px;	width: 60%;}
+#moveContentViewSub{ margin-top: 10px; height: 735px; overflow-y: scroll;}
+.offMoveCon{background-color: #c3ced6;}
+.onMoveCon{background-color: #066ab0;}
+
+.markerIconSel_ON{border:2px solid red;}
+.markerIconSel_OFF{border:2px solid #888888;}
+
+.serverInputClassW{width:250px;}
+
+/* upload_image.jsp */
+.file_input_img_btn{background-image: url("../images/geoImg/popup/load_btn_pop.png"); width:93px; height: 24px; background-repeat: no-repeat; float: left;}
+.file_input_div {
+    position:relative;
+    width:93px;
+    height:24px;
+    overflow:hidden;
+    line-height: 20px;
+    margin: 5px 0 0 10px;
+}
+.file_input_img_btn {
+/*     padding:0 0 0 5px; */
+/*     width:100%; */
+    height: 100%;
+    background: #ffffff;
+    text-align: center;
+    border-radius:8px;
+}
+.file_input_hidden {
+    font-size:29px;
+    position:absolute;
+    right:0px;
+    top:0px;
+    opacity:0;
+    filter: alpha(opacity=0);
+    -ms-filter: alpha(opacity=0);
+    cursor:pointer;
+}
+
+/* upload_video.jsp */
+.file_input_div_video {
+    position:relative;
+    width:96%;
+    height:25px;
+    overflow:hidden;
+    line-height: 20px;
+    margin: 8px 0 8px 10px;
+    float: left;
+}
+.file_input_img_btn_video{
+	background-image: url("../images/geoImg/popup/load_btn_pop.png");
+	width:93px;
+	height: 24px;
+	background-repeat: no-repeat;
+	float: left;
+    background: #ffffff;
+    text-align: center;
+    border-radius:8px;
+/*     margin: 40px; */
+}
+.file_input_hidden_video_s, .file_input_hidden_video_m, .file_input_hidden_gps{
+    font-size:29px;
+    position:absolute;
+    opacity:0;
+    filter: alpha(opacity=0);
+    -ms-filter: alpha(opacity=0);
+    cursor:pointer;
+    width: 93px;
+    height: 24px;
+}
+
+
+
+.lodingOn{  position:   fixed;
+    z-index:    1000;
+    top:        0;
+    left:       0;
+    height:     100%;
+    width:      100%;
+    background-position: center;
+    background-color: gray;
+    background-image: url('http://i.stack.imgur.com/FhHRx.gif');
+    background-repeat:no-repeat;
+    opacity:0.5;
+}
