@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:mvc="http://www.springframework.org/schema/mvc"
+	xmlns:p="http://www.springframework.org/schema/p"
+	xsi:schemaLocation="http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+
+	<!-- Enables the Spring MVC @Controller programming model -->
+	<mvc:annotation-driven />
+	
+	<!-- Resolves views selected for rendering by @Controllers to .jsp resources in the /WEB-INF/views directory -->
+	<bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+		<property name="prefix" value="/WEB-INF/jsp/" />
+		<property name="suffix" value=".jsp" />
+	</bean>
+	
+	<context:component-scan base-package="kr.co.turbosoft" />
+	
+	<!-- Annotation 을 사용하지 않는 경우에 대한 MVC 처리 설정 -->
+	<mvc:view-controller path="/geoCMS/index.do" view-name="index"/>
+	<mvc:view-controller path="/geoCMS/join.do" view-name="sub/user/join"/>
+	<mvc:view-controller path="/geoCMS/find.do" view-name="sub/user/find"/>
+	<mvc:view-controller path="/geoCMS/upload_board.do" view-name="sub/upload/upload_board"/>
+	<mvc:view-controller path="/geoCMS/upload_image.do" view-name="sub/upload/upload_image"/>
+	<mvc:view-controller path="/geoCMS/upload_panorama.do" view-name="sub/upload/upload_panorama"/>
+	<mvc:view-controller path="/geoCMS/upload_video.do" view-name="sub/upload/upload_video"/>
+	
+	<mvc:view-controller path="/geoCMS/userManage.do" view-name="sub/admin/userManage"/>
+	<mvc:view-controller path="/geoCMS/share.do" view-name="sub/user/share"/>
+    <mvc:view-controller path="/geoCMS/board_viewer.do" view-name="sub/viewer/board_viewer"/>
+    <mvc:view-controller path="/geoCMS/content_list.do" view-name="sub/moreList/content_list"/>
+    <mvc:view-controller path="/geoCMS/board_list.do" view-name="sub/moreList/board_list"/>
+</beans>
