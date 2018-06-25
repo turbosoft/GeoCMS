@@ -371,9 +371,9 @@ function selectTab(objId){
 		tType = tabTypeArr[tIdx];
 // 		tConNum =cntOfHeight(tabNumArr[tIdx], tType);
 		if(tabNumArr[tIdx] == null || tabNumArr[tIdx] == '' || tabNumArr[tIdx] == undefined){
-			tConNum = cntOfHeight(550, "");
+			tConNum = cntOfHeight(550, tType);
 		}else{
-			tConNum = cntOfHeight(tabNumArr[tIdx], "content");
+			tConNum = cntOfHeight(tabNumArr[tIdx], tType);
 		}
 	}
 
@@ -510,12 +510,12 @@ function leftMenuSetting(tableNum, type, pageNum, contentNum){	//tableNum, type,
 		}
 		
 		if(nowRightTabName == 'content'){
-			table_two_count = Math.floor((800-$('#imageMoveArea').children().first().outerHeight() - t_tabHeight)/102);
+			table_two_count = Math.floor(($('#image_map').height()-40-$('#imageMoveArea').children().first().outerHeight() - t_tabHeight)/102);
 			if(type == 'gellery'){
-				table_two_count = Math.floor((800-$('#imageMoveArea').children().first().outerHeight() - t_tabHeight)/150)*3;
+				table_two_count = Math.floor(($('#image_map').height()-40-$('#imageMoveArea').children().first().outerHeight() - t_tabHeight)/150)*3;
 			}
 		}else{
-			table_two_count = Math.floor((800-$('#imageMoveArea').children().first().outerHeight() - t_tabHeight - 40)/26)-1;
+			table_two_count = Math.floor(($('#image_map').height()-$('#imageMoveArea').children().first().outerHeight() - t_tabHeight - 40)/26)-1;
 		}
 
 

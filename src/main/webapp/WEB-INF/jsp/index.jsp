@@ -48,8 +48,13 @@ var dMarkerLng = 0;		//default marker longitude
 $(function(){
 	session_check();	//login check
 	
-	var mapWidth = $(window).width()- $('#image_list').width()	//화면 크기에 따라 이미지 크기 조정
+	var mapWidth = $(window).width()- $('#image_list').width();	//화면 크기에 따라 이미지 크기 조정
 	$('#image_map').css('width', mapWidth);
+	
+	var setMapHeight = $(window).height() - 100 - $('#footer').height();//화면 크기에 따라 이미지 크기 조정
+	if(setMapHeight > 500){
+		$('#image_map').css('height', setMapHeight);
+	}
 	
     $('#dialog').dialog({	//openApi dialog
       autoOpen: false,
