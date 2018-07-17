@@ -264,10 +264,15 @@ function getShareUser(){
 //file change
 function fileChangeInfo(obj){
 	var objId = obj.id;
+	var objFileName = "";
 	$('#floorMap_pop_'+ objId).empty();
 	
 	if(obj.files[0] != null && obj.files[0] != undefined){
-		var tmpHtml = "<div style='margin:5px 0 5px 10px; text-decoration:underline; color:gray; position:absolute;'>"+ obj.files[0].name +"</div>";  
+		objFileName = obj.files[0].name;
+		if(objFileName.length > 25){
+			objFileName = objFileName.substring(0,20) + "...";
+		}
+		var tmpHtml = "<div title='"+ obj.files[0].name  +"' style='margin:5px 0 5px 10px; text-decoration:underline; color:gray; position:absolute;'>"+ objFileName +"</div>";  
 		$('#floorMap_pop_'+objId).append(tmpHtml);
 	}else{
 		$('#'+objId).val(null);
