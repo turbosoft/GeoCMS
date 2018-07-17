@@ -1005,7 +1005,7 @@ function serverDataSetDef_2(){
 	htmlStr += 			'<label>User ID</label>';
 	htmlStr += 		'</th>';
 	htmlStr += 		'<td>';
-	htmlStr += 			'<input type="text" id="serverId_'+ serverTblCnt +'" class="serverInputClass_'+ serverTblCnt +' serverInputClassW">';
+	htmlStr += 			'<input type="password" id="serverId_'+ serverTblCnt +'" class="serverInputClass_'+ serverTblCnt +' serverInputClassW">';
 	htmlStr += 		'</td>';
 	htmlStr += 	'</tr>';
 	htmlStr += 	'<tr>';
@@ -1013,7 +1013,7 @@ function serverDataSetDef_2(){
 	htmlStr += 			'<label>Password</label>';
 	htmlStr += 		'</th>';
 	htmlStr += 		'<td>';
-	htmlStr += 			'<input type="text" id="serverPass_'+ serverTblCnt +'" class="serverInputClass_'+ serverTblCnt +' serverInputClassW">';
+	htmlStr += 			'<input type="password" id="serverPass_'+ serverTblCnt +'" class="serverInputClass_'+ serverTblCnt +' serverInputClassW">';
 	htmlStr += 		'</td>';
 	htmlStr += 	'</tr>';
 	htmlStr += 	'<tr>';
