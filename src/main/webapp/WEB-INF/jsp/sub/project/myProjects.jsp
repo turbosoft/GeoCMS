@@ -48,7 +48,7 @@ function addProjectGroupCell(response){
 				proShare = 'SELECTIVE';
 			}
 
-			var projectNameTxt = response[i].projectname.length>18? response[i].projectname.substring(0,18)+'...' : response[i].projectname;
+			var projectNameTxt = response[i].projectname.length>10? response[i].projectname.substring(0,10)+'...' : response[i].projectname;
 			innerHTML += '<div id="pName_'+ response[i].idx +'" onclick="fnProjectDiv(this,'+response[i].idx+');"';
 
 			innerHTML += 'class="offProjectDiv">';
@@ -61,14 +61,13 @@ function addProjectGroupCell(response){
 			innerHTML += "<label class='titleLabel' title='"+ response[i].projectname +"'>"+ projectNameTxt +"</label>";
 
 			//edit btn
-			if(loginId == response[i].id){
-				innerHTML += '<button onclick="editProject('+ response[i].idx +');" class="editProBtn" style="border-radius:5px;"> EDIT </button>';
-			}
+// 			if(loginId == response[i].id){
+// 				innerHTML += '<button onclick="editProject('+ response[i].idx +');" class="editProBtn" style="border-radius:5px;"> EDIT </button>';
+				innerHTML += '<button onclick="openProjectWriter();" class="editProBtn" style="border-radius:5px; margin:3px 5px 0 5px;"> Edit Annotation </button>';
+// 			}
 			
 			//upload btn
-			if(loginId == response[i].id){
-				innerHTML += '<button onclick="uploadworldFile('+ response[i].idx +');" class="editFileBtn" style="border-radius:5px; float:right; margin-top:10px;"> FILE </button>';
-			}
+			innerHTML += '<button onclick="openProjectViewer('+ response[i].idx +');" class="editFileBtn" style="border-radius:5px; float:right; margin-top:3px;"> Viewer </button>';
 
 			var tmpUserId = response[i].id.length>7? response[i].id.substring(0,7)+'...' : response[i].id;
 
@@ -859,16 +858,184 @@ function projectMarkerData(tmpProIdx){
 }
 
 //file upload dialog open
-function uploadworldFile(projectIdx){
+function openProjectViewer(projectIdx){
 	editBtnClk = 1;
-	$('#uploadFileProIdx').val(projectIdx);
-	$('#floorMap_pop_file_1').empty();
-	$('#file_1').remove();
-	$('#uploadWorldFileDig').dialog('open');
 	
-	var htmlStr = '<input type="file" multiple name="file_1" id="file_1" class="file_input_hidden" onchange="fileChangeInfo(this);" accept=".jpgw,.gifw,.pngw,.bmpw,.jgw,.gfw,.pgw,.bpw,.gpx"/>';
-	$('.file_input_div').append(htmlStr);
+	var Url			= baseRoot() + "cms/getProjectContent/";
+	var param		= loginToken + "/" + loginId + "/list/" + projectIdx + "/1/1";
+	var callBack	= "?callback=?";
+	
+	$.ajax({
+		type	: "get"
+		, url	: Url + param + callBack
+		, dataType	: "jsonp"
+		, async	: false
+		, cache	: false
+		, success: function(data) {
+			var response = data.Data;
+			if(response != null && response != '' && data.Code == '100' && response.length > 0){
+				if(response[0].datakind == 'GeoPhoto'){
+					imageViewer(response[0].filename, response[0].id, response[0].idx, response[0].projectuserid);
+				}else if(response[0].datakind == 'GeoVideo'){
+					videoViewer(response[0].filename, response[0].orignname, response[0].id, response[0].idx, response[0].projectuserid);
+				}
+			}else{
+				jAlert("There is no content.","Info");
+			}
+		}
+	});
 }
+
+//새창 띄우기 (저작)
+function openProjectWriter() {
+	editBtnClk = 1;
+	
+	var objTIdx = 0; 
+	var objTDataKind = "";
+	var objTArr = [];
+	$('.editAnno').each(function(idx,val){
+		objTIdx =$(val).parent().attr('id');
+	});
+	
+	if(objTIdx != null && objTIdx != '' ){
+		objTArr = objTIdx.split('_');
+		objTIdx = objTArr[2];
+		objTDataKind = objTArr[1];
+		
+		if(objTIdx != null && objTIdx != '' && objTDataKind != null && objTDataKind != ''){
+			var Url			= baseRoot() + "cms/getShareUser/";
+			var param		= loginToken + "/" + loginId + "/" + objTIdx + "/"+objTDataKind;
+			var callBack	= "?callback=?";
+			var tmpEditUserYN  = 0;
+			
+			$.ajax({
+				  type	: "get"
+				, url	: Url + param + callBack
+				, dataType	: "jsonp"
+				, async	: false
+				, cache	: false
+				, success: function(response) {
+					if(response.Code == 100 && response.Data[0].shareedit == 'Y'){
+						tmpEditUserYN = 1;
+					}
+					if(objTDataKind == 'GeoPhoto'){
+						getOneImageData(objTIdx, tmpEditUserYN);
+					}else if(objTDataKind = 'GeoVideo'){
+						getOneVideoData(objTIdx, tmpEditUserYN);
+					}
+				}
+			});
+			
+		}else{
+			jAlert("Please select content.","Info");
+		}
+	}else{
+		jAlert("Please select content.","Info");
+	}
+	
+}
+
+//get on image
+function getOneImageData(tmpTIdx, tmpEditUserYN){
+	var Url			= baseRoot() + "cms/getImage/";
+	var param		= "one/" + loginToken + "/" + loginId + "/&nbsp/&nbsp/&nbsp/" +tmpTIdx;
+	var callBack	= "?callback=?";
+	
+	$.ajax({
+		type	: "get"
+		, url	: Url + param + callBack
+		, dataType	: "jsonp"
+		, async	: false
+		, cache	: false
+		, success: function(data) {
+			if(data.Code == 100){
+				var response = data.Data;
+				if(response != null && response != ''){
+					response = response[0];
+					
+					if(tmpEditUserYN == 0 && (response.projectuserid == loginId && response.projectuserid != response.id)){
+						tmpEditUserYN = 1;
+					}
+					var base_url = 'http://'+location.host;
+					window.open('', 'image_write_page', 'width=1150, height=830');
+					var form = document.createElement('form');
+					form.setAttribute('method','post');
+					form.setAttribute('action',base_url + "/GeoPhoto/geoPhoto/image_write_page.do?loginToken="+loginToken+"&loginId="+loginId+'&projectBoard=1&editUserYN='+tmpEditUserYN+'&projectUserId='+response.projectuserid);
+					form.setAttribute('target','image_write_page');
+					document.body.appendChild(form);
+					
+					var insert = document.createElement('input');
+					insert.setAttribute('type','hidden');
+					insert.setAttribute('name','file_url');
+					insert.setAttribute('value',response.filename);
+					form.appendChild(insert);
+					
+					var insertIdx = document.createElement('input');
+					insertIdx.setAttribute('type','hidden');
+					insertIdx.setAttribute('name','idx');
+					insertIdx.setAttribute('value',tmpTIdx);
+					form.appendChild(insertIdx);
+					
+					form.submit();
+				}
+			}else{
+				jAlert(data.Message, 'Info');
+			}
+		}
+	});
+}
+
+//get one video
+function getOneVideoData(tmpTIdx, tmpEditUserYN){
+	var Url			= baseRoot() + "cms/getVideo/";
+	var param		= "one/" + loginToken + "/" + loginId + "/&nbsp/&nbsp/&nbsp/" +tmpTIdx;
+	var callBack	= "?callback=?";
+	
+	$.ajax({
+		type	: "get"
+		, url	: Url + param + callBack
+		, dataType	: "jsonp"
+		, async	: false
+		, cache	: false
+		, success: function(data) {
+			if(data.Code == 100){
+				var response = data.Data;
+				
+				if(response != null && response != ''){
+					response = response[0];
+					
+					if(tmpEditUserYN == 0 && (response.projectuserid == loginId && response.projectuserid != response.id)){
+						tmpEditUserYN = 1;
+					}
+					var base_url = 'http://'+location.host;
+					window.open('', 'video_write_page', 'width=1145, height=926');
+					var form = document.createElement('form');
+					form.setAttribute('method','post');
+					form.setAttribute('action',base_url + "/GeoPhoto/geoVideo/video_write_page.do?loginToken="+loginToken+"&loginId="+loginId+'&projectBoard=1&editUserYN='+tmpEditUserYN+'&projectUserId='+response.projectuserid);
+					form.setAttribute('target','video_write_page');
+					document.body.appendChild(form);
+					
+					var insert = document.createElement('input');
+					insert.setAttribute('type','hidden');
+					insert.setAttribute('name','file_url');
+					insert.setAttribute('value',response.filename);
+					form.appendChild(insert);
+					
+					var insertIdx = document.createElement('input');
+					insertIdx.setAttribute('type','hidden');
+					insertIdx.setAttribute('name','idx');
+					insertIdx.setAttribute('value',tmpTIdx);
+					form.appendChild(insertIdx);
+					
+					form.submit();
+				}
+			}else{
+				jAlert(data.Message, 'Info');
+			}
+		}
+	});
+}
+
 
 //file change
 function fileChangeInfo(obj){
@@ -990,7 +1157,7 @@ function getTabList() {
 
 </script>
 	<div>
-		<label style="margin-left: 15px;">My Project</label>
+		<label style="margin-left: 15px;">Layer</label>
 		<button id='proAddBtn' onclick='openAddProjectName();'>ADD</button>
 <!-- 		<button onclick='moveProContent();' style="float:right; margin-right:10px; color:white; border-radius: 5px;" class='offMoveCon' id='moveContentBtn'>Move Content</button> -->
 	</div>
@@ -1005,7 +1172,7 @@ function getTabList() {
 				<td><select id="tabSelect" style="width:100%;"></select>
 			</tr>
 			<tr>
-				<td style="width:100px;">Project Name</td>
+				<td style="width:100px;">Layer Name</td>
 				<td><input type="text" id="projectNameTxt" style="width:100%;" /></td>
 			</tr>
 			<tr class="showDivTR">
@@ -1013,9 +1180,9 @@ function getTabList() {
 <!-- 					<div style="float:left;"><input type="radio" value="0" name="shareRadio" checked="checked" onclick="shareInit();">비공개</div> -->
 <!-- 					<div style="float:left;"><input type="radio" value="1" name="shareRadio" onclick="shareInit();">전체공개</div> -->
 <!-- 					<div style="float:left;"><input type="radio" value="2" name="shareRadio" onclick="getShareUser();">특정인 공개</div> -->
-					<div style="float:left;"><input type="radio" value="0" name="shareRadio" checked="checked" onclick="shareInit();">Nondisclosure</div>
-					<div style="float:left;"><input type="radio" value="1" name="shareRadio" onclick="shareInit();">Full disclosure</div>
-					<div style="float:left;"><input type="radio" value="2" name="shareRadio" onclick="getShareUser();">Selective disclosure</div>
+					<div style="float:left;"><input type="radio" value="0" name="shareRadio" checked="checked" onclick="shareInit();">private</div>
+					<div style="float:left;"><input type="radio" value="1" name="shareRadio" onclick="shareInit();">public</div>
+					<div style="float:left;"><input type="radio" value="2" name="shareRadio" onclick="getShareUser();">sharing with friends</div>
 				</td>
 			</tr>
 			<tr style="text-align: center;">
@@ -1032,9 +1199,9 @@ function getTabList() {
 	
 	<div style="display: none;" id="moveContentView">
 		<div>
-			<label style="color: white;">Project Name:</label>
+			<label style="color: white;">Layer Name:</label>
 			<select id="moveContentSel"></select>
-			<button onclick="moveProjectSave();" >Move Project</button>
+			<button onclick="moveProjectSave();" >Move Layer</button>
 		</div>
 		<div id="moveContentViewSub"></div>
 	</div>
