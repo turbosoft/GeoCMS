@@ -505,9 +505,9 @@ function getShareUser(){
 <!-- 			<div style="float:left;"><input type="radio" value="0" name="shareRadio" checked="checked">비공개</div> -->
 <!-- 			<div style="float:left;"><input type="radio" value="1" name="shareRadio">전체공개</div> -->
 <!-- 			<div style="float:left;"><input type="radio" value="2" name="shareRadio" onclick="getShareUser();">특정인 공개</div> -->
-			<div style="float:left;"><input type="radio" value="0" name="shareRadio" checked="checked">Nondisclosure</div>
-			<div style="float:left;"><input type="radio" value="1" name="shareRadio">Full disclosure</div>
-			<div style="float:left;"><input type="radio" value="2" name="shareRadio" onclick="getShareUser();">Selective disclosure</div>
+			<div style="float:left;"><input type="radio" value="0" name="shareRadio" checked="checked">private</div>
+			<div style="float:left;"><input type="radio" value="1" name="shareRadio">public</div>
+			<div style="float:left;"><input type="radio" value="2" name="shareRadio" onclick="getShareUser();">sharing with friends</div>
 		</td>
 	</tr>
 	<tr>

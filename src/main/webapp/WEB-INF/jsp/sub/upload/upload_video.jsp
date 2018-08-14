@@ -10,10 +10,13 @@
 <%
 String loginId = (String)session.getAttribute("loginId");				//로그인 아이디
 String loginToken = (String)session.getAttribute("loginToken");			//로그인 token
+
+String boardHiding = request.getParameter("boardHiding");				//border content hiding
 %>
 <script type="text/javascript">
 var loginId = '<%= loginId %>';					//로그인 아이디
 var loginToken = '<%= loginToken %>';			//로그인 token
+var boardHiding = '<%= boardHiding %>';			//border content hiding
 
 var projectNameArr = new Array();		//project name array
 var projectIdxArr = new Array();		//project idx array
@@ -23,6 +26,10 @@ var uploadFileName = '';
 var nowVideoType = 's';
 
 $(function() {
+	if(boardHiding){
+		$('#showBoard').parent().remove();
+	}
+	
 	getVideoUpProjectList();
 	
 	$('.create_button').width(80);

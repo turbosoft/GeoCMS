@@ -10,6 +10,8 @@
 <%
 String loginId = (String)session.getAttribute("loginId");				//로그인 아이디
 String loginToken = (String)session.getAttribute("loginToken");			//로그인 token
+
+String boardHiding = request.getParameter("boardHiding");				//border content hiding
 %>
 
 <style type="text/css">
@@ -20,6 +22,7 @@ select {
 <script type="text/javascript">
 var loginId = '<%= loginId %>';					//로그인 아이디
 var loginToken = '<%= loginToken %>';			//로그인 token
+var boardHiding = '<%= boardHiding %>';			//border content hiding
 var projectNameArr = new Array();		//project name array
 var projectIdxArr = new Array();		//project idx array
 
@@ -28,6 +31,9 @@ var imageUploadCnt = 0;
 var fileObjCnt = 1;
 
 $(function() {
+	if(boardHiding){
+		$('#showBoard').parent().remove();
+	}
 	getImgUpProjectList();
 	
 	$('.create_button').width(80);
@@ -182,17 +188,17 @@ function fileChangeInfo(obj){
 				}
 			}
 		}
-		
 		obj.files[i].seq = viewIdx;
 		viewFileArr[viewIdx] = obj.files[i];
+		
 	}
-	
 	var tmpHtml = '';
 	for(var i=0; i<viewFileArr.length;i++){
 		tmpHtml += "<div style='margin:5px 0 5px 10px; text-decoration:underline; color:gray;'>"+ viewFileArr[i].name +"</div>";
 	}
-	
+		
 	$('#floorMap_pop_file_1').append(tmpHtml);
+	
 }
 
 function reString(numStr){
