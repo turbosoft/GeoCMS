@@ -748,9 +748,9 @@ function mapCenterChange(objArr){		//tempObj: lat, lon, file, idx, dataKind, ori
 		});
 		return;
 	}
-	//Pro_GeoPhoto_61
-	$('#Pro_GeoPhoto_'+ tempArr[3]+ ' img').addClass('editAnno');
-	$('#Pro_GeoPhoto_'+ tempArr[3]+ ' img').css('border','2px solid red');
+
+	$('#Pro_'+ tempArr[4] +'_'+ tempArr[3]+ ' img').addClass('editAnno');
+	$('#Pro_'+ tempArr[4] +'_'+ tempArr[3]+ ' img').css('border','2px solid red');
 	
 	if(tempArr[8] == null || tempArr[8] == 'null' || tempArr[8] == undefined){
 		tempArr[8] = '';
