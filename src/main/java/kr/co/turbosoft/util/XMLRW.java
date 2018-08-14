@@ -13,6 +13,8 @@ import java.net.Authenticator;
 import java.net.HttpURLConnection;
 import java.net.PasswordAuthentication;
 import java.net.URL;
+import java.net.URLDecoder;
+import java.net.URLEncoder;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 
@@ -194,7 +196,8 @@ public class XMLRW {
 			try {
 				File tmpFile = new File(fullFile);
 				if(tmpFile.exists()){
-					in = new BufferedReader(new FileReader(tmpFile));
+//					in = new BufferedReader(new FileReader(tmpFile));
+					in = new BufferedReader(new InputStreamReader(new FileInputStream(tmpFile),"UTF8"));
 					String inputLine;
 					while ((inputLine = in.readLine()) != null){
 						System.out.println(inputLine);
