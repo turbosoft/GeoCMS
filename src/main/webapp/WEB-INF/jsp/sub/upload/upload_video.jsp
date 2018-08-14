@@ -460,7 +460,7 @@ function changVideoFileGps(){
 		</td>
 	</tr>
 	<tr>
-		<td width="80" height="25" align="center">Project Name</td>
+		<td width="80" height="25" align="center">Layer Name</td>
 		<td width="" height="25" align="center">
 			<select style="width:318px;" id="projectKind"></select>
 		</td>
