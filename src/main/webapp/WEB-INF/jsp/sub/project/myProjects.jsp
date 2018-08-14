@@ -1011,7 +1011,7 @@ function getOneVideoData(tmpTIdx, tmpEditUserYN){
 					window.open('', 'video_write_page', 'width=1145, height=926');
 					var form = document.createElement('form');
 					form.setAttribute('method','post');
-					form.setAttribute('action',base_url + "/GeoPhoto/geoVideo/video_write_page.do?loginToken="+loginToken+"&loginId="+loginId+'&projectBoard=1&editUserYN='+tmpEditUserYN+'&projectUserId='+response.projectuserid);
+					form.setAttribute('action',base_url + "/GeoVideo/geoVideo/video_write_page.do?loginToken="+loginToken+"&loginId="+loginId+'&projectBoard=1&editUserYN='+tmpEditUserYN+'&projectUserId='+response.projectuserid);
 					form.setAttribute('target','video_write_page');
 					document.body.appendChild(form);
 					
