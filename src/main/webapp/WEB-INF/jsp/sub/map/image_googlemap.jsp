@@ -717,6 +717,11 @@ function mapCenterChange(objArr){		//tempObj: lat, lon, file, idx, dataKind, ori
 	var lat = tempArr[0];
 	var lon = tempArr[1];
 	
+	$('.editAnno').each(function(idx,val){
+		$(val).removeClass('editAnno');
+		$(val).css('border','2px solid #888888');
+	});
+	
 	if(proEdit == 1){
 		moveContentAdd(objArr);
 		return;
@@ -743,6 +748,9 @@ function mapCenterChange(objArr){		//tempObj: lat, lon, file, idx, dataKind, ori
 		});
 		return;
 	}
+	//Pro_GeoPhoto_61
+	$('#Pro_GeoPhoto_'+ tempArr[3]+ ' img').addClass('editAnno');
+	$('#Pro_GeoPhoto_'+ tempArr[3]+ ' img').css('border','2px solid red');
 	
 	if(tempArr[8] == null || tempArr[8] == 'null' || tempArr[8] == undefined){
 		tempArr[8] = '';
@@ -839,7 +847,8 @@ function imageViewer(file_url, user_id, idx, projectUserId) {   // 여기서 들
 			url: base_url + '/GeoPhoto/geoPhoto/image_viewer.do?file_url='+conv_file_url+'&user_id='+user_id +'&idx='+ idx+'&loginId='+loginId+'&loginType='+loginType+'&loginToken='+loginToken+'&projectUserId='+projectUserId,
 			title: 'Image Viewer',
 			width:1127,  
-			height:850, 
+// 			height:850, 
+			height:810, 
 			buttons: {},
 			autoOpen:false
 		});
@@ -871,7 +880,8 @@ function videoViewer(file_url, origin_url, id, idx, projectUserId) {
 						url: base_url + '/GeoVideo/geoVideo/video_viewer.do?&file_url='+file_url+'&user_id='+id+'&idx='+idx+'&loginId='+loginId+'&loginType='+loginType+'&loginToken='+loginToken+'&projectUserId='+projectUserId,
 						title: 'Video Viewer',
 						width: 1127,
-						height: 850,
+// 						height: 850,
+						height:810, 
 						position: 'right',
 						buttons: {},
 						autoOpen:false
