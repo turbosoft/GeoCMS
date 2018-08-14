@@ -90,7 +90,7 @@ function changeSearchKind(){
 
 </head>
 <body bgcolor='#FFF'>
-	<div id='search_div' style='position:absolute; left:10px; top:100px; width:409px; height:798px; display:block; border:1px solid #999;'>
+	<div id='search_div' style='position:absolute; left:10px; top:150px; width:409px; height:748px; display:block; border:1px solid #999;'>
 		
 		<input id='search_bar' type='text' name='search_bar' value='Search for..' onKeyPress='submit(event);' style='display:none; position:absolute; left:130px; top:20px; width:560px; height:30px; font-family:Comic Sans MS; font-size:20px;'></input>
 		
@@ -116,7 +116,7 @@ function changeSearchKind(){
 			</tr>
 		</table>
 		
-		<div id='search_result' style='position:absolute; left:5px; top:100px; width:395px; height:688px; display:block; border:1px solid #999999; overflow-y:scroll;'>
+		<div id='search_result' style='position:absolute; left:5px; top:100px; width:395px; height:638px; display:block; border:1px solid #999999; overflow-y:scroll;'>
 			 <jsp:include page="search/search.jsp"/>
 		</div>
 	</div>

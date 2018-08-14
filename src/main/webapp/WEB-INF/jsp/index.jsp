@@ -45,6 +45,8 @@ var request = null;		//request;
 var dMarkerLat = 0;		//default marker latitude
 var dMarkerLng = 0;		//default marker longitude
 
+var boardHiding = true; //board tab hide
+
 $(function(){
 	session_check();	//login check
 	
@@ -196,11 +198,13 @@ function session_check(){
 		
 		var tmpWidth = $('#userId').width();
 		if(loginType !='ADMIN'){
-			tmpWidth += 100;
+// 			tmpWidth += 100;
+			tmpWidth += 200
 			$('#userId').css('right', tmpWidth+'px');
 			$('#status_login').find('img').css('right', '45px');
 		}else{
-			tmpWidth += 360;
+// 			tmpWidth += 360;
+			tmpWidth += 460;
 			$('#userId').css('right', tmpWidth+'px');
 		}
 	}else{
@@ -294,6 +298,9 @@ function cmsLoadExif(){
 
 </head>
 <body bgcolor="#FFF">
+<!-- 	<input type="text" id="aesText" style="width:100px;height: 30px;"> -->
+<!-- 	<button id="aesBtn" onclick="getAes('A');">AES BTN</button> -->
+<!-- 	<button id="aesBtn" onclick="getAes('D');">DES BTN</button> -->
 	<!-- 상단 메뉴 -->
 	<div id="menus" style="width:100%;height:90px; min-width: 1500px;">
 	</div>
@@ -316,7 +323,7 @@ function cmsLoadExif(){
 	</div>
 	
 	<!-- left list table -->
-	<div id="image_list" style="width:420px; position:absolute; top:100px; display:block; z-index: 1">
+	<div id="image_list" style="width:420px; position:absolute; top:150px; display:block; z-index: 1">
 		<jsp:include page="image_content_list.jsp"/>
 	</div>
 	

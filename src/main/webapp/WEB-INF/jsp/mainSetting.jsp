@@ -104,6 +104,31 @@ function getBase() {
 	});
 }
 
+function getAes(type){
+	var txtVal = $('#aesText').val();
+	var encrypt = "encrypt";
+	if(type != 'A'){
+		encrypt = "Y";
+	}
+	
+	txtVal = txtVal.replace(/\//g,'&sbsp');
+	
+	var Url			= baseRoot() + "cms/encrypt/";
+	var param		= txtVal + "/" + encrypt;
+	var callBack	= "?callback=?";
+	
+	$.ajax({
+		type : "get",
+		url  : Url + param + callBack,
+		dataType : "jsonp",
+		async	: false,
+		cache	: false,
+		success: function(data) {
+			alert("success");
+		}
+	});
+}
+
 //get server
 function getServer(tmpFileName, tmpFileType, rObj){
 	var Url			= baseRoot() + "cms/selectServerList/";
@@ -146,6 +171,8 @@ function getServer(tmpFileName, tmpFileType, rObj){
 						url: '<c:url value="/geoExif.do"/>',
 						data: 'file_name='+tmpFileName+'&type=load&serverType='+b_serverType+'&serverUrl='+b_serverUrl+
 						'&serverPath='+b_serverPath+'&serverViewPort='+ b_serverViewPort +'&serverId='+tmpServerId+'&serverPass='+tmpServerPass,
+// 						data: 'file_name='+tmpFileName+'&type=load',
+						
 						success: function(data) {
 							var response = data.trim();
 							if(rObj != null ){
@@ -160,6 +187,7 @@ function getServer(tmpFileName, tmpFileType, rObj){
 						url: 'Http://'+ location.host + '/GeoCMS/geoXml.do',
 						data: 'file_name='+tmpFileName+'&type=load&serverType='+b_serverType+'&serverUrl='+b_serverUrl+
 						'&serverPath='+b_serverPath+ '&serverPort='+tmpServerPort+'&serverViewPort='+ b_serverViewPort +'&serverId='+tmpServerId+'&serverPass='+tmpServerPass,
+// 						data: 'file_name='+tmpFileName+'&type=load',
 						success:function(xml) {
 							if(xml != null && xml != "" && xml != 'null'){
 								file_check = 1;
@@ -179,6 +207,7 @@ function getServer(tmpFileName, tmpFileType, rObj){
 						url: 'Http://'+ location.host + '/GeoCMS/geoXml.do',
 						data: 'file_name='+tmpFileName+'&type=load&serverType='+b_serverType+'&serverUrl='+b_serverUrl+
 						'&serverPath='+b_serverPath+ '&serverPort='+tmpServerPort+'&serverViewPort='+ b_serverViewPort +'&serverId='+tmpServerId+'&serverPass='+tmpServerPass,
+// 						data: 'file_name='+tmpFileName+'&type=load',
 						success:function(data) {
 							if(data != null){
 								var response = JSON.parse(data);
@@ -215,12 +244,18 @@ function getServer(tmpFileName, tmpFileType, rObj){
 
 //right tab add
 function rightTabAdd() {
-	var innerHTMLStr = "";
-	innerHTMLStr += '<div id="content_tab" style="height:22px; width:190px; margin-left:6px; float:left; text-align:center; font-size:13px; top:100px; font-weight:bold; cursor:pointer;" ';
-	innerHTMLStr += ' onclick="rightTabChang(this.id)">';
-	innerHTMLStr += 'CONTENT';
-	innerHTMLStr += '</div>';
-	$('#board_tab').before(innerHTMLStr);	
+	
+	if(!boardHiding){
+		var innerHTMLStr = "";
+		innerHTMLStr += '<div id="content_tab" style="height:22px; width:190px; margin-left:6px; float:left; text-align:center; font-size:13px; top:100px; font-weight:bold; cursor:pointer;" ';
+		innerHTMLStr += ' onclick="rightTabChang(this.id)">';
+		innerHTMLStr += 'CONTENT';
+		innerHTMLStr += '</div>';
+		$('#board_tab').before(innerHTMLStr);	
+	}else{
+		$('#board_tab').css('display','none');
+		$('#board_tab').parent().css('height','0px');
+	}
 }
 
 //right tab click event
@@ -403,7 +438,7 @@ function menuSetting(){
 	//임의 메뉴 설정
 	menuMap = newMap();
 	menuMap.put("logo",{"src": "<c:url value='/images/geoImg/english_images/logo.jpg'/>", "top": 20, "width": 152, "etc": ""});	//이미지 주소, top, width, function 및 id
-	menuMap.put("MyProjects",{"src": "<c:url value='/images/geoImg/english_images/myProjects.png'/>", "top": 55, "width": 77, "etc": "onclick='viewMyProjects(null);'"});
+	menuMap.put("MyProjects",{"src": "<c:url value='/images/geoImg/english_images/myProjects.png'/>", "top": 15, "width": 77, "etc": "onclick='viewMyProjects(null);'"});
 	menuMap.put("OpenApi",{"src": "<c:url value='/images/geoImg/english_images/menu04.gif'/>", "top": 55, "width": 77, "etc": "onclick='diagOpen()'" /*"id='opener'"*/});
 	menuMap.put("searchBox",{"src": "<c:url value='/images/geoImg/btn_image/search.png'/>", "top": 32, "width": 28, "etc": "alt='search Button' onclick='searchAction();'"});
 	
@@ -432,16 +467,12 @@ function menuSetting(){
 		if(menuId == "logo" ||  menuId == "Home"){	// 메뉴가 logo, home 인 경우 메인 페이지로 되돌아가는 기능 추가
 			innerHTMLStr += "<a href='<c:url value='/'/>'>";
 		}else if(menuId == "searchBox"){	//검색 박스인 경우 input box 추가
-			var searchTop = 52;
-			if(loginType =='ADMIN') {
-				searchTop = 32;
-			}
-			innerHTMLStr += "<img src='" + menuMap.get(menuId).src + "' id='" + menuId + "' class='menu_images' style='width:" + menuMap.get(menuId).width + "px; top:" + searchTop + "px; right:50px; position:relative; cursor: pointer; float:right; clear:both;' ";
+			innerHTMLStr += "<img src='" + menuMap.get(menuId).src + "' id='" + menuId + "' class='menu_images' style='width:" + menuMap.get(menuId).width + "px; top:109px; left:380px; position:relative; cursor: pointer; clear:both;' ";
 			innerHTMLStr +=  menuMap.get(menuId).etc + " /> ";
-			innerHTMLStr += "<input type='text' id='srchBox' size='50' style='position:relative; top:"+ searchTop +"px; right:50px; height: 23px; float:right;' onKeyPress='submit1(event);'/>";
+			innerHTMLStr += "<input type='text' id='srchBox' size='45' style='position:relative; top:100px; left:-10px; height: 23px; ' onKeyPress='submit1(event);'/>";
 		}
 		
-		if(menuId != "searchBox"){
+		if(menuId != "searchBox" && menuId != "MyProjects"){
 			innerHTMLStr += "<img src='" + menuMap.get(menuId).src + "' id='" + menuId + "' class='menu_images' style='width:" + menuMap.get(menuId).width + "px; margin-top:" + menuMap.get(menuId).top + "px; left:" + leftNum + "px; position:absolute; cursor: pointer; ";
 			if(menuArr[i].split("_")[1] == "off"){
 				innerHTMLStr += "display:none;'";
@@ -455,12 +486,21 @@ function menuSetting(){
 			innerHTMLStr += "</a>";
 		}
 		
+		if(menuId == "MyProjects"){
+			var tmpLeft = $('#userId').css('left');
+			tmpLeft = Number(tmpLeft.replace('px',''));
+			tmpLeft += 70;
+			
+			innerHTMLStr += "<img src='" + menuMap.get(menuId).src + "' id='" + menuId + "' class='menu_images' style='width:" + menuMap.get(menuId).width + "px; margin-top:" + menuMap.get(menuId).top + "px; left:"+ tmpLeft + "px; position:absolute; cursor: pointer; ";
+			innerHTMLStr += "'";
+			innerHTMLStr +=  menuMap.get(menuId).etc + " /> ";
+		}
+		
 		leftNum += 110 + menuMap.get(menuId).width;
 		
 		if(i == 0){
 			leftNum += 400;
 		}
-		
 	}
 	
 	$('#menus').append(innerHTMLStr);
@@ -840,8 +880,13 @@ function addLeftImageDataCell(id_arr, title_arr, content_arr, file_url_arr, udat
 			var tempWriter = (img_type == "list")?"style='position: absolute; left: 150px; margin-top:-50px; font-size:12px;'":"";	//list type인 경우 작성자명 위치 설정
 			var tempDate = (img_type == "list")?"style='position: absolute; left: 150px; margin-top:-30px; font-size:12px;'":"style='margin-left: 10px; font-size:12px;'";	//list type인 경우 날짜 위치 설정
 			if(img_type == "list"){
-				innerHTMLStr += "<div style='position: absolute; left: 160px; margin-top:-50px; font-size:12px;'>&nbsp;Writer : "+id_arr[i]+"</div>";
-				innerHTMLStr += "<div style='position: absolute; left: 160px; margin-top:-30px; font-size:12px;'>&nbsp;Date : "+udate_arr[i]+"</div>";
+				innerHTMLStr += "<div style='position: absolute; left: 160px; margin-top:-70px; font-size:12px;'>&nbsp;Writer : "+id_arr[i]+"</div>";
+				innerHTMLStr += "<div style='position: absolute; left: 160px; margin-top:-50px; font-size:12px;'>&nbsp;Date : "+udate_arr[i]+"</div>";
+				var tmpTtText = title_arr[i];
+				if(tmpTtText != null && tmpTtText != ''){
+					tmpTtText = tmpTtText.length>30?tmpTtText.substring(0,28)+'...':tmpTtText;
+				}
+				innerHTMLStr += "<div style='position: absolute; left: 160px; margin-top:-30px; font-size:12px;'  title='"+ title_arr[i] +"'>&nbsp;Title : "+tmpTtText+"</div>";
 			}else{
 				innerHTMLStr += "<div style='margin-left: 10px;font-size:12px;border: 3px solid gray;width: 100px;line-height: 25px;margin-top: -13px;'>&nbsp;"+udate_arr[i]+"</div>";
 			}
