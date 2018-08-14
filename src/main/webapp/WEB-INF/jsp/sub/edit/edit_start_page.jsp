@@ -51,6 +51,7 @@ $(function(){
 //편집 모드
 function contentMove(){
 	if(editMode == 0){
+		$('#myProject_list').css('display','none');
 		//지도 초기 설정
 		editMapSetting();
 		
@@ -155,7 +156,8 @@ function moveObjView(){
 	editWidth = $('#left_list_table_1').width() + 38;
 	editHeight = $('#left_list_table_1').height();
 	editLeft = 0;
-	editTop = 160;
+// 	editTop = 160;
+	editTop = 189;
 	editCursor = "s-resize";
 	
 	innerHTMLStr += "<div id='left_list_table_1_view' class='over_edit'";	//이미지 리스트 영역
