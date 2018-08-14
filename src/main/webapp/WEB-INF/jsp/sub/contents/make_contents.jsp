@@ -33,15 +33,15 @@ function ContentsMakes(type, boardNowTab, selBoardNum) {
 		var tempHeight = 660;
 		
 		if((nowRightTabName == "content" && projectImage == 1 && type == "") || type == "Image"){	//image upload
-			tempUrl = '<c:url value="/geoCMS/upload_image.do"/>';
+			tempUrl = '<c:url value="/geoCMS/upload_image.do"/>?boardHiding='+boardHiding;
 			tempTitle = 'Image Upload';
 			tempWidth = 435;
 			tempHeight = 675;
 		}else if((nowRightTabName == "content" && projectVideo == 1 && type == "") || type == "Video"){	//video upload
-			tempUrl = '<c:url value="/geoCMS/upload_video.do"/>?projectBoard=1&projectImage='+projectImage+'&b_contentTabArr='+b_contentTabArr;
+			tempUrl = '<c:url value="/geoCMS/upload_video.do"/>?projectBoard=1&projectImage='+projectImage+'&b_contentTabArr='+b_contentTabArr+"&boardHiding="+boardHiding;
 			tempTitle = 'Video Upload';
 			tempWidth = 435;
-			tempHeight = 675;
+			tempHeight = 530;
 		}
 		
 		//image, video 생성시 프로젝트가 없으면 생성 할 수 없음
