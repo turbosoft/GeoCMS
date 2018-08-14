@@ -94,7 +94,7 @@ $(function(){
         autoOpen: false,
         width:320,
         height:191,
-        title:'Make Project',
+        title:'Add Layer',
         modal:true,
         background:"#99CCFF"
       });
