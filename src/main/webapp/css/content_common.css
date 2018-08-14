@@ -95,7 +95,7 @@ button
 .f_s_12{ font-size:12px;}
 .editProBtn{ float: right; margin: 10px 5px;}
 .subDivCls{font-size: 10px;}
-.titleLabel{ vertical-align:bottom; margin-left:10px; font-size: 15px; width:280px; display: inline-table;}
+.titleLabel{ vertical-align:bottom; margin-left:10px; font-size: 15px; width:200px; display: inline-table; height:25px;}
 
 #moveContentView{ width: 530px;	height: 790px; background-color: #e3e3e3; position: absolute; top: 0px;	left: 420px; border-left: 10px solid #6d808f; border-right: 10px solid #6d808f;	border-bottom: 10px solid #6d808f;}
 #moveContentView div:FIRST-CHILD{ background-color: #6d808f;}
