@@ -27,7 +27,6 @@ var setObj = null;
 
 //초기 설정 데이터 불러오기
 function getBase() {
-	
 	var Url			= baseRoot() + "cms/getbase";
 	var callBack	= "?callback=?";
 	
@@ -97,6 +96,7 @@ function getBase() {
 				setObj.openAPI = '0';
 				setObj.latestView = '1';
 				setObj.mapZoom = 8;
+				menuArr[2] = 'OpenApi_off';
 				rightTabAdd();								//content TAB 추가
 				rightTabChang('content_tab');				//left list content type setting
 			}
