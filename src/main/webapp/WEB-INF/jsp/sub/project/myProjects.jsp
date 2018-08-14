@@ -48,7 +48,7 @@ function addProjectGroupCell(response){
 				proShare = 'SELECTIVE';
 			}
 
-			var projectNameTxt = response[i].projectname.length>10? response[i].projectname.substring(0,10)+'...' : response[i].projectname;
+			var projectNameTxt = response[i].projectname.length>28? response[i].projectname.substring(0,28)+'...' : response[i].projectname;
 			innerHTML += '<div id="pName_'+ response[i].idx +'" onclick="fnProjectDiv(this,'+response[i].idx+');"';
 
 			innerHTML += 'class="offProjectDiv">';
