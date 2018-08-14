@@ -112,7 +112,7 @@ $(function(){
         autoOpen: false,
         width:320,
         height:130,
-        title:'Make Project',
+        title:'Add Layer',
         modal:true,
         background:"#99CCFF"
       });
