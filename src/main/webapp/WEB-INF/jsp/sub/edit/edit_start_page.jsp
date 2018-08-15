@@ -52,6 +52,7 @@ $(function(){
 function contentMove(){
 	if(editMode == 0){
 		$('#myProject_list').css('display','none');
+		$('#copyReqStart').css('display','none');
 		//지도 초기 설정
 		editMapSetting();
 		
@@ -401,12 +402,15 @@ function editLeftSetting(eimgType1, eContnetNum, eNowTabelHeight, eTableNum){
 //edit mode sample content list2
 function editlatestSetting(eImgType){
 	//latest table draw
-	var eTableH = 800 - $('#imageMoveArea').children().first().height() - $('#tabHeader').height() - Number(nowTabelHeight) - 60;
-	var etableT = Number(nowTabelHeight) + 220;
+// 	var eTableH = 800 - $('#imageMoveArea').children().first().height() - $('#tabHeader').height() - Number(nowTabelHeight) - 60;
+	var eTableH = ($('#image_map').height()-74- $('#imageMoveArea').children().first().height() - Number(nowTabelHeight)- $('#tabHeader').height());
+// 	var etableT = Number(nowTabelHeight) + 220;
+	var etableT = Number(nowTabelHeight) + 254;
 	var eTableN = Math.floor((eImgType == "gellery")?eTableH/150: eTableH/102);
 	
 	$('#left_list_table_2').empty();
-	$('#latestUpload').css('top', (Number(nowTabelHeight)+200) +"px");
+// 	$('#latestUpload').css('top', (Number(nowTabelHeight)+200) +"px");
+	$('#latestUpload').css('top', (Number(nowTabelHeight)+234) +"px");
 	$('#image_latest_list').css('top', (etableT)+"px");
 
 	if(eTableN > 0){
@@ -869,7 +873,7 @@ function getServerList(){
 			}else if(data.Code == '200'){
 				serverDataSetDef_1();
 				$('#serverPath_1').val(b_serverPath);
-				$('#serverName_1').val('기본 서버');
+				$('#serverName_1').val('Base Server');
 				$('#serverRadio_1').attr('checked',true);
 				$('.serverInputClass_1').attr('readonly',true);
 				isServerFirst = true;
