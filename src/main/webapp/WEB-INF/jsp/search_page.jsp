@@ -37,7 +37,8 @@ function search() {
 	else {
 		var boardChk, imageChk, videoChk, check, display;
 		
-		boardChk = $('#search_board').attr('checked');
+// 		boardChk = $('#search_board').attr('checked');
+		boardChk = false;
 		imageChk = $('#search_image').attr('checked');
 		videoChk = $('#search_video').attr('checked');
 		if(!boardChk && !imageChk && !videoChk){
@@ -73,7 +74,8 @@ function search() {
 }
 
 function changeSearchKind(){
-	var board_chk = $('#search_board').attr('checked');
+// 	var board_chk = $('#search_board').attr('checked');
+	var board_chk = false;
 	var image_chk = $('#search_image').attr('checked');
 	var video_chk = $('#search_video').attr('checked');
 	
@@ -99,7 +101,7 @@ function changeSearchKind(){
 				<td align='center' width=100 rowspan='4'><label style='font-size:13px;'><b>Searching<br/>Option</b></label>&nbsp;</td>
 				<td align='center' width=80><label style='font-size:12px;'><b>Search</b></label></td>
 				<td>
-					<div style="float:left;"><input type="checkbox" id="search_board" checked onclick="changeSearchKind();"/><label style="color:#000; font-size:12px;">Board</label></div>
+<!-- 					<div style="float:left;"><input type="checkbox" id="search_board" checked onclick="changeSearchKind();"/><label style="color:#000; font-size:12px;">Board</label></div> -->
 					<div style="float:left;"><input type="checkbox" id="search_image" checked onclick="changeSearchKind();"/><label style="color:#000; font-size:12px;">Image</label></div>
 					<div style="float:left;"><input type="checkbox" id="search_video" checked onclick="changeSearchKind();"/><label style="color:#000; font-size:12px;">Video</label></div>
 				</td>
