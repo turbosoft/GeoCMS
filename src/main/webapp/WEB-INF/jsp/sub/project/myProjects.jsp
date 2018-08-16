@@ -1263,3 +1263,4 @@ function getTabList() {
 	<input type="hidden" id="editYes"/>
 	<input type="hidden" id="editNo"/>
 	<div id="clonSharUser" style="display:none;"></div>
+
