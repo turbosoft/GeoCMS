@@ -48,7 +48,7 @@ function addProjectGroupCell(response){
 				proShare = 'SELECTIVE';
 			}
 
-			var projectNameTxt = response[i].projectname.length>28? response[i].projectname.substring(0,28)+'...' : response[i].projectname;
+			var projectNameTxt = response[i].projectname.length>14? response[i].projectname.substring(0,14)+'...' : response[i].projectname;
 			innerHTML += '<div id="pName_'+ response[i].idx +'" onclick="fnProjectDiv(this,'+response[i].idx+');"';
 
 			innerHTML += 'class="offProjectDiv">';
@@ -58,9 +58,13 @@ function addProjectGroupCell(response){
 			innerHTML += '<input type="hidden" id="hiddenShareType_'+ response[i].idx +'" value="'+ response[i].sharetype +'"/>';
 			innerHTML += '<input type="hidden" id="hiddenTabIdx_'+ response[i].idx +'" value="'+ response[i].tabidx +'"/>';
 			
-			innerHTML += "<label class='titleLabel' title='"+ response[i].projectname +"'>"+ projectNameTxt +"</label>";
+			innerHTML += "<label class='titleLabel' title='"+ response[i].projectname +"' style='width:150px !important;'>"+ projectNameTxt +"</label>";
 
 			//edit btn
+			if(loginId == response[i].id){
+				innerHTML += '<button onclick="editProject('+ response[i].idx +');" class="editProBtn" style="border-radius:5px; margin:3px 5px 0 0px;"> Manage </button>';
+	 		}
+			
 // 			if(loginId == response[i].id){
 // 				innerHTML += '<button onclick="editProject('+ response[i].idx +');" class="editProBtn" style="border-radius:5px;"> EDIT </button>';
 				innerHTML += '<button onclick="openProjectWriter();" class="editProBtn" style="border-radius:5px; margin:3px 5px 0 5px;"> Edit Annotation </button>';
@@ -69,6 +73,7 @@ function addProjectGroupCell(response){
 			//upload btn
 			innerHTML += '<button onclick="openProjectViewer('+ response[i].idx +');" class="editFileBtn" style="border-radius:5px; float:right; margin-top:3px;"> Viewer </button>';
 
+			
 			var tmpUserId = response[i].id.length>7? response[i].id.substring(0,7)+'...' : response[i].id;
 
 // 			innerHTML += '<div class="subDivCls"><label class="m_l_10">작성자: </label><label style="display:inline-block; width:45px;" title="'+ response[i].id +'">'+ tmpUserId + '</label><label style="margin-left:5px;">등록일: </label><label>' + response[i].u_date + '</label><label style="margin-left:5px;">'+ proShare + '</label></div>';
@@ -127,7 +132,7 @@ function clickProjectPage(pageNum, tmpProIdx, dataType){
 		, success: function(data) {
 			var response = data.Data;
 			if(response != null && response != '' && data.Code == '100'){
-				if(dataType != 'editView'){
+				if(dataType != 'editView' && dataType != 'removeView'){
 					proIdx = tmpProIdx;
 					addProjectChildCell(response, pageNum);
 					
@@ -147,14 +152,18 @@ function clickProjectPage(pageNum, tmpProIdx, dataType){
 						//테이블에 페이지 추가
 						addProjectPageCell(totalPage, pageNum);
 					}
-				}else{
+				}else if(dataType == 'editView'){
 					editDiagOpen(data.DataLen);
+				}else if(dataType == 'removeView'){
+					removeProjectName1(data.DataLen);
 				}
 			}else{
-				if(dataType != 'editView'){
+				if(dataType != 'editView' && dataType != 'removeView'){
 					jAlert(data.Message, 'Info');
-				}else{
+				}else if(dataType == 'editView'){
 					editDiagOpen(0);
+				}else if(dataType == 'removeView'){
+					removeProjectName1(0);
 				}
 			}
 		}
@@ -373,6 +382,7 @@ function openAddProjectName(){
 	$('#projectNameAddDig #saveBtn').css('display','inline-block');
 	$('#projectNameAddDig #modifyBtn').css('display','none');
 	$('#projectNameAddDig #removeBtn').css('display','none');
+	$('#projectNameAddDig').dialog('option', 'title', 'Add Layer');
 	$('#projectNameTxt').val('');
 	getTabList();
 }
@@ -401,13 +411,15 @@ function editProject(projectIdx){
 }
 
 function editDiagOpen(totalLen){
-	if(totalLen == 0){
+// 	if(totalLen == 0){
 		$('#projectNameAddDig #removeBtn').css('display','inline-block');
-	}else{
-		$('#projectNameAddDig #removeBtn').css('display','none');
-	}
+// 	}else{
+// 		$('#projectNameAddDig #removeBtn').css('display','none');
+// 	}
 	$('#projectNameAddDig #saveBtn').css('display','none');
 	$('#projectNameAddDig #modifyBtn').css('display','inline-block');
+	$('#projectNameAddDig').dialog('option', 'title', 'Manage Layer');
+
 	getTabList();
 }
 
@@ -782,27 +794,36 @@ function moveProjectSave(){
 }
 
 function removeProjectName(){
-// 	jConfirm('정말 삭제하시겠습니까?', '정보', function(type){
-	jConfirm('Are you sure you want to delete?', 'Info', function(type){
-		if(type){ 
-			var Url			= baseRoot() + "cms/removeProject/";
-			var param		= loginToken + "/" + loginId + "/"+ proIdx;
-			var callBack	= "?callback=?";
-			
-			$.ajax({
-				type	: "POST"
-				, url	: Url + param + callBack
-				, dataType	: "jsonp"
-				, async	: false
-				, cache	: false
-				, success: function(data) {
-					viewMyProjects(null);
-					closeAddProjectName();
-					jAlert(data.Message, 'Info');
-				}
-			});
-		} 
-	});
+	clickProjectPage(1, proIdx, 'removeView');
+}
+
+function removeProjectName1(dataTLen){
+	
+	if(dataTLen > 0){
+		jAlert('It can be deleted only if there is no content in the layer.','info');
+	}else{
+//	 	jConfirm('정말 삭제하시겠습니까?', '정보', function(type){
+		jConfirm('Are you sure you want to delete?', 'Info', function(type){
+			if(type){ 
+				var Url			= baseRoot() + "cms/removeProject/";
+				var param		= loginToken + "/" + loginId + "/"+ proIdx;
+				var callBack	= "?callback=?";
+				
+				$.ajax({
+					type	: "POST"
+					, url	: Url + param + callBack
+					, dataType	: "jsonp"
+					, async	: false
+					, cache	: false
+					, success: function(data) {
+						viewMyProjects(null);
+						closeAddProjectName();
+						jAlert(data.Message, 'Info');
+					}
+				});
+			} 
+		});
+	}
 }
 
 //project marker 
@@ -1162,7 +1183,7 @@ function getTabList() {
 <!-- 		<button onclick='moveProContent();' style="float:right; margin-right:10px; color:white; border-radius: 5px;" class='offMoveCon' id='moveContentBtn'>Move Content</button> -->
 	</div>
 	<div id="project_list_table" style="height: 750px; overflow-y:scroll;"></div>
-	<button id="makeContents" onclick="myContentsMake();">make Contents</button>
+	<button id="makeContents" onclick="myContentsMake();" style=" width: 80%; left: 10%; height: 30px; font-size: 16px;">Upload Contents</button>
 	
 	<!-- projectName dialog -->
 	<div id="projectNameAddDig">
@@ -1189,7 +1210,7 @@ function getTabList() {
 				<td colspan="2">
 					<input type="button" id="saveBtn" value="Save" onclick="addProjectName();"/>
 					<input type="button" id="modifyBtn" value="Modify" style="display:none;" onclick="modifyProjectName();"/>
-					<input type="button" id="removeBtn" value="Remove" style="display:none;" onclick="removeProjectName();"/>
+					<input type="button" id="removeBtn" value="Drop layer" style="display:none;" onclick="removeProjectName();"/>
 					<input type="button" value="Cancel" onclick="closeAddProjectName();"/>
 				</td>
 			</tr>
