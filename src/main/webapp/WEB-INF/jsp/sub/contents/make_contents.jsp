@@ -21,31 +21,31 @@ $(function() {
 });
 
 //make contents button click function
-function ContentsMakes(type, boardNowTab, selBoardNum) {
+function ContentsMakes(type, boardNowTab, selBoardNum, makeContentIdx) {
 	if(loginId == null || loginId =='' || loginId == 'null') {
 // 		jAlert("로그인 정보가 만료되었습니다.\n\n다시 로그인을 수행하여 주세요.", '정보');
 		jAlert("Your login information has expired.\n\nPlease login again.", 'Info');
 	}
 	else {	//base board upload setting	
-		var tempUrl = '<c:url value="/geoCMS/upload_board.do"/>?projectImage='+ projectImage+ '&projectVideo='+projectVideo+'&nowTabIdx='+boardNowTab+'&selBoardNum='+selBoardNum;
+		var tempUrl = '<c:url value="/geoCMS/upload_board.do"/>?projectImage='+ projectImage+ '&projectVideo='+projectVideo+'&nowTabIdx='+boardNowTab+'&selBoardNum='+selBoardNum+'&makeContentIdx='+makeContentIdx;
 		var tempTitle = 'Board Upload';
 		var tempWidth = 960;
 		var tempHeight = 660;
 		
-		if((nowRightTabName == "content" && projectImage == 1 && type == "") || type == "Image"){	//image upload
-			tempUrl = '<c:url value="/geoCMS/upload_image.do"/>?boardHiding='+boardHiding;
+		if((projectImage == 1 && type == "") || type == "Image"){	//image upload
+			tempUrl = '<c:url value="/geoCMS/upload_image.do"/>?makeContentIdx='+makeContentIdx;
 			tempTitle = 'Image Upload';
 			tempWidth = 435;
 			tempHeight = 675;
-		}else if((nowRightTabName == "content" && projectVideo == 1 && type == "") || type == "Video"){	//video upload
-			tempUrl = '<c:url value="/geoCMS/upload_video.do"/>?projectBoard=1&projectImage='+projectImage+'&b_contentTabArr='+b_contentTabArr+"&boardHiding="+boardHiding;
+		}else if((projectVideo == 1 && type == "") || type == "Video"){	//video upload
+			tempUrl = '<c:url value="/geoCMS/upload_video.do"/>?makeContentIdx='+makeContentIdx;
 			tempTitle = 'Video Upload';
 			tempWidth = 435;
 			tempHeight = 530;
 		}
 		
 		//image, video 생성시 프로젝트가 없으면 생성 할 수 없음
-		if(tempTitle != 'Board Upload'){
+// 		if(tempTitle != 'Board Upload'){
 			var orderIdx  = '&nbsp';
 			var tmeShareEdit = 'Y';
 			var Url			= baseRoot() + "cms/getProjectList/";
@@ -76,17 +76,18 @@ function ContentsMakes(type, boardNowTab, selBoardNum) {
 					}
 				}
 			});
-		}else{
-			uploadDig = jQuery.FrameDialog.create({
-				url: tempUrl,
-				title: tempTitle,
-				width: tempWidth,
-				height: tempHeight,
-				buttons: {},
-				autoOpen:false
-			});
-			uploadDig.dialog('open');
-		}
+// 		}
+// 		else{
+// 			uploadDig = jQuery.FrameDialog.create({
+// 				url: tempUrl,
+// 				title: tempTitle,
+// 				width: tempWidth,
+// 				height: tempHeight,
+// 				buttons: {},
+// 				autoOpen:false
+// 			});
+// 			uploadDig.dialog('open');
+// 		}
 	}
 }
 
