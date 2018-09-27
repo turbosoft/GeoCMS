@@ -15,6 +15,7 @@ String ObjIdx = request.getParameter("idx");					//now idx
 String viewPageNum = request.getParameter("viewPageNum");		//now view page number
 String selBoardNum = request.getParameter("selBoardNum");		//페이지당 컨텐츠 개수
 String b_nowTabIdx = request.getParameter("nowTabIdx");			//now tab idx
+String makeContentIdx = request.getParameter("makeContentIdx");		//선택한 프로젝트 인덱스
 
 // String shareType = request.getParameter("shareType");				//공유 타입
 String oldShareUserLen = request.getParameter("oldShareUserLen");	//저장된 공유 유저
@@ -34,6 +35,7 @@ var b_nowTabIdx = "<%=b_nowTabIdx%>";		//board now Tab idx
 var shareType = 1;							//공유 타입
 <%-- var shareType = "<%=shareType%>";				//공유 타입 --%>
 var oldShareUserLen = "<%=oldShareUserLen%>";	//저장된 공유 유저
+var makeContentIdx = "<%=makeContentIdx%>";		//선택한 프로젝트 인덱스
 
 var fileCnt = 1;
 // var fontList = ["굴림", "굴림체", "돋움", "돋움체", "바탕", "바탕체", "궁서", "궁서체", "Arial", "Courier New", "Tahoma", "Times New Roman", "Verdana", "Sans Serif", "MS Gothic", "MS PGothic", "MS UI Gothic", "Meiryo", "SimSun"];
@@ -213,7 +215,7 @@ function getOneBoardData(){
 //make change object(board, image, video)
 function changeShow(type) {
 	jQuery.FrameDialog.closeDialog();
-	parent.ContentsMakes(type,'','');
+	parent.ContentsMakes(type,'','', makeContentIdx);
 }
 
 //게시물 생성

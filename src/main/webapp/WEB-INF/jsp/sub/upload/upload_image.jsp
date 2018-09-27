@@ -11,7 +11,7 @@
 String loginId = (String)session.getAttribute("loginId");				//로그인 아이디
 String loginToken = (String)session.getAttribute("loginToken");			//로그인 token
 
-String boardHiding = request.getParameter("boardHiding");				//border content hiding
+String makeContentIdx = request.getParameter("makeContentIdx");			//선택한 프로젝트 인덱스
 %>
 
 <style type="text/css">
@@ -22,7 +22,8 @@ select {
 <script type="text/javascript">
 var loginId = '<%= loginId %>';					//로그인 아이디
 var loginToken = '<%= loginToken %>';			//로그인 token
-var boardHiding = '<%= boardHiding %>';			//border content hiding
+var makeContentIdx = '<%= makeContentIdx %>';	//선택한 프로젝트 인덱스
+
 var projectNameArr = new Array();		//project name array
 var projectIdxArr = new Array();		//project idx array
 
@@ -31,9 +32,6 @@ var imageUploadCnt = 0;
 var fileObjCnt = 1;
 
 $(function() {
-	if(boardHiding){
-		$('#showBoard').parent().remove();
-	}
 	getImgUpProjectList();
 	
 	$('.create_button').width(80);
@@ -59,6 +57,9 @@ $(function() {
 	}
 	$('#projectKind').append(innerHTML);
 	
+	if(makeContentIdx != null){
+		$('#projectKind').val(makeContentIdx);
+	}
 });
 
 //get proejct List
@@ -98,7 +99,7 @@ function getImgUpProjectList(){
 //upload kind 선택 시 
 function changeShow(type) {
 	jQuery.FrameDialog.closeDialog();
-	parent.ContentsMakes(type, '', '','');
+	parent.ContentsMakes(type, '', '','', makeContentIdx);
 }
 
 //게시물 생성 취소
@@ -323,7 +324,7 @@ function createContent() {
 		<tr class="showDivTR">
 			<td width="" height="25" colspan="2" style="font-size: 12px;">
 				<div style="width:260px; float:left; padding:3px;">
-					<div style="float:left;"><input type="radio" id="showBoard" name="showRadio" onclick="changeShow('Board')">Board</div>
+<!-- 					<div style="float:left;"><input type="radio" id="showBoard" name="showRadio" onclick="changeShow('Board')">Board</div> -->
 					<div style="float:left;"><input type="radio" id="showImage" name="showRadio">Image</div>
 					<div style="float:left;"><input type="radio" id="showVideo" name="showRadio" onclick="changeShow('Video')">Video</div>
 				</div>

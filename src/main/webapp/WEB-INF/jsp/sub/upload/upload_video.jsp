@@ -11,12 +11,12 @@
 String loginId = (String)session.getAttribute("loginId");				//로그인 아이디
 String loginToken = (String)session.getAttribute("loginToken");			//로그인 token
 
-String boardHiding = request.getParameter("boardHiding");				//border content hiding
+String makeContentIdx = request.getParameter("makeContentIdx");			//선택한 프로젝트 인덱스
 %>
 <script type="text/javascript">
 var loginId = '<%= loginId %>';					//로그인 아이디
 var loginToken = '<%= loginToken %>';			//로그인 token
-var boardHiding = '<%= boardHiding %>';			//border content hiding
+var makeContentIdx = '<%= makeContentIdx %>';	//선택한 프로젝트 인덱스
 
 var projectNameArr = new Array();		//project name array
 var projectIdxArr = new Array();		//project idx array
@@ -26,10 +26,6 @@ var uploadFileName = '';
 var nowVideoType = 's';
 
 $(function() {
-	if(boardHiding){
-		$('#showBoard').parent().remove();
-	}
-	
 	getVideoUpProjectList();
 	
 	$('.create_button').width(80);
@@ -54,6 +50,10 @@ $(function() {
 		innerHTML += '<option value="'+ projectIdxArr[i] +'">'+ projectNameArr[i] +'</option>';
 	}
 	$('#projectKind').append(innerHTML);
+	
+	if(makeContentIdx != null){
+		$('#projectKind').val(makeContentIdx);
+	}
 });
 
 //get proejct List
@@ -243,7 +243,7 @@ function cancelContent() {
 //upload kind 선택 시 
 function changeShow(type) {
 	jQuery.FrameDialog.closeDialog();
-	parent.ContentsMakes(type, '', '');
+	parent.ContentsMakes(type, '', '', makeContentIdx);
 }
 
 //all checked
@@ -449,7 +449,7 @@ function changVideoFileGps(){
 	<tr id="showDivTR">
 		<td height="25" colspan="2" style="font-size: 12px;">
 			<div style="width:250px;float:left;">
-				<div style="float:left;"><input type="radio" id="showBoard" name="showRadio" onclick="changeShow('Board')">Board</div>
+<!-- 				<div style="float:left;"><input type="radio" id="showBoard" name="showRadio" onclick="changeShow('Board')">Board</div> -->
 				<div style="float:left;"><input type="radio" id="showImage" name="showRadio" onclick="changeShow('Image')">Image</div>
 <!-- 				<div style="float:left;"><input type="radio" id="showVideo" name="showRadio" onclick="changeShow('Panorama')">Panorama</div> -->
 				<div style="float:left;"><input type="radio" id="showVideo" name="showRadio">Video</div>
