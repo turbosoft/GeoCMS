@@ -90,12 +90,12 @@ button
 #makeContents{position:absolute; left:300px; top:780px;background-color: #3f51b5;color:white; border-radius: 5px;}
 .m_l_10{margin-left: 10px;}
 .m_l_15{margin-left: 15px;}
-.onProjectDiv{background-color: #00BCD4; color: white; font-weight: bold; height: 45px; margin-top: 5px;}
-.offProjectDiv{	background-color: gray;	color: white; font-weight: normal; height: 45px; margin-top: 5px;}
+.onProjectDiv{background-color: #00BCD4; color: white; font-weight: bold; height: 55px; margin-top: 5px;}
+.offProjectDiv{	background-color: gray;	color: white; font-weight: normal; height: 55px; margin-top: 5px;}
 .f_s_12{ font-size:12px;}
 .editProBtn{ float: right; margin: 10px 5px;}
 .subDivCls{font-size: 10px;}
-.titleLabel{ vertical-align:bottom; margin-left:10px; font-size: 15px; width:200px; display: inline-table; height:25px;}
+.titleLabel{ vertical-align:bottom; margin-left:10px; font-size: 15px; width:200px; height:25px;}
 
 #moveContentView{ width: 530px;	height: 790px; background-color: #e3e3e3; position: absolute; top: 0px;	left: 420px; border-left: 10px solid #6d808f; border-right: 10px solid #6d808f;	border-bottom: 10px solid #6d808f;}
 #moveContentView div:FIRST-CHILD{ background-color: #6d808f;}
