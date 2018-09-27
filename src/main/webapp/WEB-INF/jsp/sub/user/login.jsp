@@ -64,7 +64,15 @@ function loginSetting(id, token, type) {
 		data: 'typeVal=login&loginId='+id+'&loginToken='+token+'&loginType='+type,
 		success: function(data) {
 			if(data == "100"){
-				window.location.href='/GeoCMS';
+// 				window.location.href='/GeoCMS';
+				loginId = id;
+				loginToken = token;
+				loginType = type;
+				$('#LoginDig').dialog('close');
+				session_check();
+				
+				menuSetting();
+				viewMyProjects(null); //로그인 시 my layer메뉴로 이동
 			}else{
 				jAlert(data, 'Info');
 			}
