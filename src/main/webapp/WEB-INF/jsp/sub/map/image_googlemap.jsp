@@ -39,6 +39,7 @@ var draw_sequence_arr = new Array();
 var rectangleSequence = null;
 
 var oldMarkerData = new Array(); //이전 center marker
+var infowindow = null;
 
 function initialize() {
 	markerArr = new Array();
@@ -49,11 +50,15 @@ function initialize() {
 	//create map
 	map = new google.maps.Map(document.getElementById("map_canvas"), myOptions);
 	
+	infowindow = new google.maps.InfoWindow();
+	
 	if(typeShape == "marker") {	//main marker
 		takeMarkerData(typeShape);
 	}
-	else if(typeShape == "forSearch") {	//searh page marker
+	else if(typeShape == "editMap") {	//searh page marker
 		google.maps.event.addDomListener(window, 'load', gridMap(LocationData));	
+	}else if(typeShape == "mainMarker") {	//main marker
+		takeMainMarkerData(typeShape);
 	}
 }
 
@@ -288,31 +293,40 @@ Number.prototype.toDeg = function() {
 /*******************************function**************************************/
 //make marker
 function fnMakeMarker(p, type){
-	var infowindow = new google.maps.InfoWindow();
+// 	var infowindow = new google.maps.InfoWindow();
 	var latlng = new google.maps.LatLng(p[0], p[1]);
 	var jpgStr = p[2];
 
 	if(p[4] == 'GeoVideo'){
 		jpgStr = p[6];
 	}
-	
 	var tmpMarkerIcon = 'http://maps.google.com/mapfiles/ms/icons/red-dot.png';
 
 	if(p[8] == null || p[8] == '' || p[8] == 'null' || p[8] == undefined){
 		p[8] = '';
 	}
-    
-	var marker = new google.maps.Marker({
-        position: latlng,
-        map: map,
-        title: jpgStr,				// jpg file name
-        id: p[3]+'_'+p[4]+'_'+p[7]+'_'+p[8],			//p[3]: index, p[4]: kind(GeoPhoto, GeoVideo), p[7]: use_id, p[8]: project make user id
-        label: {
-        	text: p[2]+'/'+p[5],	//p[2]: file , p[5]: origin file name
-        	fontSize: '0px'
-        },
-        icon: tmpMarkerIcon
-    });
+	
+	if(typeShape == 'mainMarker'){
+		var marker = new google.maps.Marker({
+	        position: latlng,
+	        map: map,
+	        title: p[12],				// jpg file name
+	        id: p[11],			//p[11]: projectidx
+	        icon: tmpMarkerIcon
+	    });
+	}else{
+		var marker = new google.maps.Marker({
+	        position: latlng,
+	        map: map,
+	        title: jpgStr,				// jpg file name
+	        id: p[3]+'_'+p[4]+'_'+p[7]+'_'+p[8],			//p[3]: index, p[4]: kind(GeoPhoto, GeoVideo), p[7]: use_id, p[8]: project make user id
+	        label: {
+	        	text: p[2]+'/'+p[5],	//p[2]: file , p[5]: origin file name
+	        	fontSize: '0px'
+	        },
+	        icon: tmpMarkerIcon
+	    });
+	}
 	
 	if(type != 'click'){
 		markerArr.push(marker);
@@ -322,6 +336,10 @@ function fnMakeMarker(p, type){
     	if(nowClickLine != 0){
     		return;
     	}
+    	if(typeShape == 'mainMarker'){
+    		return;
+    	}
+    	
 		var kindStr = this.id.split("_")[1];
 		if(kindStr == 'GeoPhoto'){
 			imageViewer(this.title, this.id.split("_")[2], this.id.split("_")[0], this.id.split("_")[3]);
@@ -338,20 +356,33 @@ function fnMakeMarker(p, type){
     		return;
     	}
     	
-    	var kindStr = this.id.split("_")[1];
+    	var tmpBoundX = event.clientX;
+    	var tmpBoundY = event.clientY; 
     	
-    	var tmpThumbFileName = this.title.split('.');
-		var tmpThumbFileName1 = tmpThumbFileName[0] +'_thumbnail_600.png';
-		if(kindStr == 'GeoVideo'){
-			tmpThumbFileName1 = this.title;
-		}
-		
-    	var contentStr = "<img class='round' src='" + ftpBaseUrl() + "/" + kindStr +"/"+tmpThumbFileName1+"' width='200' height='200' style='border:2px solid #888888'/>";
-		infowindow = new google.maps.InfoWindow({
-   			content: contentStr,
-   			maxWidth: 204
-  		});
-    	infowindow.open(map, this);
+    	if(infowindow){
+    		if(Math.abs(tmpBoundX - infoViewBoundX) > 30 || Math.abs(tmpBoundY - infoViewBoundY) > 30){
+    			infowindow.close();
+    		}else{
+    			return;
+    		}
+    	}
+    	
+    	var kindStr = this.id.split("_")[1];
+        
+        var tmpThumbFileName = this.title.split('.');
+    	var tmpThumbFileName1 = tmpThumbFileName[0] +'_thumbnail_600.png';
+    	if(kindStr == 'GeoVideo'){
+    		tmpThumbFileName1 = this.title;
+    	}
+    	
+        var contentStr = "<img class='round' src='" + ftpBaseUrl() + "/" + kindStr +"/"+tmpThumbFileName1+"' width='200' height='200' style='border:2px solid #888888'/>";
+    	infowindow = new google.maps.InfoWindow({
+       		content: contentStr,
+       		maxWidth: 204
+      	});
+        infowindow.open(map, this);
+        infoViewBoundX = event.clientX;
+        infoViewBoundY = event.clientY;
 
     	$.each($('.gm-style-iw'),function(){
 			$(this).next('div').remove();
@@ -360,14 +391,26 @@ function fnMakeMarker(p, type){
 			$(this).prev('div').children().eq(2).children().addClass('infoview_main_map_child');
 			$(this).prev('div').children().last().addClass('infoview_main_map_last');
 		});
-    	
     });
     
     google.maps.event.addListener(marker, 'mouseout', function() {
     	if(nowClickLine != 0){
     		return;
     	}
-    	infowindow.close();
+//     	infowindow.close();
+
+    	var tmpBoundX = event.clientX;
+    	var tmpBoundY = event.clientY; 
+    	
+    	if(infowindow){
+    		if(Math.abs(tmpBoundX - infoViewBoundX) > 5 || Math.abs(tmpBoundY - infoViewBoundY) > 5){
+    			infowindow.close();
+    			infoViewBoundX = 0;
+    	        infoViewBoundY = 0;
+    		}else{
+    			return;
+    		}
+    	}
     });
     
     google.maps.event.addListener(marker, 'rightclick', function() {
@@ -447,18 +490,34 @@ function fnMakeMarker(p, type){
         }
     });
     
-    google.maps.event.addListener(map, "mousemove", function(event){
+    google.maps.event.addListener(map, "mousemove", function(){
+    	var tmpBoundX = event.clientX;
+    	var tmpBoundY = event.clientY;
+    	console.log('tmpBoundX : ' + tmpBoundX + " infoViewBoundX   : " + infoViewBoundX + '  tmpBoundY : '+ tmpBoundY + '  infoViewBoundY : '+ infoViewBoundY);
+    	 
+    	if(infowindow){
+    		if(Math.abs(tmpBoundX - infoViewBoundX) > 30 || Math.abs(tmpBoundY - infoViewBoundY) > 30){
+    			infowindow.close();
+    			infoViewBoundX = 0;
+    	        infoViewBoundY = 0;
+    		}else{
+    			return;
+    		}
+    	}
+    	
         if(nowClickLine == 2){
              nowClickLine = 3;
         }
     });
 }
 
+var infoViewBoundX = 0;
+var infoViewBoundY = 0;
+
 //마커 데이터 가져오기
 function takeMarkerData(typeShape) {
 	var tmpPageNum = '&nbsp';
 	var tmpContentNum = '&nbsp';
-	var tmpTabName = editMode == 1?tempTabName:nowTabName;
 	var tmpLoginId = loginId;
 	var tmpLoginToken = loginToken;
 	var tmpIdx = '&nbsp';
@@ -469,20 +528,10 @@ function takeMarkerData(typeShape) {
 	if(tmpLoginToken == null || tmpLoginToken == '' ||  tmpLoginToken == 'null'){
 		tmpLoginToken = '&nbsp';
 	}
-	if(b_url == 'cms/getBoard/'){
-		gridMap(null);
-		return;
-	}
 	
-	var tmpTabIndex = 0;
-	if(tmpTabName != null && tmpTabName != ''){
-		tmpTabIndex = $.inArray(tmpTabName, b_contentTabArr)+1;
-	}
-
 	var Url			= baseRoot() + b_url;
-	var param		= typeShape + "/" + tmpLoginToken + "/" + tmpLoginId + "/" + tmpPageNum + "/" + tmpContentNum + "/" + tmpTabIndex + "/" + tmpIdx;
+	var param		= typeShape + "/" + tmpLoginToken + "/" + tmpLoginId + "/" + tmpPageNum + "/" + tmpContentNum + "/"+ b_nowProjectIdx +"/" + tmpIdx;
 	var callBack	= "?callback=?";
-	
 	$.ajax({
 		type	: "get"
 		, url	: Url + param + callBack
@@ -513,6 +562,7 @@ function markDataMake(data){
 	var seqNum_arr = new Array();
 	var droneType_arr = new Array();
 	var projectIdx_arr = new Array();
+	var projectName_arr = new Array();
 	
 	if(data != null && data.length > 0){
 		for(var i=0; i<data.length; i++) 
@@ -546,6 +596,8 @@ function markDataMake(data){
 			droneType_arr.push(data[i].dronetype); //drone type
 			
 			projectIdx_arr.push(data[i].projectidx); //project idx
+			
+			projectName_arr.push(data[i].projectname); //project name
 		}
 	}
 	
@@ -556,7 +608,7 @@ function markDataMake(data){
 	var locaMap = null;
 	var locaChildArr = [];
 
-	for(var i=0; i < file_url_arr.length; i++)
+	for(var i=0; i < projectIdx_arr.length; i++)
 	{	
 		if(lati_arr[i] != null && lati_arr[i] != 'null' && lati_arr[i] != 0 && longi_arr[i] != null && longi_arr[i] != '' && longi_arr[i] != 0){
 		    if(tmpProjectIdx == 0)
@@ -588,6 +640,7 @@ function markDataMake(data){
 			temp[9] = seqNum_arr[i];
 			temp[10] = droneType_arr[i];
 			temp[11] = projectIdx_arr[i];
+			temp[12] = projectName_arr[i];
 			loca.push(temp);
 			locaChildArr.push(temp);
 		}
@@ -605,8 +658,7 @@ function markDataMake(data){
 
 function gridMap(LocationData) {
     var bounds = new google.maps.LatLngBounds();
-    var infowindow = new google.maps.InfoWindow();
-
+//     var infowindow = new google.maps.InfoWindow();
     if(LocationData == null || LocationData.length <= 0){	//base map setting
     	if(dMarkerLat == null || dMarkerLat == ""){
     		dMarkerLat = 37.5663889;
@@ -900,6 +952,7 @@ function mapPolygonView(obj){
 	if(editMode == 1) return;
 	
 	if($(obj).attr('checked')){
+	
 		$.each(markerFileList,function(idx, val){
 			var tmpMarkList = val.value.k_data;
 			$.each(tmpMarkList,function(idxs, vals){
@@ -1145,12 +1198,46 @@ function addCopyPoject(){
 		}
 	});
 }
+	
+	
+//마커 데이터 가져오기
+function takeMainMarkerData(typeShape) {
+	var tmpPageNum = '&nbsp';
+	var tmpContentNum = '&nbsp';
+	var tmpLoginId = loginId;
+	var tmpLoginToken = loginToken;
+	var tmpIdx = '&nbsp';
+	
+	if(tmpLoginId == null || tmpLoginId == '' ||  tmpLoginId == 'null'){
+		tmpLoginId = '&nbsp';
+	}
+	if(tmpLoginToken == null || tmpLoginToken == '' ||  tmpLoginToken == 'null'){
+		tmpLoginToken = '&nbsp';
+	}
+	var tmpOrderType = '&nbsp';
+	
+	var Url			= baseRoot() + 'cms/getMainProjectList/';
+	var param		= "marker/" + tmpLoginToken + "/" + tmpLoginId + "/" + tmpPageNum + "/" + tmpContentNum + "/" + tmpIdx + "/"+ tmpOrderType;
+	var callBack	= "?callback=?";
+	
+	$.ajax({
+		type	: "get"
+		, url	: Url + param + callBack
+		, dataType	: "jsonp"
+		, async	: false
+		, cache	: false
+		, success: function(data) {
+			var response = data.Data;
+			markDataMake(response);
+		}
+	});
+}
 
 </script>
 </head>
 
 <body style='margin:0px; padding:0px;'>
-	<div class="viewModeCls">
+	<div class="viewModeCls" style="display: none;">
 		<input type="checkbox" id="polygonView" onclick="mapPolygonView(this);" style="vertical-align: middle ;"/>
 		<label style="margin-top: 3px; display: inline-block;">View Mode</label>
 		
