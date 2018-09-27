@@ -15,9 +15,11 @@ var proContentNum = 12;
 var proIdx = 0;
 var proEdit = 0;
 var oldShareUser = 0;
-var nowProTabIdx = null;
 
 function projectGroupListSetup(response){
+	$('.viewModeCls').css('display','block');
+	typeShape = 'marker';
+	
 	$('#project_list_table').empty();
 	proIdx = response[0].idx;
 	shareInit();
@@ -26,7 +28,6 @@ function projectGroupListSetup(response){
 	}
 	
 	markerProArr = new Array();
-	console.log('mess');
 	addProjectGroupCell(response);
 }
 
@@ -56,33 +57,39 @@ function addProjectGroupCell(response){
 			innerHTML += "<input type='hidden' id='hiddenProName_"+ response[i].idx +"' value='"+ response[i].projectname +"'/>";
 			innerHTML += '<input type="hidden" id="hiddenProUserIn_'+ response[i].idx +'" value="'+ response[i].editUserIn +'"/>';
 			innerHTML += '<input type="hidden" id="hiddenShareType_'+ response[i].idx +'" value="'+ response[i].sharetype +'"/>';
-			innerHTML += '<input type="hidden" id="hiddenTabIdx_'+ response[i].idx +'" value="'+ response[i].tabidx +'"/>';
 			
-			innerHTML += "<label class='titleLabel' title='"+ response[i].projectname +"' style='width:150px !important;'>"+ projectNameTxt +"</label>";
+			innerHTML += "<label class='titleLabel' title='"+ response[i].projectname +"' style='width:130px !important;font-size: 16px;display: inline-block;margin-top:3px;'>"+ projectNameTxt +"</label>";
 
-			//edit btn
-			if(loginId == response[i].id){
-				innerHTML += '<button onclick="editProject('+ response[i].idx +');" class="editProBtn" style="border-radius:5px; margin:3px 5px 0 0px;"> Manage </button>';
-	 		}
+// 			//edit btn
+// 			if(loginId == response[i].id){
+// 				innerHTML += '<button onclick="editProject('+ response[i].idx +');" class="editProBtn" style="border-radius:5px; margin:3px 5px 0 0px;"> Manage </button>';
+// 	 		}
 			
 // 			if(loginId == response[i].id){
 // 				innerHTML += '<button onclick="editProject('+ response[i].idx +');" class="editProBtn" style="border-radius:5px;"> EDIT </button>';
-				innerHTML += '<button onclick="openProjectWriter();" class="editProBtn" style="border-radius:5px; margin:3px 5px 0 5px;"> Edit Annotation </button>';
+// 				innerHTML += '<button onclick="openProjectWriter();" class="editProBtn" style="border-radius:5px; margin:3px 5px 0 5px;"> Edit Annotation </button>';
 // 			}
-			
-			//upload btn
-			innerHTML += '<button onclick="openProjectViewer('+ response[i].idx +');" class="editFileBtn" style="border-radius:5px; float:right; margin-top:3px;"> Viewer </button>';
 
+			//upload btn
+// 			innerHTML += '<button onclick="openProjectViewer('+ response[i].idx +');" class="editFileBtn" style="border-radius:5px; float:right; margin-top:3px;"> Viewer </button>';
 			
 			var tmpUserId = response[i].id.length>7? response[i].id.substring(0,7)+'...' : response[i].id;
-
-// 			innerHTML += '<div class="subDivCls"><label class="m_l_10">작성자: </label><label style="display:inline-block; width:45px;" title="'+ response[i].id +'">'+ tmpUserId + '</label><label style="margin-left:5px;">등록일: </label><label>' + response[i].u_date + '</label><label style="margin-left:5px;">'+ proShare + '</label></div>';
-			innerHTML += '<div class="subDivCls"><label class="m_l_10">WRITER: </label><label style="display:inline-block; width:45px;" title="'+ response[i].id +'">'+ tmpUserId + '</label><label class="margin-left:5px;">DATE: </label><label>' + response[i].u_date + '</label><label style="margin-left:5px;">'+ proShare + '</label></div>';
+			innerHTML += '<div class="subDivCls" style="float:right;font-size:12px;margin-top:5px;color:#ddd;margin-right:5px;"><label class="m_l_10" style="font-size: 11px;">WRITER: </label><label style="display:inline-block; width:45px;font-size: 11px;" title="'+ response[i].id +'">'+ tmpUserId + '</label><label class="margin-left:5px;" style="font-size: 11px;">DATE: </label><label style="font-size: 11px;">' + response[i].u_date + '</label><label style="margin-left:5px;font-size: 11px;">'+ proShare + '</label>';
+			innerHTML += '</div>';
+			
+			innerHTML += '<button id="makeContents'+ response[i].idx +'" onclick="myContentsMake('+ response[i].idx +');" style="border-radius:5px; float:left;margin:3px 0px 0 5px;font-size:12px;background-color: #efefef;">Upload geoContents</button>';
+			innerHTML += '<button onclick="openProjectWriter();" class="editProBtn" style="border-radius:5px; margin:3px 5px 0 5px;font-size:12px;float:left;background-color: #efefef;"> Edit Annotation </button>';
+			innerHTML += '<button onclick="openProjectViewer('+ response[i].idx +');" class="editFileBtn" style="border-radius:5px; float:left; margin:3px 5px 0 0px;font-size:12px;width:75px;background-color: #efefef;"> Viewer </button>';
+			//edit btn
+			if(loginId == response[i].id){
+				innerHTML += '<button onclick="editProject('+ response[i].idx +');" class="editProBtn" style="border-radius:5px; margin:3px 5px 0 0px;font-size:12px;float:left;width:75px;background-color: #efefef;"> Manage </button>';
+	 		}
+			
 			innerHTML += '</div>';
 
 			innerHTML += '<table id="pChild_'+ response[i].idx + '" style="border:1px solid gray; width:100%;"/>';
 			innerHTML += '</div>';
-
+			
 		}
 
 		$('#project_list_table').append(innerHTML);
@@ -207,7 +214,6 @@ function addProjectChildCell(response, pageNum){
 				}else if(response[i].datakind == "GeoVideo"){
 					localAddress += "/"+response[i].thumbnail;
 				}
-				
 				innerHTMLStr += "<a class='imageTag' id='Pro_"+ response[i].datakind +"_"+response[i].idx +"' href='javascript:;' onclick="+'"';
 				var tempArr = new Array; //mapCenterChange에 넘길 객체 생성
 				tempArr.push(response[i].latitude);
@@ -219,11 +225,12 @@ function addProjectChildCell(response, pageNum){
 				tempArr.push(response[i].thumbnail);
 				tempArr.push(response[i].id);
 				tempArr.push(response[i].projectUserId);
-				tempArr.push("");
-				tempArr.push("");
-				tempArr.push(response[i].u_date);
+// 				tempArr.push("");
+// 				tempArr.push("");
+// 				tempArr.push(response[i].u_date);
 				tempArr.push(response[i].seqnum);
 				tempArr.push(response[i].dronetype);
+				tempArr.push(response[i].projectidx);
 				innerHTMLStr += "mapCenterChange('"+ tempArr +"');";
 // 				innerHTMLStr += '"'+" title='제목 : "+ response[i].title +"\n내용 : "+ response[i].content +"\n작성자 : "+ response[i].id +"\n작성일 : "+ response[i].u_date +"' border='0'>";
 				innerHTMLStr += '"'+" title='TITLE : "+ response[i].title +"\nCONTENT : "+ response[i].content +"\nWRITER : "+ response[i].id +"\nDATE : "+ response[i].u_date +"' border='0'>";
@@ -378,13 +385,12 @@ function clickMovePageMP(cType, totalPage, pageNum, projectIdx){
 //프로젝트 명 추가 dialog Open
 function openAddProjectName(){
 	proIdx = 0;
-	nowProTabIdx = null;
 	$('#projectNameAddDig #saveBtn').css('display','inline-block');
 	$('#projectNameAddDig #modifyBtn').css('display','none');
 	$('#projectNameAddDig #removeBtn').css('display','none');
 	$('#projectNameAddDig').dialog('option', 'title', 'Add Layer');
 	$('#projectNameTxt').val('');
-	getTabList();
+	$('#projectNameAddDig').dialog('open');
 }
 
 //프로젝트 명 추가 dialog close
@@ -400,8 +406,6 @@ function editProject(projectIdx){
 	var tmpProShare = $('#hiddenShareType_'+projectIdx).val();
 	var tmpImgIcon = $('#markerIcon_'+projectIdx).attr('src');
 	
-	nowProTabIdx = $('#hiddenTabIdx_'+ projectIdx).val();
-
 	$('#projectNameTxt').val(tmpProName);
 	oldShareUser = tmpProShare;
 	proIdx = projectIdx;
@@ -411,16 +415,15 @@ function editProject(projectIdx){
 }
 
 function editDiagOpen(totalLen){
-// 	if(totalLen == 0){
+	if(totalLen == 0){
 		$('#projectNameAddDig #removeBtn').css('display','inline-block');
-// 	}else{
-// 		$('#projectNameAddDig #removeBtn').css('display','none');
-// 	}
+	}else{
+		$('#projectNameAddDig #removeBtn').css('display','none');
+	}
 	$('#projectNameAddDig #saveBtn').css('display','none');
 	$('#projectNameAddDig #modifyBtn').css('display','inline-block');
 	$('#projectNameAddDig').dialog('option', 'title', 'Manage Layer');
-
-	getTabList();
+	$('#projectNameAddDig').dialog('open');
 }
 
 //open shareUser list
@@ -482,42 +485,9 @@ function addProjectName(){
 		, async	: false
 		, cache	: false
 		, success: function(data) {
-			if(data.Code == "100" && data.Data != null){
-				var projectTabIdx = $('#tabSelect').val();
-				if(projectTabIdx != null && projectTabIdx != ''){
-					
-					var Url			= baseRoot() + "cms/updateContentTab/";
-	     			var param		= loginToken + "/" + loginId + "/"+ projectTabIdx +"/" + data.Data + "/GeoProject";
-	     			var callBack	= "?callback=?";
-	     			$.ajax({
-	     				type	: "POST"
-	     				, url	: Url + param + callBack
-	     				, dataType	: "jsonp"
-	     				, async	: false
-	     				, cache	: false
-	     				, success: function(data) {
-	     					if(data.Code == '100'){
-	     						viewMyProjects(data.Data);
-								jAlert(data.Message, 'Info', function(res){
-	     							closeAddProjectName();
-	     						});
-	     					}else{
-	     						closeAddProjectName();
-	     						jAlert(data.Message, 'Info');
-	     						viewMyProjects(null);
-	     					}
-	     				}
-	     			});
-				}else{
-					closeAddProjectName();
-					jAlert(data.Message, 'Info');
-					viewMyProjects(null);
-				}
-			}else{
-				closeAddProjectName();
-				jAlert(data.Message, 'Info');
-				viewMyProjects(null);
-			}
+			closeAddProjectName();
+			jAlert(data.Message, 'Info');
+			viewMyProjects(null);
 		}
 	});
 }
@@ -568,41 +538,17 @@ function modifyProjectName(){
 		, async	: false
 		, cache	: false
 		, success: function(data) {
-			var projectTabIdx = $('#tabSelect').val();
-			if(data.Code == "100" && projectTabIdx != null && projectTabIdx != '' && projectTabIdx != nowProTabIdx){
- 				var Url			= baseRoot() + "cms/updateContentTab/";
-     			var param		= loginToken + "/" + loginId + "/"+ projectTabIdx +"/" + proIdx + "/GeoProject";
-     			var callBack	= "?callback=?";
-     			$.ajax({
-     				type	: "POST"
-     				, url	: Url + param + callBack
-     				, dataType	: "jsonp"
-     				, async	: false
-     				, cache	: false
-     				, success: function(data) {
-     					if(data.Code == '100'){
-     						viewMyProjects(proIdx);
-     						closeAddProjectName();
-     						jAlert(data.Message, 'Info');
-     					}else{
-     						closeAddProjectName();
-     						jAlert(data.Message, 'Info');
-     						viewMyProjects(null);
-     					}
-     				}
-     			});
-			}else{
-				viewMyProjects(proIdx);
-				closeAddProjectName();
-				jAlert(data.Message, 'Info');
-			}
+			viewMyProjects(proIdx);
+			closeAddProjectName();
+			jAlert(data.Message, 'Info');
 		}
 	});
 }
 
 //make content
-function myContentsMake(){
-	ContentsMakes('Image','','');
+function myContentsMake(makeContentIdx){
+	editBtnClk = 1;
+	ContentsMakes('Image', '','', makeContentIdx);
 }
 
 function removeContents(type, tmpIdArr, parentId){
@@ -1138,44 +1084,6 @@ function cancelUploadFile(){
 	$('#uploadWorldFileDig').dialog('close');
 }
 
-//tab select
-function getTabList() {
-	$('#tabSelect').empty();
-	var Url			= baseRoot() + "cms/getbase";
-	var callBack	= "?callback=?";
-	
-	$.ajax({
-		type	: "get"
-		, url	: Url + callBack
-		, dataType	: "jsonp"
-		, async	: false
-		, cache	: false
-		, success: function(data) {
-			if(data.Code == '100'){
-				result = data.Data;
-				if(result != null && result.length > 0){
-					var innerHTML = '';
-					for(var i=1;i<result.length; i++){
-						if(result[i].tabgroup == 'content'){
-							innerHTML += '<option value="'+ result[i].tabidx +'" ';
-							if(nowProTabIdx != null && nowProTabIdx != '' && nowProTabIdx != undefined){
-								if(result[i].tabidx == nowProTabIdx){
-									innerHTML += ' selected="selected" ';
-								}
-							}
-							innerHTML += '>'+ result[i].tabname +'</option>';
-						}
-					}
-					$('#tabSelect').append(innerHTML);
-				}
-				$('#projectNameAddDig').dialog('open');
-			}else{
-				jAlert(data.Message, 'Info');
-			}
-		}
-	});
-}
-
 </script>
 	<div>
 		<label style="margin-left: 15px;">Layer</label>
@@ -1183,15 +1091,11 @@ function getTabList() {
 <!-- 		<button onclick='moveProContent();' style="float:right; margin-right:10px; color:white; border-radius: 5px;" class='offMoveCon' id='moveContentBtn'>Move Content</button> -->
 	</div>
 	<div id="project_list_table" style="height: 750px; overflow-y:scroll;"></div>
-	<button id="makeContents" onclick="myContentsMake();" style=" width: 80%; left: 10%; height: 30px; font-size: 16px;">Upload Contents</button>
+<!--	<button id="makeContents" onclick="myContentsMake();">make Contents</button> -->
 	
 	<!-- projectName dialog -->
 	<div id="projectNameAddDig">
 		<table style="width: 100%;">
-			<tr>
-				<td style="width:100px;">Tab Name</td>
-				<td><select id="tabSelect" style="width:100%;"></select>
-			</tr>
 			<tr>
 				<td style="width:100px;">Layer Name</td>
 				<td><input type="text" id="projectNameTxt" style="width:100%;" /></td>
@@ -1210,7 +1114,7 @@ function getTabList() {
 				<td colspan="2">
 					<input type="button" id="saveBtn" value="Save" onclick="addProjectName();"/>
 					<input type="button" id="modifyBtn" value="Modify" style="display:none;" onclick="modifyProjectName();"/>
-					<input type="button" id="removeBtn" value="Drop layer" style="display:none;" onclick="removeProjectName();"/>
+					<input type="button" id="removeBtn" value="Remove" style="display:none;" onclick="removeProjectName();"/>
 					<input type="button" value="Cancel" onclick="closeAddProjectName();"/>
 				</td>
 			</tr>
@@ -1263,4 +1167,3 @@ function getTabList() {
 	<input type="hidden" id="editYes"/>
 	<input type="hidden" id="editNo"/>
 	<div id="clonSharUser" style="display:none;"></div>
-
