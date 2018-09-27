@@ -3,6 +3,9 @@ package kr.co.turbosoft.geocms.controller;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.io.UnsupportedEncodingException;
+import java.security.GeneralSecurityException;
+import java.security.NoSuchAlgorithmException;
 import java.util.Properties;
 
 import javax.activation.DataHandler;
@@ -20,6 +23,8 @@ import javax.mail.internet.MimeMultipart;
 import javax.mail.util.ByteArrayDataSource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import kr.co.turbosoft.geocms.util.KeyManager;
 
 import org.apache.commons.codec.binary.Base64;
 import org.springframework.beans.factory.annotation.Value;
@@ -121,6 +126,14 @@ public class UserSendMailController {
  	        Message msg = new MimeMessage(session);
  	        
  	        //sender
+ 	        KeyManager km = new KeyManager();
+ 	       try {
+				emailAddress = km.decrypt(emailAddress);
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+ 	       
  	        InternetAddress from = new InternetAddress() ;
 	        from = new InternetAddress(emailAddress);
 	        msg.setFrom(from);
@@ -150,6 +163,14 @@ public class UserSendMailController {
 	
 	private class PopupAuthenticator extends Authenticator {
         public PasswordAuthentication getPasswordAuthentication() {
+        	KeyManager km = new KeyManager();
+        	try {
+				emailPass = km.decrypt(emailPass);
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+        	
         	String address = emailAddress;
         	String pass = emailPass;
             return new PasswordAuthentication(address, pass);
