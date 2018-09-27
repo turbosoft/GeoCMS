@@ -14,6 +14,9 @@ var searchSKind = '';
 
 //검색 실행
 function searchPageInit(text, boardChk, imageChk, videoChk, check, display) {
+	$('.viewModeCls').css('display','block');
+	typeShape = 'marker';
+	
 	var encode_text = encodeURIComponent(text);
 	searchSKind = check;
 	var tmpLoginId = loginId;
@@ -63,6 +66,8 @@ function searchListSetup(pure_data) {
 	var thumbnail_url_arr = new Array();
 	var origin_url_arr = new Array();
 	var dataKind_arr = new Array();
+	var projectIdx_arr = new Array();
+	var droneType_arr = new Array();
 	
 	for(var i=0; i<pure_data.length; i++) {
 		search_arr.push(pure_data[i].SEARCHKIND);
@@ -76,6 +81,8 @@ function searchListSetup(pure_data) {
 		dataKind_arr.push(pure_data[i].datakind);
 		
 		file_url_arr.push(pure_data[i].filename);
+		projectIdx_arr.push(pure_data[i].projectidx);
+		droneType_arr.push(pure_data[i].dronetype);
 		
 		if(pure_data[i].originname != null){
 			thumbnail_url_arr.push(pure_data[i].thumbnail);
@@ -85,7 +92,7 @@ function searchListSetup(pure_data) {
 			origin_url_arr.push("blank");
 		}
 	}
-	SearchResultMarker(lati_arr, longi_arr, file_url_arr, thumbnail_url_arr, idx_arr, dataKind_arr, origin_url_arr, id_arr);
+	SearchResultMarker(lati_arr, longi_arr, file_url_arr, thumbnail_url_arr, idx_arr, dataKind_arr, origin_url_arr, id_arr, projectIdx_arr, droneType_arr);
 	
 	//테이블 초기화
 	clearSearchTable();
@@ -186,12 +193,43 @@ function loadXMLSearch(file_url, data_kind){
 }
 
 //검색 목록 마커 설정
-function SearchResultMarker(lati_arr, longi_arr, file_url_arr, thumbnail_url_arr, idx_arr, dataKind_arr, origin_url_arr, id_arr) {
-
+function SearchResultMarker(lati_arr, longi_arr, file_url_arr, thumbnail_url_arr, idx_arr, dataKind_arr, origin_url_arr, id_arr, projectIdx_arr, droneType_arr) {
 	var loca = [];
-	for(var i=0; i < file_url_arr.length; i++)
+	var tmpProjectIdx = 0;
+	var locaArr = new Array();
+	var locaMap = null;
+	var locaChildArr = [];
+	
+	for(var i=0; i < idx_arr.length; i++)
 	{	
 		if(lati_arr[i] != null && lati_arr[i] != 'null' && lati_arr[i] != 0 && longi_arr[i] != null && longi_arr[i] != '' && longi_arr[i] != 0){
+// 			var temp = new Array();
+// 			temp[0] = lati_arr[i];
+// 			temp[1] = longi_arr[i];
+// 			temp[2] = file_url_arr[i];
+// 			temp[3] = idx_arr[i];
+// 			temp[4] = dataKind_arr[i];
+// 			temp[5] = origin_url_arr[i];
+// 			temp[6] = thumbnail_url_arr[i];
+// 			temp[7] = id_arr[i];
+// 			loca.push(temp);
+			
+			if(tmpProjectIdx == 0)
+		    {
+		    	tmpProjectIdx = projectIdx_arr[i];
+		    	locaMap = newMap();
+		    	locaMap.put('projectIdx',tmpProjectIdx);
+		    }
+		    else if(tmpProjectIdx != projectIdx_arr[i])
+		    {
+		    	locaMap.put('data',locaChildArr);
+		    	locaChildArr = [];
+		    	locaArr.push(locaMap);
+		    	tmpProjectIdx = projectIdx_arr[i];
+		    	locaMap = newMap();
+		    	locaMap.put('projectIdx',tmpProjectIdx);
+			}
+		    
 			var temp = new Array();
 			temp[0] = lati_arr[i];
 			temp[1] = longi_arr[i];
@@ -201,14 +239,34 @@ function SearchResultMarker(lati_arr, longi_arr, file_url_arr, thumbnail_url_arr
 			temp[5] = origin_url_arr[i];
 			temp[6] = thumbnail_url_arr[i];
 			temp[7] = id_arr[i];
+			temp[8] = null;
+			temp[9] = null;
+			temp[10] = droneType_arr[i];
+			temp[11] = projectIdx_arr[i];
 			loca.push(temp);
+			locaChildArr.push(temp);
 		}
 	}
+	if(locaChildArr != null && locaChildArr.length > 0){
+		locaMap.put('data',locaChildArr);
+		locaArr.push(locaMap);
+	}
+	
+	$.each(markerArr, function(idx, val){
+		var tmpMarkerIcon = 'http://maps.google.com/mapfiles/ms/icons/red-dot.png';
+		var tmpVal;
+		
+		val.setIcon(tmpMarkerIcon);
+		val.setZIndex(google.maps.Marker.MAX_ZINDEX);
+		
+	});
 	
 	LocationData = loca;
+	markerFileList = locaArr;
+	google.maps.event.addDomListener(window, 'load', gridMap(LocationData));
 	
-	typeShape = "forSearch";
-	initialize();
+// 	typeShape = "forSearch";
+// 	initialize();
 }
 
 //테이블 초기화
