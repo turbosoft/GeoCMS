@@ -106,14 +106,29 @@ function clickMovePageICL(cType, totalPage){
 	}
 }
 
+function fuOrderTypeChange(oType){
+	if(editMode == 1){
+		return;
+	}
+	b_orderType = oType;
+	if(oType == 'DESC'){
+		$('#orderTypeDesc').css('display','block');
+		$('#orderTypeAsc').css('display','none');
+	}else{
+		$('#orderTypeDesc').css('display','none');
+		$('#orderTypeAsc').css('display','block');
+	}
+	mainProjectGroup("1", "list", "change");
+}
+
 </script>
-<div id="imageMoveArea" style="width:420px; height:100%;">
-<div style="background-color:#000000; padding:7px; height:22px;">
-	<div id="board_tab" style="height:22px; width:190px; margin-left:10px; float:left; text-align:center; font-size:13px; top:100px; font-weight: bold;cursor: pointer;" onclick="rightTabChang(this.id);" >
-		BOARD
-	</div>
+<div style="height: 30px;" class="orderTypeClass">
+	<div style="width: 50px;float: left;margin-left: 260px;margin-top: 2px;font-size: 15px;	">Date : </div>
+	<div id="orderTypeDesc" onclick="fuOrderTypeChange('ASC');" style="display: block;width: 100px;background-color: #e4e4e4;border-radius: 5px;margin-bottom: 10px;text-align: center;height: 25px;line-height: 25px;cursor: pointer;float: left;">DESC ▼</div>
+	<div id="orderTypeAsc" onclick="fuOrderTypeChange('DESC');" style="display: none;width: 100px;background-color: #e4e4e4;border-radius: 5px;margin-bottom: 10px;text-align: center;height: 25px;line-height: 25px;cursor: pointer;float: left;">ASC ▲</div>
 </div>
-<div id="tabs" style="position:absolute;"></div>
+<div id='mainProjectListView' style="width:100%;"></div>
+<div id="imageMoveArea" style="width:420px; height:100%;">
 </div>
 
 <input type="hidden" id="shareAdd"/>

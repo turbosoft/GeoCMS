@@ -26,26 +26,16 @@ var loginType = '<%=loginType%>';
 var typeShape ="marker";
 var LocationData = new Array();	//마커용
 var editMode = 0;	//편집 모드 (0:일반 모드 , 1:편집모드)
-var tabArr = [];		//tab list
-var tabTypeArr = [];	//tab type list
-var tabNumArr = [];		//tab count list
-var tabIdxArr = [];		//tab idx list
-var b_contentTabArr = []; //content tab list
-var b_contentTabTypeArr = [];	//content tab type list
 var b_contentNum = [];
-var b_contentTabIdxArr = [];	//content tab idx list
-var b_boardTabArr = [];	//board tab list
-var b_boardNum = [];
-var b_boardTabIdxArr = [];
-var menuArr = ['logo', /*'MakeContents',*/ 'MyProjects', 'OpenApi',  'latestUpload', 'searchBox']; 		//menu List
+var menuArr = ['logo', /*'MakeContents',*/ 'MyProjects', /*'OpenApi',  'latestUpload',*/ 'searchBox']; 		//menu List
 var projectImage = 0;	//GeoPhoto 다운여부
 var projectVideo = 0;	//GeoVideo 다운여부
 var b_url = '';			//url
 var request = null;		//request;
 var dMarkerLat = 0;		//default marker latitude
 var dMarkerLng = 0;		//default marker longitude
-
-var boardHiding = true; //board tab hide
+var b_nowProjectIdx = 0;
+var b_orderType = 'DESC';
 
 $(function(){
 	session_check();	//login check
@@ -71,16 +61,6 @@ $(function(){
       }
     });
     
-    $('#tabAddDig').dialog({	//tab 추가, 수정 dialog
-        autoOpen: false,
-        width:300,
-        height:150,
-        title:'TAB Manage',
-        modal:true,
-        background:"#99CCFF"
-      });
-    
-   
     $('#LoginDig').dialog({	//projectName 추가, 수정 dialog
         autoOpen: false,
         width:400,
@@ -198,13 +178,11 @@ function session_check(){
 		
 		var tmpWidth = $('#userId').width();
 		if(loginType !='ADMIN'){
-// 			tmpWidth += 100;
-			tmpWidth += 200
+			tmpWidth += 100;
 			$('#userId').css('right', tmpWidth+'px');
 			$('#status_login').find('img').css('right', '45px');
 		}else{
-// 			tmpWidth += 360;
-			tmpWidth += 460;
+			tmpWidth += 340;
 			$('#userId').css('right', tmpWidth+'px');
 		}
 	}else{
@@ -229,9 +207,9 @@ function searchAction(){
 	search();
 	
 	$('#image_list').css('display', 'none');
-	$('#latestUpload').css('display', 'none');
-	$('#moreViewImg').css('display', 'none');
-	$('#image_latest_list').css('display', 'none');
+// 	$('#latestUpload').css('display', 'none');
+// 	$('#moreViewImg').css('display', 'none');
+// 	$('#image_latest_list').css('display', 'none');
 	$('#image_list').next().css('display', 'none');
 	
 	$('#srch_page').css('display', 'block');
@@ -297,7 +275,7 @@ function cmsLoadExif(){
 </script>
 
 </head>
-<body bgcolor="#FFF">
+<body bgcolor="#FFF" id="mainBody">
 <!-- 	<input type="text" id="aesText" style="width:100px;height: 30px;"> -->
 <!-- 	<button id="aesBtn" onclick="getAes('A');">AES BTN</button> -->
 <!-- 	<button id="aesBtn" onclick="getAes('D');">DES BTN</button> -->
@@ -307,9 +285,9 @@ function cmsLoadExif(){
 	
 	<div id="status_login" style="display:none;">
 		<!-- user -->
-		<div id="userId" style="height:30px; position:absolute; top:15px;color: blue;"></div>
+		<div id="userId" style="height:30px; position:absolute; top:17px;color: blue;"></div>
 		<!-- logout -->
-		<img src="<c:url value='/images/geoImg/main_images/logout.png'/>" style="position:absolute; right:300px; top: 15px; width:50px; height:20px; cursor:pointer;" onclick="fnLogout();">
+		<img src="<c:url value='/images/geoImg/main_images/logout.png'/>" style="position:absolute; right:300px; top: 15px; width:50px; height:24px; cursor:pointer;" onclick="fnLogout();">
 	</div>
 	
 	<!-- login -->
@@ -338,34 +316,16 @@ function cmsLoadExif(){
 	</div>
 	
 	<!-- more view -->
-	<img src="<c:url value='/images/geoImg/btn_image/more_list.png'/>" id="moreViewImg" style="position:absolute; left:390px; top: 143px; width:20px; height:20px;z-index:1" onclick="moreListView(1,'','');">
+<%-- 	<img src="<c:url value='/images/geoImg/btn_image/more_list.png'/>" id="moreViewImg" style="position:absolute; left:390px; top: 143px; width:20px; height:20px;z-index:1" onclick="moreListView(1,'','');"> --%>
 	
 	<!-- latest upload -->
-	<img src="<c:url value='/images/geoImg/english_images/title_01.gif'/>" style="position:absolute; left:20px; top: 465px;" id="latestUpload"/>
-	<div id="image_latest_list" style="position:absolute; top:480px; left:12px; display:block; z-index: 0">
-		<table border=0 id="left_list_table_2" style="margin-left: 10px;">
-			<tbody>
-			</tbody>
-		</table>
-	</div>
-	
-	<!-- edit btn -->
-	<div style="position:absolute;background-color: #ffffff;width:130px;height: 200px;left: 430px;top: 160px;border: 1px solid gray;z-index: 500;display:none;" id="editPopBtn">
-		<img src="<c:url value='/images/geoImg/btn_image/edit_add.png'/>" style='width:30px; height:30px; margin:15px 0 0 5px;' onclick="tabEditBtn('ADD');"/>
-		<label style="display: inline-block; float: right; margin: 25px 20px 0 0;">Add Tab</label><br>
-		
-		<img src="<c:url value='/images/geoImg/btn_image/edit_delete.png'/>" style='width:30px; height:30px; margin:15px 0 0 5px;' onclick="tabEditBtn('DELETE');"/>
-		<label style="display: inline-block; float: right; margin: 25px 20px 0 0;">Delete Tab</label><br>
-		
-		<img src="<c:url value='/images/geoImg/btn_image/edit_update.png'/>" style='width:30px; height:30px; margin:15px 0 0 5px;' onclick="tabEditBtn('EDIT');"/>
-		<label style="display: inline-block; float: right; margin: 25px 20px 0 0;">Modify Tab</label>
-		
-		<hr>
-<!-- 		<p class="fnt_12"><input type="checkbox" id="view_OpenApi" name="view_OpenApi" onclick="viewCheck(this);" /> Open API </p> -->
-		<p class="fnt_12"><input type="checkbox" id="view_latestUpload" name="view_latestUpload" onclick="viewCheck(this);" /> Latest Uploads </p>
-		
-	</div>
-	<!-- edit btn -->
+<%-- 	<img src="<c:url value='/images/geoImg/english_images/title_01.gif'/>" style="position:absolute; left:20px; top: 465px;" id="latestUpload"/> --%>
+<!-- 	<div id="image_latest_list" style="position:absolute; top:480px; left:12px; display:block; z-index: 0"> -->
+<!-- 		<table border=0 id="left_list_table_2" style="margin-left: 10px;"> -->
+<!-- 			<tbody> -->
+<!-- 			</tbody> -->
+<!-- 		</table> -->
+<!-- 	</div> -->
 	
 	<div id="srch_page" style="display: none;">
 		<jsp:include page="search_page.jsp"/>
@@ -390,29 +350,6 @@ function cmsLoadExif(){
 	
 	<div style="display: none;">
 		<jsp:include page="sub/moreList/content_list.jsp"></jsp:include>
-	</div>
-	
-	<!-- add tab dialog -->
-	<div id="tabAddDig">
-		<table style="font-size: 15px;">
-			<tr>
-				<td style="width:90px;">Tab Name</td>
-				<td><input type="text" id="addTabName"/></td>
-			</tr>
-			<tr id="addTabTr">
-				<td>Tab Type</td>
-				<td>
-					<input type="radio" name="addTabRaido" value="list" checked="checked"/> List
-					<input type="radio" name="addTabRaido" value="gellery"/> Gellery
-				</td>
-			</tr>
-			<tr>
-				<td colspan="2" style="text-align:center;">
-					<input type="button" style="margin-top:10px;margin-left:110px;" id="saveBtn" value="Save" onclick="addTabData('save');"/>
-					<input type="button" style="margin-top:10px;margin-left:110px;display:none;" id="modifyBtn" value="Modified" onclick="addTabData('modify');"/>
-				</td>
-			</tr>
-		</table>
 	</div>
 	
 	<!-- server dialog -->
