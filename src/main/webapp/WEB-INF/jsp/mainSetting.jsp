@@ -58,6 +58,7 @@ function getBase() {
 				setObj.latestView = '1';
 				setObj.mapZoom = 8;
 				b_url = 'cms/getContent/';
+				getServer("","", "");
 				mainSetting();	
 			}
 		}
@@ -119,7 +120,6 @@ function getServer(tmpFileName, tmpFileType, rObj){
 				tmpServerPort = response[0].serverport;
 			}else if(data.Code != '200'){
 				b_serverPath = "upload";
-				jAlert(data.Message, 'Info');
 			}else{
 				b_serverPath = "upload";
 			}
