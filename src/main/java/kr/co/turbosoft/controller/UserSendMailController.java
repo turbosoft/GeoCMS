@@ -80,7 +80,7 @@ public class UserSendMailController {
 	        	
 	        	if(chk_url != null && "Y".equals(chk_url)){
 //	        		sendHtml = "요청하신 url 주소는 <a href='"+ imgData_url +"&idx="+ imgData_idx + "&link=Y'>링크로 가기</a>";
-	        		sendHtml = "The url address you requested is <a href='"+ imgData_url +"&idx="+ imgData_idx + "&link=Y'>Go to link</a>";
+	        		sendHtml = "The url address you requested is <a href='"+ imgData_url +"'>Go to link</a>";
 	        	}
 	        
 	        	MimeBodyPart messageBodyPart = new MimeBodyPart();
