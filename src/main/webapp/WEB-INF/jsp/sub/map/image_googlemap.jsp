@@ -1245,7 +1245,7 @@ function takeMainMarkerData(typeShape) {
 		<div id="copyPojectAddDig">
 			<table style="width: 100%;">
 				<tr>
-					<td style="width:100px;">Project Name</td>
+					<td style="width:100px;">Layer Name</td>
 					<td><input type="text" id="copyProjectNameTxt" style="width:100%;" /></td>
 				</tr>
 				<tr style="text-align: center;">
