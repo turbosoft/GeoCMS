@@ -49,7 +49,7 @@ function addProjectGroupCell(response){
 				proShare = 'SELECTIVE';
 			}
 
-			var projectNameTxt = response[i].projectname.length>14? response[i].projectname.substring(0,14)+'...' : response[i].projectname;
+			var projectNameTxt = response[i].projectname.length>12? response[i].projectname.substring(0,12)+'...' : response[i].projectname;
 			innerHTML += '<div id="pName_'+ response[i].idx +'" onclick="fnProjectDiv(this,'+response[i].idx+');"';
 
 			innerHTML += 'class="offProjectDiv">';
@@ -77,8 +77,11 @@ function addProjectGroupCell(response){
 			innerHTML += '<div class="subDivCls" style="float:right;font-size:12px;margin-top:5px;color:#ddd;margin-right:5px;"><label class="m_l_10" style="font-size: 11px;">WRITER: </label><label style="display:inline-block; width:45px;font-size: 11px;" title="'+ response[i].id +'">'+ tmpUserId + '</label><label class="margin-left:5px;" style="font-size: 11px;">DATE: </label><label style="font-size: 11px;">' + response[i].u_date + '</label><label style="margin-left:5px;font-size: 11px;">'+ proShare + '</label>';
 			innerHTML += '</div>';
 			
-			innerHTML += '<button id="makeContents'+ response[i].idx +'" onclick="myContentsMake('+ response[i].idx +');" style="border-radius:5px; float:left;margin:3px 0px 0 5px;font-size:12px;background-color: #efefef;">Upload geoContents</button>';
-			innerHTML += '<button onclick="openProjectWriter();" class="editProBtn" style="border-radius:5px; margin:3px 5px 0 5px;font-size:12px;float:left;background-color: #efefef;"> Edit Annotation </button>';
+			if(response[i].edituserin == 'Y' ||  (loginId != null && loginId != '' && loginId != 'null' && response[i].id == loginId)){
+				innerHTML += '<button id="makeContents'+ response[i].idx +'" onclick="myContentsMake('+ response[i].idx +');" style="border-radius:5px; float:left;margin:3px 0px 0 5px;font-size:12px;background-color: #efefef;">Upload geoContents</button>';
+				innerHTML += '<button onclick="openProjectWriter();" class="editProBtn" style="border-radius:5px; margin:3px 5px 0 5px;font-size:12px;float:left;background-color: #efefef;"> Edit Annotation </button>';
+			}
+			
 			innerHTML += '<button onclick="openProjectViewer('+ response[i].idx +');" class="editFileBtn" style="border-radius:5px; float:left; margin:3px 5px 0 0px;font-size:12px;width:75px;background-color: #efefef;"> Viewer </button>';
 			//edit btn
 			if(loginId == response[i].id){
