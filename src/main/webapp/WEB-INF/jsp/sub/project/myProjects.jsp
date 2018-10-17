@@ -393,6 +393,7 @@ function openAddProjectName(){
 	$('#projectNameAddDig #removeBtn').css('display','none');
 	$('#projectNameAddDig').dialog('option', 'title', 'Add Layer');
 	$('#projectNameTxt').val('');
+	$('input[name=shareRadio]:radio[value=0]').attr('checked',true);
 	$('#projectNameAddDig').dialog('open');
 }
 
