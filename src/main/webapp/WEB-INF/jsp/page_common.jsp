@@ -69,6 +69,7 @@ var b_serverPath = "";
 var dataReplaceFun = function(oldData){
 	var replaceResultData = "";
 	if(oldData != null && oldData != undefined){
+		oldData = oldData.toString();
 		replaceResultData = oldData.replace(/\//g,'&sbsp');
 		replaceResultData = replaceResultData.replace(/\?/g,'&mbsp');
 		replaceResultData = replaceResultData.replace(/\#/g,'&pbsp');
