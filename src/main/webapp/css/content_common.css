@@ -109,6 +109,10 @@ button
 
 .serverInputClassW{width:250px;}
 
+/* mainSetting.jsp */
+.onMainProjectDiv{background-color: #00BCD4; color: white; font-weight: bold; height: 70px; margin-top: 5px;}
+.offMainProjectDiv{	background-color: gray;	color: white; font-weight: normal; height: 70px; margin-top: 5px;}
+
 /* upload_image.jsp */
 .file_input_img_btn{background-image: url("../images/geoImg/popup/load_btn_pop.png"); width:93px; height: 24px; background-repeat: no-repeat; float: left;}
 .file_input_div {
