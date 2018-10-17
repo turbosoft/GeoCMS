@@ -35,6 +35,7 @@ var request = null;		//request;
 var dMarkerLat = 0;		//default marker latitude
 var dMarkerLng = 0;		//default marker longitude
 var b_nowProjectIdx = 0;
+var b_nowProjectContentNum = 18;
 var b_orderType = 'DESC';
 
 $(function(){

@@ -6,12 +6,7 @@
 var contentNowPageNum = 1;		//현재 페이지 번호
 
 //게시물 페이지 설정
-function leftPageSetup(totalRes, obj) {
-	var contentNum = obj.content_num;
-	var tName = nowTabName;
-	if(editMode == 1){
-		tName = tempTabName;
-	}
+function leftPageSetup(pageNum, contentNum, totalRes) {
 	var totalPage = 1;
 	
 	if(totalRes % contentNum == 0){
@@ -21,11 +16,11 @@ function leftPageSetup(totalRes, obj) {
 	}
 	
 	//테이블에 페이지 추가
-	addImagePageCell(totalPage,obj.pageNum);
+	addImagePageCell(totalPage,pageNum);
 	
-	if(obj.pageNum == '1'){
-		initialize();
-	}
+// 	if(obj.pageNum == '1'){
+// 		initialize();
+// 	}
 }
 
 //테이블에 페이지 추가
@@ -46,7 +41,7 @@ function addImagePageCell(totalPage, pageNum) {
 	}
 
 	if(pageGroup > 1){
-		innerHTMLStr += "<div style='position:absolute;left:25px; margin-top:4px; background-image: url(<c:url value='/images/geoImg/btn_image/paging_DL.png'/>); width: 18px;height: 14px; background-repeat:no-repeat;cursor:pointer;' onclick='clickImagePage("+(pageGroup-10)+",1);'></div>";
+		innerHTMLStr += "<div style='position:absolute;left:25px; margin-top:4px; background-image: url(<c:url value='/images/geoImg/btn_image/paging_DL.png'/>); width: 18px;height: 14px; background-repeat:no-repeat;cursor:pointer;' onclick='clickImagePage("+(pageGroup-10)+",\"list\");'></div>";
 	}
 	
 	if(totalPage > 1){ 
@@ -60,7 +55,7 @@ function addImagePageCell(totalPage, pageNum) {
 			if(i>totalPage){
 				continue;
 			}
-			innerHTMLStr += "<font color='#000'><a href="+'"'+ "javascript:clickImagePage('"+(i).toString()+"', '1');"+'"';
+			innerHTMLStr += "<font color='#000'><a href="+'"'+ "javascript:clickImagePage('"+(i).toString()+"', 'list');"+'"';
 			innerHTMLStr += " style='padding:2px 2px 0 2px; text-decoration:none;'> ";
 			if(pageNum == i){
 				innerHTMLStr += " <font color='#066ab0' style='font-weight:900; font-size:12px;'>";
@@ -78,7 +73,7 @@ function addImagePageCell(totalPage, pageNum) {
 	}
 	
 	if(totalPage >= (pageGroup+10)){
-		innerHTMLStr += "<div style='position:absolute;width:40px;left:360px; margin-top:4px; background-image: url(<c:url value='/images/geoImg/btn_image/paging_DR.png'/>);width: 18px;height: 14px; background-repeat:no-repeat; cursor:pointer;' onclick='clickImagePage("+ (pageGroup+10)+",1);'></div>";
+		innerHTMLStr += "<div style='position:absolute;width:40px;left:360px; margin-top:4px; background-image: url(<c:url value='/images/geoImg/btn_image/paging_DR.png'/>);width: 18px;height: 14px; background-repeat:no-repeat; cursor:pointer;' onclick='clickImagePage("+ (pageGroup+10)+",\"list\");'></div>";
 	}
 	
 	innerHTMLStr += "</div>";
@@ -102,7 +97,7 @@ function clickMovePageICL(cType, totalPage){
 	}
 	
 	if(movePage > 0){
-		clickImagePage(movePage,1);
+		clickImagePage(movePage,'list');
 	}
 }
 

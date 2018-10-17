@@ -386,26 +386,39 @@ function addMainProjectGroupCell(response){
 			}
 
 			var projectNameTxt = response[i].projectname.length>40? response[i].projectname.substring(0,40)+'...' : response[i].projectname;
+			
 			innerHTML += '<div id="mainPName_'+ response[i].projectidx +'" onclick="moveMainDetailView('+response[i].projectidx+');"';
 
-			innerHTML += 'class="offProjectDiv" style="cursor:pointer;">';
+			innerHTML += 'class="offMainProjectDiv" style="cursor:pointer;">';
 			
 			innerHTML += "<input type='hidden' id='mainhiddenProName_"+ response[i].projectidx +"' value='"+ response[i].projectname +"'/>";
 			innerHTML += '<input type="hidden" id="mainhiddenShareType_'+ response[i].projectidx +'" value="'+ response[i].projectsharetype +'"/>';
 			
-			innerHTML += "<label class='titleLabel' title='"+ response[i].projectname +"' style='width:390px !important;font-size: 16px;display: inline-block;margin-top:3px;cursor:pointer;'>"+ projectNameTxt +"</label>";
+			innerHTML += "<label class='titleLabel' title='"+ response[i].projectname +"' style='width:340px !important;font-size: 16px;display: inline-block;margin-top:3px;cursor:pointer;'>"+ projectNameTxt +"</label>";
+			
+			var imageSrcStr = '';
+			var localAddress = ftpBaseUrl() + "/" + response[i].datakind;
+			if(response[i].datakind == "GeoPhoto"){
+				var tmpThumbFileName = response[i].filename.split('.');
+				imageSrcStr += "/"+tmpThumbFileName[0] +'_thumbnail.png';
+				
+			}else{
+				imageSrcStr += "/"+response[i].thumbnail;
+			}
+			
+			
+			innerHTML += "<img class='round' src='"+ localAddress + imageSrcStr + "' width='40px' height='35px' hspace='2' vspace='2' style='margin-top:10px;' />";
 			
 			var tmpUserId = response[i].projectid.length>7? response[i].projectid.substring(0,7)+'...' : response[i].projectid;
-			innerHTML += '<div class="subDivCls" style="float:right;font-size:12px;margin-top:5px;color:#ddd;margin-right:5px; cursor:pointer;"><label class="m_l_10" style="font-size: 11px; cursor:pointer;">WRITER: </label><label style="display:inline-block; width:45px;font-size: 11px; cursor:pointer;" title="'+ response[i].projectid +'">'+ tmpUserId + '</label><label class="margin-left:5px;" style="font-size: 11px;cursor:pointer;">DATE: </label><label style="font-size: 11px;cursor:pointer;">' + response[i].projectudate + '</label><label style="margin-left:5px;font-size: 11px;cursor:pointer;">'+ proShare + '</label>';
+			innerHTML += '<div class="subDivCls" style="float:right;font-size:12px;margin-top:5px;color:#ddd;margin-right:5px; cursor:pointer;"><label class="m_l_10" style="font-size: 11px; cursor:pointer;">WRITER: </label><label style="display:inline-block; max-width:55px;font-size: 11px; cursor:pointer;" title="'+ response[i].projectid +'">'+ tmpUserId + '</label><label class="margin-left:5px;" style="font-size: 11px;cursor:pointer;margin-left: 5px;">DATE: </label><label style="font-size: 11px;cursor:pointer;">' + response[i].projectudate + '</label><label style="margin-left:5px;font-size: 11px;cursor:pointer;">'+ proShare + '</label>';
 			innerHTML += '</div>';
-
+			
 // 			innerHTML += '<button onclick="openProjectViewer('+ response[i].projectidx +');" class="editFileBtn" style="border-radius:5px; float:left; margin:3px 5px 0 0px;font-size:12px;width:75px;background-color: #efefef;"> Viewer </button>';
 
 			innerHTML += '</div>';
 
 			innerHTML += '</div>';
 		}
-
 		$('#mainProjectListView').append(innerHTML);
 	}
 }
@@ -422,7 +435,7 @@ function moveMainDetailView(cProjectIdx){
 		
 		$('#mainProjectListView').empty();
 		$('#imageMoveArea').append("<table border=1 class='ui-widget' id='left_list_table_1' style='border-collapse: collapse; width:100%; border-left:0px;border-color:#999;'><tbody></tbody></table>");
-		clickImagePage("1", null, "list", cProjectIdx);
+		clickImagePage("1", "list");
 		
 		typeShape = 'marker';
 		initialize();
@@ -439,7 +452,7 @@ function moveMainDetailView(cProjectIdx){
 
 
 //페이지 선택
-function clickImagePage(pageNum, content_num, type, cProjectIdx){
+function clickImagePage(pageNum, type){
 	var dataIdx = '&nbsp';
 	var tmpLoginId = loginId;
 	var tmpLoginToken = loginToken;
@@ -453,16 +466,16 @@ function clickImagePage(pageNum, content_num, type, cProjectIdx){
 		tmpLoginToken = '&nbsp';
 	}
 	
-	if(content_num == null || content_num == "" || content_num == 'null'){
-		content_num = '&nbsp';
+	if(b_nowProjectContentNum == null || b_nowProjectContentNum == "" || b_nowProjectContentNum == 'null'){
+		b_nowProjectContentNum = '&nbsp';
 	}
 	
-	if(cProjectIdx == null || cProjectIdx == "" || cProjectIdx == 'null'){
-		cProjectIdx = '&nbsp';
+	if(b_nowProjectIdx == null || b_nowProjectIdx == "" || b_nowProjectIdx == 'null'){
+		b_nowProjectIdx = '&nbsp';
 	}
 	
 	var Url			= baseRoot() + b_url;
-	var param		= type + "/" + tmpLoginToken + "/" + tmpLoginId + "/" + pageNum + "/" + content_num + "/" + cProjectIdx + "/"+ tmpIndex;
+	var param		= type + "/" + tmpLoginToken + "/" + tmpLoginId + "/" + pageNum + "/" + b_nowProjectContentNum + "/" + b_nowProjectIdx + "/"+ tmpIndex;
 	var callBack	= "?callback=?";
 	
 	$.ajax({
@@ -476,11 +489,11 @@ function clickImagePage(pageNum, content_num, type, cProjectIdx){
 			
 			leftListSetup(response);
 			//페이지 설정
-// 			var dataLen = 1;
-// 			if(data.DataLen != null && data.DataLen != "" && data.DataLen != "null" && data.DataLen != undefined){
-// 				dataLen = data.DataLen;
-// 			}
-// 			if(obj.table_num == "1"){leftPageSetup(dataLen, obj);}
+			var dataLen = 1;
+			if(data.DataLen != null && data.DataLen != "" && data.DataLen != "null" && data.DataLen != undefined){
+				dataLen = data.DataLen;
+			}
+			leftPageSetup(pageNum, b_nowProjectContentNum, dataLen);
 		}
 		, error:function(request,status,error){
 			$('.lodingOn').remove();
@@ -540,14 +553,16 @@ function leftListSetup(pure_data) {
 				var projectNameTxt = pure_data[i].projectname.length>40? pure_data[i].projectname.substring(0,40)+'...' : pure_data[i].projectname;
 				innerHTML += '<div id="mainPName_'+ pure_data[i].projectidx +'" onclick="moveMainDetailView(null);"';
 	
-				innerHTML += 'class="onProjectDiv" style="cursor:pointer;">';
+				innerHTML += 'class="onMainProjectDiv" style="cursor:pointer;">';
 
 				innerHTML += "<input type='hidden' id='mainhiddenProName_"+ pure_data[i].projectidx +"' value='"+ pure_data[i].projectname +"'/>";
 				innerHTML += '<input type="hidden" id="mainhiddenShareType_'+ pure_data[i].projectidx +'" value="'+ pure_data[i].projectsharetype +'"/>';
 				
+				innerHTML += '<div><< back</div>';
+				
 				innerHTML += "<label class='titleLabel' title='"+ pure_data[i].projectname +"' style='width:390px !important;font-size: 16px;display: inline-block;margin-top:3px; cursor:pointer;'>"+ projectNameTxt +"</label>";
 				var tmpUserId = pure_data[i].projectuserid.length>7? pure_data[i].projectuserid.substring(0,7)+'...' : pure_data[i].projectuserid;
-				innerHTML += '<div class="subDivCls" style="float:right;font-size:12px;margin-top:5px;color:#ddd;margin-right:5px; cursor:pointer;"><label class="m_l_10" style="font-size: 11px;cursor:pointer;">WRITER: </label><label style="display:inline-block; width:45px;font-size: 11px;cursor:pointer;" title="'+ pure_data[i].projectuserid +'">'+ tmpUserId + '</label><label class="margin-left:5px;" style="font-size: 11px;cursor:pointer;">DATE: </label><label style="font-size: 11px;cursor:pointer;">' + pure_data[i].projectudate + '</label><label style="margin-left:5px;font-size: 11px;cursor:pointer;">'+ proShare + '</label>';
+				innerHTML += '<div class="subDivCls" style="float:right;font-size:12px;margin-top:5px;color:#ddd;margin-right:5px; cursor:pointer;"><label class="m_l_10" style="font-size: 11px;cursor:pointer;">WRITER: </label><label style="display:inline-block; max-width:55px;font-size: 11px;cursor:pointer;" title="'+ pure_data[i].projectuserid +'">'+ tmpUserId + '</label><label class="margin-left:5px;" style="font-size: 11px;cursor:pointer;margin-left: 5px;">DATE: </label><label style="font-size: 11px;cursor:pointer;">' + pure_data[i].projectudate + '</label><label style="margin-left:5px;font-size: 11px;cursor:pointer;">'+ proShare + '</label>';
 				innerHTML += '</div>';
 				
 	// 			innerHTML += '<button onclick="openProjectViewer('+ pure_data[i].projectidx +');" class="editFileBtn" style="border-radius:5px; float:left; margin:3px 5px 0 0px;font-size:12px;width:75px;background-color: #efefef;"> Viewer </button>';
@@ -556,7 +571,7 @@ function leftListSetup(pure_data) {
 				innerHTML += '</div>';
 				
 				$('#mainProjectListView').append(innerHTML);
-				$('#mainProjectListView').css('height','55px');
+				$('#mainProjectListView').css('height','70px');
 				$('#mainProjectListView').css('overflow-y','hidden');
 				
 				var setTbHeight = $(window).height() - 130 - $('#footer').height() - $('#mainProjectListView').height();//화면 크기에 따라 이미지 크기 조정
@@ -566,22 +581,34 @@ function leftListSetup(pure_data) {
 		}
 	}
 	
+	//부족한 데이터는 "" 로 채운다
+	if(id_arr.length > 0 && id_arr.length%b_nowProjectContentNum > 0) {
+		for(var i = 0; i < id_arr.length%b_nowProjectContentNum; i++) {
+			id_arr.push("");
+			title_arr.push("");
+			content_arr.push("");
+			file_url_arr.push("");
+			udate_arr.push("");
+			idx_arr.push("");
+		}
+	}
 	//테이블에 데이터 추가
 	addLeftImageDataCell(id_arr, title_arr, content_arr, file_url_arr, udate_arr, idx_arr, lat_arr, lon_arr, thumbnail_url_arr, origin_url_arr, dataKind_arr, projectUserId_arr, status_arr);
 }
 
 //left content list data add
 function addLeftImageDataCell(id_arr, title_arr, content_arr, file_url_arr, udate_arr, idx_arr, lat_arr, lon_arr, thumbnail_url_arr, origin_url_arr, dataKind_arr, projectUserId_arr, status_arr){
+	$('#left_list_table_1').empty();
 	var target = document.getElementById('left_list_table_1');
 	var max_cell = '3';
 	var blankImg = '<c:url value="/images/geoImg/blank(100x70).PNG"/>';
 
 	var thumbnail_arr = new Array();
 	//xml file check
-	for(var i=0;i<file_url_arr.length;i++){
-		var thumbnail_arr_data = loadXMLMain(file_url_arr[i], dataKind_arr[i]);
-		thumbnail_arr.push(thumbnail_arr_data);
-	}
+// 	for(var i=0;i<file_url_arr.length;i++){
+// 		var thumbnail_arr_data = loadXMLMain(file_url_arr[i], dataKind_arr[i]);
+// 		thumbnail_arr.push(thumbnail_arr_data);
+// 	}
 	var imgWidth = mainImageWidth;		//image width
 	var imgHeight = mainImageHeight;		//image height
 	
@@ -608,7 +635,7 @@ function addLeftImageDataCell(id_arr, title_arr, content_arr, file_url_arr, udat
 		var img_cell = img_row.insertCell(-1);
 		var innerHTMLStr = "";
 		if(id_arr[i]=="" && title_arr[i]=="" && content_arr[i]=="" && file_url_arr[i]=="") {	//등록한 이미지가 없을때
-			innerHTMLStr += "<img class='round' src='"+ blankImg + "' width='" + imgWidth + "' height='" + imgHeight + "'hspace='10' vspace='10' style='border:3px solid gray'/>";
+			innerHTMLStr += "<img class='round' src='"+ blankImg + "' width='" + imgWidth + "' height='" + imgHeight + "'hspace='10' vspace='10' style='border:2px solid #ffffff' />";
 			img_cell.innerHTML = innerHTMLStr;
 		}else{
 			innerHTMLStr += "<a class='imageTag' href='javascript:;' onclick="+'"';
