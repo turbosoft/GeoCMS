@@ -44,10 +44,12 @@ $(function(){
 	var mapWidth = $(window).width()- $('#image_list').width();	//화면 크기에 따라 이미지 크기 조정
 	$('#image_map').css('width', mapWidth);
 	
-	var setMapHeight = $(window).height() - 100 - $('#footer').height();//화면 크기에 따라 이미지 크기 조정
+	var setMapHeight = $(window).height() - 105 - $('#footer').height();//화면 크기에 따라 이미지 크기 조정
 	if(setMapHeight > 500){
 		$('#image_map').css('height', setMapHeight);
 	}
+	var setFooterHeight = $('#image_map').height() + 100;
+	$('#footer').css('top',setFooterHeight);
 	
     $('#dialog').dialog({	//openApi dialog
       autoOpen: false,
