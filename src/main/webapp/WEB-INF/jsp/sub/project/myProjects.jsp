@@ -217,6 +217,7 @@ function addProjectChildCell(response, pageNum){
 				}else if(response[i].datakind == "GeoVideo"){
 					localAddress += "/"+response[i].thumbnail;
 				}
+
 				innerHTMLStr += "<a class='imageTag' id='Pro_"+ response[i].datakind +"_"+response[i].idx +"' href='javascript:;' onclick="+'"';
 				var tempArr = new Array; //mapCenterChange에 넘길 객체 생성
 				tempArr.push(response[i].latitude);
