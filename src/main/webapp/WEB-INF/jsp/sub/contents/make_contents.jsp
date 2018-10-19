@@ -36,12 +36,12 @@ function ContentsMakes(type, boardNowTab, selBoardNum, makeContentIdx) {
 			tempUrl = '<c:url value="/geoCMS/upload_image.do"/>?makeContentIdx='+makeContentIdx;
 			tempTitle = 'Image Upload';
 			tempWidth = 435;
-			tempHeight = 675;
+			tempHeight = 635;
 		}else if((projectVideo == 1 && type == "") || type == "Video"){	//video upload
 			tempUrl = '<c:url value="/geoCMS/upload_video.do"/>?makeContentIdx='+makeContentIdx;
 			tempTitle = 'Video Upload';
 			tempWidth = 435;
-			tempHeight = 530;
+			tempHeight = 490;
 		}
 		
 		//image, video 생성시 프로젝트가 없으면 생성 할 수 없음
