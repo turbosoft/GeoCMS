@@ -45,15 +45,15 @@ $(function() {
 	$('#showVideo').attr("checked", true);
 	
 	//project name setting
-	innerHTML = '';
-	for(var i=0;i<projectNameArr.length;i++){
-		innerHTML += '<option value="'+ projectIdxArr[i] +'">'+ projectNameArr[i] +'</option>';
-	}
-	$('#projectKind').append(innerHTML);
+// 	innerHTML = '';
+// 	for(var i=0;i<projectNameArr.length;i++){
+// 		innerHTML += '<option value="'+ projectIdxArr[i] +'">'+ projectNameArr[i] +'</option>';
+// 	}
+// 	$('#projectKind').append(innerHTML);
 	
-	if(makeContentIdx != null){
-		$('#projectKind').val(makeContentIdx);
-	}
+// 	if(makeContentIdx != null){
+// 		$('#projectKind').val(makeContentIdx);
+// 	}
 });
 
 //get proejct List
@@ -95,7 +95,8 @@ function createContent() {
 	if(loginId != '' && loginId != null) {
 		var title = $('#title_area').val();
 		var content = document.getElementById('content_area').value;
-		var projectIdxNum = $('#projectKind').val();
+// 		var projectIdxNum = $('#projectKind').val();
+		var projectIdxNum = makeContentIdx;
 		var droneType = '&nbsp';
 		var chkVideoGps = '&nbsp';
 		var m_s_check = nowVideoType;
@@ -459,14 +460,14 @@ function changVideoFileGps(){
 			</div>
 		</td>
 	</tr>
+<!-- 	<tr> -->
+<!-- 		<td width="80" height="25" align="center">Layer Name</td> -->
+<!-- 		<td width="" height="25" align="center"> -->
+<!-- 			<select style="width:318px;" id="projectKind"></select> -->
+<!-- 		</td> -->
+<!-- 	</tr> -->
 	<tr>
-		<td width="80" height="25" align="center">Layer Name</td>
-		<td width="" height="25" align="center">
-			<select style="width:318px;" id="projectKind"></select>
-		</td>
-	</tr>
-	<tr>
-		<td width='' height='25' align='center' style="width:80px;">TITLE</td>
+		<td width='80' height='25' align='center' style="width:80px;">TITLE</td>
 		<td width='' height='25' align='center'>
 			<input id='title_area' type='text' style='width:316px;'>
 		</td>

@@ -51,15 +51,15 @@ $(function() {
 	$('#showImage').attr("checked", true);
 	
 	//project name setting
-	innerHTML = '';
-	for(var i=0;i<projectNameArr.length;i++){
-		innerHTML += '<option value="'+ projectIdxArr[i] +'">'+ projectNameArr[i] +'</option>';
-	}
-	$('#projectKind').append(innerHTML);
+// 	innerHTML = '';
+// 	for(var i=0;i<projectNameArr.length;i++){
+// 		innerHTML += '<option value="'+ projectIdxArr[i] +'">'+ projectNameArr[i] +'</option>';
+// 	}
+// 	$('#projectKind').append(innerHTML);
 	
-	if(makeContentIdx != null){
-		$('#projectKind').val(makeContentIdx);
-	}
+// 	if(makeContentIdx != null){
+// 		$('#projectKind').val(makeContentIdx);
+// 	}
 });
 
 //get proejct List
@@ -157,6 +157,7 @@ function fileChangeInfo(obj){
 	var viewIdx = 0;
 	var tmpViewArr = new Array();
 	var chkTime = false;
+	var mxFileSize = 0;
 	
 	var i = document.getElementById('file_1');
 	for(var i=0; i<obj.files.length;i++){
@@ -188,12 +189,14 @@ function fileChangeInfo(obj){
 					chkTime = true;
 				}
 			}
+			
 		}
+		mxFileSize += obj.files[i].size;
 		obj.files[i].seq = viewIdx;
 		viewFileArr[viewIdx] = obj.files[i];
-		
 	}
 	var tmpHtml = '';
+// 	tmpHtml += "<div style='margin:5px 0 5px 10px; text-decoration:underline; color:gray;'>"+ mxFileSize +"</div>";
 	for(var i=0; i<viewFileArr.length;i++){
 		tmpHtml += "<div style='margin:5px 0 5px 10px; text-decoration:underline; color:gray;'>"+ viewFileArr[i].name +"</div>";
 	}
@@ -227,7 +230,8 @@ function createContent() {
 		//게시물 정보 전송 설정
 		var title = $('#title_area').val();
 		var content = document.getElementById('content_area').value;
-		var projectIdxNum = $('#projectKind').val();
+// 		var projectIdxNum = $('#projectKind').val();
+		var projectIdxNum = makeContentIdx;
 		var droneType = '&nbsp';
 		if( $(':checkbox[id="droneDataChk"]').is(":checked")){
 			droneType = 'Y';
@@ -333,14 +337,14 @@ function createContent() {
 				</div>
 			</td>
 		</tr>
+<!-- 		<tr> -->
+<!-- 			<td width="80" height="25" align="center">Layer Name</td> -->
+<!-- 			<td width="" height="25" align="center"> -->
+<!-- 				<select style="width:318px;" id="projectKind"></select> -->
+<!-- 			</td> -->
+<!-- 		</tr> -->
 		<tr>
-			<td width="80" height="25" align="center">Layer Name</td>
-			<td width="" height="25" align="center">
-				<select style="width:318px;" id="projectKind"></select>
-			</td>
-		</tr>
-		<tr>
-			<td width="" height="25" align="center">TITLE</td>
+			<td width="80" height="25" align="center">TITLE</td>
 			<td width="" height="25" align="center">
 				<input id="title_area" type="text" style="width:316px;">
 			</td>
