@@ -95,11 +95,10 @@ function getImgUpProjectList(){
 		}
 	});
 }
-
 //upload kind 선택 시 
 function changeShow(type) {
+	parent.ContentsMakes(type, '', '', makeContentIdx);
 	jQuery.FrameDialog.closeDialog();
-	parent.ContentsMakes(type, '', '','', makeContentIdx);
 }
 
 //게시물 생성 취소
